@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
+import GlobalSearch from './components/GlobalSearch';
 import KarnatakaMap from './components/KarnatakaMap';
 import DialectMorph from './components/DialectMorph';
 import DialectMitra from './components/DialectMitra';
@@ -13,6 +14,7 @@ import Footer from './components/Footer';
 export default function App() {
   const [currentRegion, setCurrentRegion] = useState('mysuru');
   const [activeSection, setActiveSection] = useState('map');
+  const [lang, setLang] = useState('kn'); // 'kn' (Kannada default) or 'en' (English)
 
   const scrollToSection = (id) => {
     setActiveSection(id);
@@ -23,54 +25,78 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex flex-col font-sans selection:bg-amber-500 selection:text-slate-950">
-      {/* Sticky Top Navigation */}
+    <div className="min-h-screen bg-[#14110E] text-[#F3EFEA] flex flex-col font-sans selection:bg-[#F3C067] selection:text-[#14110E]">
+      {/* Sticky Top Navigation with Kannada / English Toggle */}
       <Navbar
         activeSection={activeSection}
         setActiveSection={setActiveSection}
         currentRegion={currentRegion}
         setCurrentRegion={setCurrentRegion}
+        lang={lang}
+        setLang={setLang}
       />
 
       {/* Main Content Flow */}
       <main className="flex-1">
-        {/* Hero Section */}
+        {/* Hero Section with Embedded Word of the Day & Audio Greeting */}
         <HeroSection
           onExploreMap={() => scrollToSection('map')}
           onTryMorph={() => scrollToSection('morph')}
           onPlayQuiz={() => scrollToSection('quiz')}
+          onSearchClick={() => scrollToSection('search')}
+          lang={lang}
+          onSelectRegion={setCurrentRegion}
         />
 
-        {/* Feature 1: Interactive Karnataka Regional Map */}
+        {/* Upgrade (d): Global Search & Multi-Filter Matrix */}
+        <GlobalSearch
+          lang={lang}
+        />
+
+        {/* Upgrade (a): Interactive Karnataka Regional Map & Dialect Entries */}
         <KarnatakaMap
           currentRegion={currentRegion}
           setCurrentRegion={setCurrentRegion}
+          lang={lang}
         />
 
-        {/* Feature 2: 5-Way Dialect Morph Cross-Translator */}
-        <DialectMorph />
+        {/* Upgrade (b): 5-Way Multi-Dialect Morph Cross-Translator */}
+        <DialectMorph
+          lang={lang}
+        />
 
-        {/* Feature 2B: Real-Time AI Dialect Mitra & Word Explorer */}
-        <DialectMitra />
+        {/* Real-Time AI Dialect Mitra & Word Explorer */}
+        <DialectMitra
+          lang={lang}
+        />
 
-        {/* Feature 3: Audio Waveform & Pronunciation Lab */}
-        <AudioLab />
+        {/* Upgrade (c): Real-Time Voice Waveform & Pronunciation Lab */}
+        <AudioLab
+          lang={lang}
+        />
 
-        {/* Feature 4: Gamified Dialect Detective Quiz */}
-        <DialectQuiz />
+        {/* Gamified Dialect Detective Quiz with Dynamic Question Shuffling */}
+        <DialectQuiz
+          lang={lang}
+        />
 
-        {/* Feature 5: Crowdsourced Janapada Kosha Folk Vault */}
-        <FolkVault />
+        {/* Upgrade (g): Janapada Kosha Folk Vault with Validated Contribution Form */}
+        <FolkVault
+          lang={lang}
+        />
 
-        {/* Feature 6: Regional Heritage, Literature & Cuisine Showcase */}
+        {/* Regional Heritage, Literature & Cuisine Showcase */}
         <RegionalShowcase
           currentRegion={currentRegion}
           setCurrentRegion={setCurrentRegion}
+          lang={lang}
         />
       </main>
 
       {/* Footer & Hackathon Attribution */}
-      <Footer />
+      <Footer
+        lang={lang}
+      />
     </div>
   );
 }

@@ -13,22 +13,22 @@ import {
   Volume2,
   Copy,
   Check,
-  Globe,
   BookOpen,
   ArrowRight,
-  HelpCircle,
   Lightbulb,
   Loader2
 } from 'lucide-react';
+import { UI_STRINGS } from '../data/translations';
 
-export default function DialectMitra() {
+export default function DialectMitra({ lang = 'kn' }) {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [activeResult, setActiveResult] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
   const [searchFilter, setSearchFilter] = useState('');
 
-  // Sample prompt ideas
+  const isKn = lang === 'kn';
+
   const samplePrompts = [
     'I am getting late for college, please drive fast!',
     'How much does a plate of Jolada Rotti cost?',
@@ -45,43 +45,46 @@ export default function DialectMitra() {
     setIsLoading(true);
 
     try {
-      // 1. Check if exact word exists in our root lexicon
       const lower = text.toLowerCase();
       const lexiconMatch = VOCABULARY_LEXICON.find(
         (item) => item.en.toLowerCase() === lower || item.kn.includes(text)
       );
 
       let standardKn = text;
-
-      // 2. If it's English, attempt online translation to get base Kannada
       const isEnglish = /^[A-Za-z0-9\s.,!?'"()-]+$/.test(text);
       if (isEnglish) {
         if (lexiconMatch) {
           standardKn = lexiconMatch.kn;
         } else {
-          const fetched = await fetchOnlineKannadaTranslation(text);
-          if (fetched) {
-            standardKn = fetched;
-          }
+          standardKn = await fetchOnlineKannadaTranslation(text);
         }
       }
 
-      // 3. Decompose into 5 regional variations using Semantic Lexicon Engine
-      const parsedSemantic = parseAndMorphDialect(text);
-      const regionalVariants = (parsedSemantic && parsedSemantic.type !== 'general_morph')
-        ? parsedSemantic.variants
-        : transformToRegionalDialects(text, standardKn);
+      const morphedResult = parseAndMorphDialect(text);
+      let regionalBreakdown = {};
+
+      if (morphedResult && morphedResult.isRecognized) {
+        Object.keys(REGIONS).forEach((regKey) => {
+          const m = morphedResult.variants[regKey];
+          regionalBreakdown[regKey] = {
+            text: m.text,
+            phonetic: m.phonetic,
+            tone: m.trait,
+            etiquetteTip: m.culturalNuance || m.trait
+          };
+        });
+      } else {
+        regionalBreakdown = transformToRegionalDialects(standardKn);
+      }
 
       setActiveResult({
         original: text,
         standardKannada: standardKn,
-        isLexicon: !!lexiconMatch || (parsedSemantic && parsedSemantic.type !== 'general_morph'),
-        lexiconData: lexiconMatch,
-        variants: regionalVariants
+        variants: regionalBreakdown
       });
       soundEffects.playSuccess();
     } catch (err) {
-      console.warn('Translation error', err);
+      console.error('Translation error:', err);
     } finally {
       setIsLoading(false);
     }
@@ -93,7 +96,6 @@ export default function DialectMitra() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  // Filtered lexicon dictionary items
   const filteredLexicon = VOCABULARY_LEXICON.filter(
     (item) =>
       item.en.toLowerCase().includes(searchFilter.toLowerCase()) ||
@@ -102,68 +104,77 @@ export default function DialectMitra() {
   );
 
   return (
-    <section id="mitra" className="py-16 bg-slate-900/40 relative border-b border-slate-800">
+    <section 
+      id="mitra" 
+      aria-labelledby="mitra-heading"
+      className="py-14 sm:py-18 bg-[#14110E] relative border-b border-[#2E2620]"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs font-semibold mb-3 border border-amber-500/20">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F3C067]/15 text-[#F3C067] text-xs font-semibold mb-3 border border-[#F3C067]/40 shadow-sm">
             <Sparkles className="w-3.5 h-3.5" />
-            <span>Real-Time AI Dialect Assistant & Word Explorer</span>
+            <span>{isKn ? 'ನೈಜ ಸಮಯದ ಎಐ ನುಡಿ ಸಹಾಯಕ' : 'Real-Time AI Dialect Assistant & Word Explorer'}</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-kannada">
-            ನುಡಿ ಮಿತ್ರ — Ask Any Word or Sentence in Real Time
+          <h2 id="mitra-heading" className="text-2xl sm:text-4xl font-extrabold text-[#F3EFEA] tracking-tight font-serif">
+            {isKn ? 'ನುಡಿ ಮಿತ್ರ — ಯಾವುದೇ ಪದ ಅಥವಾ ವಾಕ್ಯವನ್ನು ನೈಜವಾಗಿ ತಿಳಿಯಿರಿ' : 'AI Dialect Mitra — Ask Any Word or Sentence in Real Time'}
           </h2>
-          <p className="mt-2 text-base text-slate-400">
-            Have a doubt about a new word, slang, or situation not covered in textbooks? Type any sentence in English or Kannada to see how all 5 regions of Karnataka speak it!
+          <p className="mt-2 text-xs sm:text-base text-[#D4CDC5]">
+            {isKn 
+              ? 'ಪುಸ್ತಕಗಳಲ್ಲಿ ಇಲ್ಲದ ಹೊಸ ಶಬ್ದಗಳು ಅಥವಾ ಸ್ಲ್ಯಾಂಗ್ ಬಗ್ಗೆ ಸಂದೇಹವಿದೆಯೇ? ಯಾವುದೇ ವಾಕ್ಯವನ್ನು ಟೈಪ್ ಮಾಡಿ 5 ಪ್ರಾಂತ್ಯಗಳಲ್ಲಿ ತಿಳಿಯಿರಿ!' 
+              : 'Have a doubt about a new word, slang, or situation? Type any sentence in English or Kannada to see how all 5 regions speak it!'}
           </p>
         </div>
 
         {/* Live Input & Search Bar */}
-        <div className="max-w-4xl mx-auto bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-8 shadow-2xl mb-12">
+        <div className="max-w-4xl mx-auto bg-[#1E1915] border border-[#2E2620] rounded-3xl p-5 sm:p-8 shadow-xl mb-10">
           
-          <div className="relative mb-4">
+          <div className="relative mb-3">
             <input
               type="text"
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleTranslate()}
-              placeholder="Type any word or sentence (e.g. 'Driver, please turn on the AC' or 'How much is this?')..."
-              className="w-full bg-slate-900 border border-slate-700 hover:border-amber-500/80 focus:border-amber-500 rounded-2xl px-5 py-4 text-sm sm:text-base text-white placeholder-slate-500 focus:outline-none transition-all pr-36"
+              placeholder={isKn ? "ಯಾವುದೇ ವಾಕ್ಯ ಟೈಪ್ ಮಾಡಿ (ಉದಾ: 'ಆಟೋ ಮೀಟರ್ ಹಾಕಿ', 'ಇಲ್ಲಿ ಶೀರಾ ಸಿಗುತ್ತಾ?')..." : "Type any word or sentence (e.g. 'Driver, please turn on the meter' or 'How much is this?')..."}
+              className="w-full bg-[#14110E] border border-[#2E2620] hover:border-[#F3C067]/60 focus:border-[#F3C067] rounded-2xl px-4 py-3 sm:py-3.5 text-xs sm:text-sm text-[#F3EFEA] placeholder-[#C8BFB5]/50 focus:outline-none transition-all pr-32 sm:pr-36"
+              aria-label="Input sentence to dialect morph"
             />
             
             <button
+              type="button"
               onClick={() => handleTranslate()}
               disabled={isLoading || !inputText.trim()}
-              className="absolute right-2 top-2 bottom-2 px-6 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-400 hover:to-amber-500 text-slate-950 font-bold rounded-xl text-xs sm:text-sm flex items-center gap-2 transition-all disabled:opacity-50 disabled:cursor-not-allowed shadow-md shadow-amber-500/20"
+              className="absolute right-1.5 top-1.5 bottom-1.5 px-4 sm:px-5 bg-gradient-to-r from-[#F3C067] to-[#E5A93C] text-[#14110E] font-bold rounded-xl text-xs sm:text-sm flex items-center gap-1.5 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-md"
             >
               {isLoading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
-                  <span>Translating...</span>
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-[#14110E]" />
+                  <span>{isKn ? 'ಅನುವಾದ...' : 'Translating...'}</span>
                 </>
               ) : (
                 <>
-                  <Sparkles className="w-4 h-4 text-slate-950" />
-                  <span>Dialect Morph</span>
+                  <Sparkles className="w-3.5 h-3.5 text-[#14110E]" />
+                  <span>{isKn ? 'ರೂಪಾಂತರ' : 'Morph'}</span>
                 </>
               )}
             </button>
           </div>
 
           {/* Quick Idea Prompts */}
-          <div className="flex flex-wrap items-center gap-2 pt-2">
-            <span className="text-xs text-slate-400 font-medium flex items-center gap-1">
-              <Lightbulb className="w-3.5 h-3.5 text-amber-400" /> Try Asking:
+          <div className="flex flex-wrap items-center gap-1.5 pt-1">
+            <span className="text-[11px] text-[#C8BFB5] font-medium flex items-center gap-1">
+              <Lightbulb className="w-3 h-3 text-[#F3C067]" /> {isKn ? 'ಪ್ರಯತ್ನಿಸಿ:' : 'Try Asking:'}
             </span>
             {samplePrompts.map((prompt, idx) => (
               <button
                 key={idx}
+                type="button"
                 onClick={() => {
                   setInputText(prompt);
                   handleTranslate(prompt);
                 }}
-                className="text-[11px] bg-slate-900 hover:bg-slate-800 text-slate-300 hover:text-amber-300 px-2.5 py-1 rounded-lg border border-slate-800 transition-all truncate max-w-[280px]"
+                className="text-[11px] bg-[#14110E] hover:bg-[#2E2620] text-[#D4CDC5] hover:text-[#F3C067] px-2.5 py-1 rounded-lg border border-[#2E2620] transition-all truncate max-w-[260px]"
               >
                 {prompt}
               </button>
@@ -172,77 +183,79 @@ export default function DialectMitra() {
 
           {/* Real-Time Result Display */}
           {activeResult && (
-            <div className="mt-8 pt-8 border-t border-slate-800 animate-fade-in">
-              <div className="bg-gradient-to-r from-amber-500/10 via-slate-900 to-amber-500/10 border border-amber-500/30 rounded-2xl p-5 mb-6">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-amber-400 block mb-1">
-                  Standard Translation
+            <div className="mt-6 pt-6 border-t border-[#2E2620]">
+              <div className="bg-[#14110E] border border-[#F3C067]/30 rounded-2xl p-4 sm:p-5 mb-5">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#F3C067] block mb-1">
+                  {isKn ? 'ಪ್ರಮಾಣಿತ ಕನ್ನಡ ಅರ್ಥ' : 'Standard Translation'}
                 </span>
-                <h3 className="text-xl sm:text-2xl font-bold text-white font-kannada">
+                <h3 className="text-lg sm:text-xl font-bold text-[#F3EFEA] font-serif">
                   {activeResult.standardKannada}
                 </h3>
-                <p className="text-xs text-slate-400 italic mt-0.5">
+                <p className="text-xs text-[#C8BFB5] italic mt-0.5">
                   Original: "{activeResult.original}"
                 </p>
               </div>
 
               {/* 5-Region Breakdown */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5">
                 {Object.entries(activeResult.variants).map(([regKey, variant]) => {
-                  const reg = REGIONS[regKey];
+                  const reg = REGIONS[regKey] || {};
                   const copyId = `realtime-${regKey}`;
                   const isCopied = copiedId === copyId;
 
                   return (
                     <div
                       key={regKey}
-                      className="bg-slate-900/90 border border-slate-800 rounded-xl p-5 hover:border-amber-500/50 transition-all flex flex-col justify-between shadow-lg"
+                      className="bg-[#14110E] border border-[#2E2620] rounded-xl p-4 hover:border-[#F3C067]/40 transition-all flex flex-col justify-between shadow-md"
                     >
                       <div>
-                        <div className="flex items-center justify-between mb-3">
+                        <div className="flex items-center justify-between mb-2">
                           <span
-                            className="text-xs font-bold px-2.5 py-0.5 rounded-md border"
+                            className="text-xs font-bold px-2 py-0.5 rounded-md border"
                             style={{
-                              backgroundColor: `${reg.color}15`,
-                              color: reg.color,
-                              borderColor: `${reg.color}40`
+                              backgroundColor: `${reg.color || '#F3C067'}15`,
+                              color: reg.color || '#F3C067',
+                              borderColor: `${reg.color || '#F3C067'}40`
                             }}
                           >
-                            {reg.name.split(' (')[0]}
+                            {isKn ? reg.kannadaName : reg.name?.split(' (')[0]}
                           </span>
 
                           <div className="flex items-center gap-1.5">
                             <button
-                              onClick={() => speakKannada(variant.text, regKey)}
-                              className="p-1.5 rounded-lg bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-amber-400 transition-all"
-                              title="Listen"
+                              type="button"
+                              onClick={() => speakKannada(variant.text)}
+                              className="p-1 rounded-lg bg-[#1E1915] hover:bg-[#F3C067] hover:text-[#14110E] text-[#F3C067] transition-all border border-[#2E2620]"
+                              aria-label={`Listen to ${variant.text}`}
                             >
-                              <Volume2 className="w-4 h-4" />
+                              <Volume2 className="w-3.5 h-3.5" />
                             </button>
                             <button
+                              type="button"
                               onClick={() => handleCopy(variant.text, copyId)}
-                              className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-all"
-                              title="Copy"
+                              className="p-1 rounded-lg bg-[#1E1915] hover:bg-[#2E2620] text-[#C8BFB5] hover:text-[#F3EFEA] transition-all border border-[#2E2620]"
+                              aria-label="Copy"
                             >
-                              {isCopied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                              {isCopied ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                             </button>
                           </div>
                         </div>
 
-                        <p className="text-sm sm:text-base font-bold text-white font-kannada mb-1.5 leading-snug">
+                        <p className="text-sm font-bold text-[#F3EFEA] font-serif mb-1 leading-snug">
                           “{variant.text}”
                         </p>
-                        <p className="text-xs text-slate-400 italic mb-3">
-                          {variant.phonetic}
+                        <p className="text-xs text-[#F3C067]/90 italic mb-2">
+                          /{variant.phonetic}/
                         </p>
                       </div>
 
-                      <div className="pt-3 border-t border-slate-800/80 text-[11px] text-slate-400 space-y-1">
+                      <div className="pt-2 border-t border-[#2E2620] text-[11px] text-[#C8BFB5] space-y-0.5">
                         <div>
-                          <strong className="text-slate-300">Tone: </strong>
+                          <strong className="text-[#F3EFEA] font-medium">{isKn ? 'ಧ್ವನಿ ಲಯ: ' : 'Tone: '}</strong>
                           {variant.tone}
                         </div>
                         <div>
-                          <strong className="text-amber-400/90">Local Etiquette: </strong>
+                          <strong className="text-[#F3C067]">{isKn ? 'ಸ್ಥಳೀಯ ಶಿಷ್ಟಾಚಾರ: ' : 'Local Etiquette: '}</strong>
                           {variant.etiquetteTip}
                         </div>
                       </div>
@@ -256,81 +269,86 @@ export default function DialectMitra() {
         </div>
 
         {/* Live Word & Slang Lexicon Directory */}
-        <div className="bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-8">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6 pb-4 border-b border-slate-800">
+        <div className="bg-[#1E1915] border border-[#2E2620] rounded-3xl p-5 sm:p-7 shadow-xl">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-5 pb-3 border-b border-[#2E2620]">
             <div>
-              <h3 className="text-lg font-bold text-white flex items-center gap-2">
-                <BookOpen className="w-5 h-5 text-amber-400" />
-                <span>Instant Word & Slang Explorer (ಶಬ್ದ ಕೋಶ)</span>
+              <h3 className="text-base sm:text-lg font-bold text-[#F3EFEA] flex items-center gap-2 font-serif">
+                <BookOpen className="w-4 h-4 text-[#F3C067]" />
+                <span>{isKn ? 'ತ್ವರಿತ ಶಬ್ದಕೋಶ' : 'Instant Word & Slang Explorer (ಶಬ್ದ ಕೋಶ)'}</span>
               </h3>
-              <p className="text-xs text-slate-400 mt-0.5">
-                Quick reference for common English words and their regional Kannada counterparts.
+              <p className="text-xs text-[#C8BFB5] mt-0.5">
+                {isKn 
+                  ? 'ದೈನಂದಿನ ಪದಗಳು ಮತ್ತು ಅವುಗಳ ೫ ಪ್ರಾದೇಶಿಕ ಸಮಾನಾರ್ಥಕಗಳು.' 
+                  : 'Quick reference for common English words and their regional Kannada counterparts.'}
               </p>
             </div>
 
             {/* Filter Search */}
-            <div className="relative w-full sm:w-64">
-              <Search className="absolute left-3 top-2.5 w-3.5 h-3.5 text-slate-500" />
+            <div className="relative w-full sm:w-60">
+              <Search className="absolute left-3 top-2.5 w-3.5 h-3.5 text-[#C8BFB5]" />
               <input
                 type="text"
                 value={searchFilter}
                 onChange={(e) => setSearchFilter(e.target.value)}
-                placeholder="Filter words (e.g. friend, food)..."
-                className="w-full bg-slate-900 border border-slate-700 rounded-xl pl-8 pr-3 py-1.5 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                placeholder={isKn ? 'ಪದಗಳನ್ನು ಫಿಲ್ಟರ್ ಮಾಡಿ...' : 'Filter words (e.g. friend, food)...'}
+                className="w-full bg-[#14110E] border border-[#2E2620] rounded-xl pl-8 pr-3 py-1.5 text-xs text-[#F3EFEA] placeholder-[#C8BFB5]/50 focus:outline-none focus:border-[#F3C067]"
+                aria-label="Filter lexicon words"
               />
             </div>
           </div>
 
           {/* Lexicon Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3.5">
             {filteredLexicon.map((item, idx) => (
               <div
                 key={idx}
-                className="p-4 rounded-2xl bg-slate-900/60 border border-slate-800 hover:border-amber-500/40 transition-all flex flex-col justify-between"
+                className="p-3.5 rounded-xl bg-[#14110E] border border-[#2E2620] hover:border-[#F3C067]/40 transition-all flex flex-col justify-between"
               >
                 <div>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-xs font-bold text-amber-400 uppercase tracking-wider">
+                    <span className="text-[11px] font-bold text-[#F3C067] uppercase tracking-wider">
                       {item.en}
                     </span>
                     <button
+                      type="button"
                       onClick={() => speakKannada(item.kn)}
-                      className="text-slate-400 hover:text-amber-400"
-                      title="Pronounce"
+                      className="text-[#C8BFB5] hover:text-[#F3C067]"
+                      aria-label={`Pronounce ${item.kn}`}
                     >
                       <Volume2 className="w-3.5 h-3.5" />
                     </button>
                   </div>
-                  <p className="text-base font-bold text-white font-kannada">{item.kn}</p>
-                  <p className="text-[11px] text-slate-400 italic mb-3">{item.phonetic}</p>
+                  <p className="text-base font-bold text-[#F3EFEA] font-serif">{item.kn}</p>
+                  <p className="text-[11px] text-[#F3C067]/80 italic mb-2.5">/{item.phonetic}/</p>
 
                   {/* Regional Snapshot */}
-                  <div className="space-y-1 text-[11px] bg-slate-950/70 p-2.5 rounded-lg border border-slate-800/80">
-                    <div className="text-amber-300">
+                  <div className="space-y-0.5 text-[11px] bg-[#1E1915] p-2 rounded-lg border border-[#2E2620]">
+                    <div className="text-[#F3C067]">
                       <strong>Mys: </strong>{item.dialects.mysuru.word.split(' (')[0]}
                     </div>
-                    <div className="text-orange-300">
+                    <div className="text-[#D96B43]">
                       <strong>North: </strong>{item.dialects.north_karnataka.word.split(' (')[0]}
                     </div>
-                    <div className="text-cyan-300">
+                    <div className="text-emerald-400">
                       <strong>Karavali: </strong>{item.dialects.karavali.word.split(' (')[0]}
                     </div>
-                    <div className="text-pink-300">
+                    <div className="text-[#E5A93C]">
                       <strong>Blr: </strong>{item.dialects.bengaluru.word.split(' (')[0]}
                     </div>
                   </div>
                 </div>
 
                 <button
+                  type="button"
                   onClick={() => {
                     setInputText(item.en);
                     handleTranslate(item.en);
                     const el = document.getElementById('mitra');
                     if (el) el.scrollIntoView({ behavior: 'smooth' });
                   }}
-                  className="mt-3 text-[11px] font-semibold text-amber-400 hover:text-amber-300 flex items-center justify-center gap-1 py-1 rounded bg-slate-900 hover:bg-slate-800 border border-slate-800 transition-all"
+                  className="mt-2.5 text-[11px] font-semibold text-[#F3C067] hover:text-[#F3EFEA] flex items-center justify-center gap-1 py-1 rounded bg-[#1E1915] hover:bg-[#28211B] border border-[#2E2620] transition-all"
                 >
-                  <span>Explore 5 Dialects</span>
+                  <span>{isKn ? '೫ ಪ್ರಾಂತ್ಯಗಳ ರೂಪ ನೋಡಿ' : 'Explore 5 Dialects'}</span>
                   <ArrowRight className="w-3 h-3" />
                 </button>
               </div>

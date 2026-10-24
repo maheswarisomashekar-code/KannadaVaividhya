@@ -3,31 +3,68 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Noto Sans Kannada', sans-serif;
+    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
+    background-color: #14110e;
+    color: #f3efea;
   }
 }
 
-/* Custom subtle glassmorphism & Kannada typography enhancement */
+/* Kannada script typography with zero subscript/matra clipping */
 .font-kannada {
-  font-family: 'Noto Sans Kannada', 'Segoe UI', system-ui, sans-serif;
+  font-family: 'Noto Sans Kannada', 'Nirmala UI', 'Tunga', 'Kedage', 'Mallige', system-ui, sans-serif;
+  line-height: 1.75 !important;
+  letter-spacing: 0.015em;
 }
 
-/* Custom scrollbar */
+h1.font-kannada, h2.font-kannada, h3.font-kannada {
+  line-height: 1.4 !important;
+}
+
+/* Hoysala stone & Mysore Silk cultural design tokens */
+.bg-hoysala-950 { background-color: #120f0d; }
+.bg-hoysala-900 { background-color: #1a1613; }
+.bg-hoysala-800 { background-color: #241f1b; }
+.bg-hoysala-card { background-color: #1e1915; }
+.border-hoysala { border-color: #382f28; }
+.border-hoysala-light { border-color: #4a3e35; }
+
+.text-zari { color: #f3c067; }
+.text-zari-muted { color: #e5a93c; }
+.text-terracotta { color: #e07a5f; }
+.text-kumkuma { color: #b83a4b; }
+.text-stone-warm { color: #d7d2cc; }
+.text-stone-muted { color: #a8a096; }
+
+/* Silk Gold Gradient */
+.gold-gradient-text {
+  background: linear-gradient(135deg, #fae29c 0%, #f3c067 50%, #d89624 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-gradient-bg {
+  background: linear-gradient(135deg, #f5c067 0%, #e5a93c 60%, #b87d1b 100%);
+}
+
+.kumkuma-gradient-bg {
+  background: linear-gradient(135deg, #9b2839 0%, #801e2c 100%);
+}
+
+/* Custom scrollbar with warm Mysore zari theme */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 7px;
+  height: 7px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #0f172a;
+  background: #14110e;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #334155;
+  background: #382f28;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #eab308;
+  background: #e5a93c;
 }
-

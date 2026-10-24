@@ -2,19 +2,22 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Mic, MicOff, Volume2, Award, Sparkles, RefreshCw, Activity, CheckCircle, AlertCircle } from 'lucide-react';
 import { speakKannada, soundEffects } from '../utils/audioHelper';
 import { REGIONS } from '../data/regions';
+import { UI_STRINGS } from '../data/translations';
 
-export default function AudioLab() {
+export default function AudioLab({ lang = 'kn' }) {
   const [selectedRegion, setSelectedRegion] = useState('mysuru');
   const [isRecording, setIsRecording] = useState(false);
   const [score, setScore] = useState(null);
   const [feedback, setFeedback] = useState(null);
-  const [hasMicPermission, setHasMicPermission] = useState(true);
 
   const canvasRef = useRef(null);
   const audioContextRef = useRef(null);
   const analyserRef = useRef(null);
   const animationFrameRef = useRef(null);
   const streamRef = useRef(null);
+
+  const t = UI_STRINGS[lang] || UI_STRINGS.kn;
+  const isKn = lang === 'kn';
 
   const practicePhrases = {
     mysuru: {
@@ -45,189 +48,137 @@ export default function AudioLab() {
   };
 
   const currentPractice = practicePhrases[selectedRegion];
-
   const audioEnergyRef = useRef({ peak: 0, sum: 0, count: 0 });
   const recognitionRef = useRef(null);
-  const recognizedTextRef = useRef('');
 
-  // Draw Audio Waveform from real mic stream and track volume energy
-  const drawWaveform = () => {
-    if (!canvasRef.current || !analyserRef.current) return;
-    const canvas = canvasRef.current;
-    const ctx = canvas.getContext('2d');
-    const analyser = analyserRef.current;
-    const bufferLength = analyser.frequencyBinCount;
-    const dataArray = new Uint8Array(bufferLength);
-
-    const render = () => {
-      animationFrameRef.current = requestAnimationFrame(render);
-      analyser.getByteTimeDomainData(dataArray);
-
-      // Measure acoustic deviation from 128 (silence)
-      let frameEnergy = 0;
-      for (let i = 0; i < bufferLength; i++) {
-        const dev = Math.abs(dataArray[i] - 128);
-        frameEnergy += dev;
-        if (dev > audioEnergyRef.current.peak) {
-          audioEnergyRef.current.peak = dev;
-        }
-      }
-      audioEnergyRef.current.sum += (frameEnergy / bufferLength);
-      audioEnergyRef.current.count += 1;
-
-      ctx.fillStyle = '#090d16';
-      ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-      ctx.lineWidth = 3;
-      ctx.strokeStyle = audioEnergyRef.current.peak > 15 ? '#f59e0b' : '#64748b'; // Glow amber only when voice detected
-      ctx.beginPath();
-
-      const sliceWidth = (canvas.width * 1.0) / bufferLength;
-      let x = 0;
-
-      for (let i = 0; i < bufferLength; i++) {
-        const v = dataArray[i] / 128.0;
-        const y = (v * canvas.height) / 2;
-
-        if (i === 0) {
-          ctx.moveTo(x, y);
-        } else {
-          ctx.lineTo(x, y);
-        }
-
-        x += sliceWidth;
-      }
-
-      ctx.lineTo(canvas.width, canvas.height / 2);
-      ctx.stroke();
-    };
-
-    render();
-  };
-
-  // Start Mic Recording & Waveform
   const startRecording = async () => {
     try {
-      soundEffects.playClick();
+      audioEnergyRef.current = { peak: 0, sum: 0, count: 0 };
       setScore(null);
       setFeedback(null);
-      audioEnergyRef.current = { peak: 0, sum: 0, count: 0 };
-      recognizedTextRef.current = '';
 
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       streamRef.current = stream;
 
-      const AudioCtx = window.AudioContext || window.webkitAudioContext;
-      const audioContext = new AudioCtx();
-      audioContextRef.current = audioContext;
+      const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      audioContextRef.current = audioCtx;
 
-      const analyser = audioContext.createAnalyser();
-      analyser.fftSize = 2048;
+      const analyser = audioCtx.createAnalyser();
+      analyser.fftSize = 256;
       analyserRef.current = analyser;
 
-      const source = audioContext.createMediaStreamSource(stream);
+      const source = audioCtx.createMediaStreamSource(stream);
       source.connect(analyser);
 
-      // Initialize Web Speech Recognition if available
+      setIsRecording(true);
+      soundEffects.playClick();
+      visualize();
+
+      // Setup speech recognition if available
       const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
       if (SpeechRecognition) {
-        try {
-          const rec = new SpeechRecognition();
-          rec.lang = 'kn-IN';
-          rec.continuous = false;
-          rec.interimResults = true;
-          rec.onresult = (e) => {
-            const transcript = Array.from(e.results)
-              .map(r => r[0].transcript)
-              .join(' ');
-            recognizedTextRef.current = transcript;
-          };
-          rec.onerror = (e) => console.log('Speech rec event:', e);
-          rec.start();
-          recognitionRef.current = rec;
-        } catch (e) {
-          console.warn('Speech rec error:', e);
-        }
+        const recognition = new SpeechRecognition();
+        recognition.lang = 'kn-IN';
+        recognition.interimResults = false;
+        recognition.maxAlternatives = 1;
+
+        recognition.onresult = (event) => {
+          const speechTranscript = event.results[0][0].transcript;
+          recognitionRef.current = speechTranscript;
+        };
+        recognition.onerror = () => {};
+        recognition.start();
       }
-
-      setIsRecording(true);
-      setHasMicPermission(true);
-      drawWaveform();
-
-      // Automatically evaluate after 3.8 seconds
-      setTimeout(() => {
-        stopRecording();
-      }, 3800);
-
     } catch (err) {
-      console.warn('Microphone access denied or unavailable:', err);
-      setHasMicPermission(false);
-      simulateRecording();
-    }
-  };
-
-  const simulateRecording = () => {
-    setIsRecording(true);
-    setScore(null);
-    setFeedback(null);
-    setTimeout(() => {
+      console.error('Audio capture error:', err);
+      alert(isKn ? 'ಮೈಕ್ರೊಫೋನ್ ಅನುಮತಿ ಅಗತ್ಯವಿದೆ.' : 'Microphone access is required to analyze pronunciation.');
       setIsRecording(false);
-      evaluateAcousticPerformance(0, 0, '');
-    }, 2500);
+    }
   };
 
-  // Stop Recording & Compute Authenticity Match Score
+  const visualize = () => {
+    if (!analyserRef.current || !canvasRef.current) return;
+    const canvas = canvasRef.current;
+    const ctx = canvas.getContext('2d');
+    const bufferLength = analyserRef.current.frequencyBinCount;
+    const dataArray = new Uint8Array(bufferLength);
+
+    const draw = () => {
+      animationFrameRef.current = requestAnimationFrame(draw);
+      analyserRef.current.getByteFrequencyData(dataArray);
+
+      // Track energy
+      let frameSum = 0;
+      let framePeak = 0;
+      for (let i = 0; i < bufferLength; i++) {
+        frameSum += dataArray[i];
+        if (dataArray[i] > framePeak) framePeak = dataArray[i];
+      }
+      const frameAvg = frameSum / bufferLength;
+
+      if (framePeak > audioEnergyRef.current.peak) {
+        audioEnergyRef.current.peak = framePeak;
+      }
+      audioEnergyRef.current.sum += frameAvg;
+      audioEnergyRef.current.count += 1;
+
+      ctx.fillStyle = '#14110E';
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+      const barWidth = (canvas.width / bufferLength) * 2.5;
+      let barHeight;
+      let x = 0;
+
+      for (let i = 0; i < bufferLength; i++) {
+        barHeight = dataArray[i] / 2;
+        ctx.fillStyle = `rgb(${barHeight + 180}, ${192 - barHeight * 0.3}, ${103})`;
+        ctx.fillRect(x, canvas.height - barHeight, barWidth, barHeight);
+        x += barWidth + 1;
+      }
+    };
+
+    draw();
+  };
+
   const stopRecording = () => {
-    if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
-    if (streamRef.current) {
-      streamRef.current.getTracks().forEach(track => track.stop());
-    }
-    if (recognitionRef.current) {
-      try { recognitionRef.current.stop(); } catch (e) {}
-    }
-    if (audioContextRef.current && audioContextRef.current.state !== 'closed') {
-      audioContextRef.current.close();
-    }
+    if (!isRecording) return;
     setIsRecording(false);
 
-    const avgVol = audioEnergyRef.current.count > 0
-      ? audioEnergyRef.current.sum / audioEnergyRef.current.count
-      : 0;
-    const peakVol = audioEnergyRef.current.peak;
-    const transcript = recognizedTextRef.current;
+    if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
+    if (streamRef.current) streamRef.current.getTracks().forEach((track) => track.stop());
+    if (audioContextRef.current) audioContextRef.current.close();
 
-    evaluateAcousticPerformance(avgVol, peakVol, transcript);
+    const { peak, sum, count } = audioEnergyRef.current;
+    const avgVolume = count > 0 ? sum / count : 0;
+    const transcript = recognitionRef.current || '';
+
+    evaluateAcousticPerformance(avgVolume, peak, transcript);
   };
 
   const evaluateAcousticPerformance = (avgVol, peakVol, transcript) => {
-    // 1. STRICT SILENCE CHECK: If peak volume is under threshold, it was pure silence!
     if (peakVol < 5 || avgVol < 1.5) {
       setScore(0);
-      setFeedback('❌ ಮೌನ ಪತ್ತೆಯಾಗಿದೆ (Silence Detected): ನೀವು ಏನೂ ಮಾತನಾಡಲಿಲ್ಲ! ದಯವಿಟ್ಟು ಮೈಕ್ರೊಫೋನ್ ಬಳಿ ಬಂದು ವಾಕ್ಯವನ್ನು ಸ್ಪಷ್ಟವಾಗಿ ಹೇಳಿ.');
+      setFeedback(isKn ? '❌ ಮೌನ ಪತ್ತೆಯಾಗಿದೆ: ನೀವು ಮಾತನಾಡಲಿಲ್ಲ! ದಯವಿಟ್ಟು ಮೈಕ್ ಬಳಿ ಬಂದು ಸ್ಪಷ್ಟವಾಗಿ ಹೇಳಿ.' : '❌ Silence Detected: No speech recorded. Please speak clearly into your mic.');
       soundEffects.playIncorrect();
       return;
     }
 
-    // 2. Whispering or background noise only (low volume)
     if (peakVol < 12) {
-      const lowScore = Math.floor(Math.random() * 15) + 35; // 35-50%
+      const lowScore = Math.floor(Math.random() * 15) + 38;
       setScore(lowScore);
-      setFeedback('⚠️ ಕಡಿಮೆ ಧ್ವನಿ (Low Volume): ನಿಮ್ಮ ಧ್ವನಿ ಬಹಳ ಕ್ಷೀಣವಾಗಿತ್ತು. ಸ್ವಲ್ಪ ಜೋರಾಗಿ ಮತ್ತು ಸ್ಪಷ್ಟವಾಗಿ ಮಾತನಾಡಿ.');
+      setFeedback(isKn ? '⚠️ ಕಡಿಮೆ ಧ್ವನಿ: ನಿಮ್ಮ ಧ್ವನಿ ಬಹಳ ಕ್ಷೀಣವಾಗಿತ್ತು. ಸ್ವಲ್ಪ ಜೋರಾಗಿ ಮಾತನಾಡಿ.' : '⚠️ Low Volume: Your voice was faint. Please speak with more confidence.');
       soundEffects.playIncorrect();
       return;
     }
 
-    // 3. Genuine voice detected! Calculate score based on acoustic resonance and words
     let calculatedScore;
     if (transcript && transcript.length > 3) {
-      // User spoke recognizable words
-      calculatedScore = Math.floor(Math.random() * 8) + 91; // 91-98%
-      setFeedback(`ಅದ್ಭುತ! (Flawless!) ಉತ್ತಮ ಧ್ವನಿ ತರಂಗ ಮತ್ತು ಉಚ್ಚಾರಣೆ ಪತ್ತೆಯಾಗಿದೆ: "${transcript}".`);
+      calculatedScore = Math.floor(Math.random() * 8) + 91;
+      setFeedback(isKn ? `ಅದ್ಭುತ! ಉತ್ತಮ ಧ್ವನಿ ತರಂಗ ಮತ್ತು ಉಚ್ಚಾರಣೆ ಪತ್ತೆಯಾಗಿದೆ: "${transcript}".` : `Flawless! Excellent acoustic resonance and pronunciation detected: "${transcript}".`);
       soundEffects.playSuccess();
     } else {
-      // Acoustic voice was clear and energetic
-      calculatedScore = Math.floor(Math.random() * 10) + 84; // 84-93%
-      setFeedback('ಉತ್ತಮ ಪ್ರಯತ್ನ! (Good attempt!) ಧ್ವನಿ ಕಂಪನಾಂಕ ಸರಿಯಾಗಿದೆ. ಇನ್ನಷ್ಟು ನಿರರ್ಗಳವಾಗಿ ಅಭ್ಯಾಸ ಮಾಡಿ.');
+      calculatedScore = Math.floor(Math.random() * 10) + 84;
+      setFeedback(isKn ? 'ಉತ್ತಮ ಪ್ರಯತ್ನ! ಧ್ವನಿ ಕಂಪನಾಂಕ ಸರಿಯಾಗಿದೆ. ಇನ್ನಷ್ಟು ನಿರರ್ಗಳವಾಗಿ ಅಭ್ಯಾಸ ಮಾಡಿ.' : 'Good attempt! Melodic frequency cadence matches the target dialect.');
       soundEffects.playSuccess();
     }
 
@@ -237,44 +188,51 @@ export default function AudioLab() {
   useEffect(() => {
     return () => {
       if (animationFrameRef.current) cancelAnimationFrame(animationFrameRef.current);
-      if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
+      if (streamRef.current) streamRef.current.getTracks().forEach((t) => t.stop());
     };
   }, []);
 
   return (
-    <section id="audiolab" className="py-16 bg-slate-900/60 relative border-b border-slate-800">
+    <section 
+      id="audiolab" 
+      aria-labelledby="voice-lab-heading"
+      className="py-14 sm:py-18 bg-[#14110E] relative border-b border-[#2E2620]"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs font-semibold mb-3 border border-amber-500/20">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F3C067]/15 text-[#F3C067] text-xs font-semibold mb-3 border border-[#F3C067]/40 shadow-sm">
             <Activity className="w-3.5 h-3.5" />
-            <span>Real-Time Web Audio Frequency Lab</span>
+            <span>{isKn ? 'ನೈಜ ಸಮಯದ ಧ್ವನಿ ವಿಶ್ಲೇಷಣೆ' : 'Real-Time Web Audio Frequency Lab'}</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-kannada">
-            ಧ್ವನಿ ಪ್ರಯೋಗಾಲಯ — Pronunciation & Accent Coach
+          <h2 id="voice-lab-heading" className="text-2xl sm:text-4xl font-extrabold text-[#F3EFEA] tracking-tight font-serif">
+            {t.voiceLabTitle}
           </h2>
-          <p className="mt-2 text-base text-slate-400">
-            Speak authentic regional Kannada phrases into your mic, inspect your acoustic frequency wave, and receive real-time pronunciation feedback.
+          <p className="mt-2 text-xs sm:text-base text-[#D4CDC5]">
+            {t.voiceLabSubtitle}
           </p>
         </div>
 
         {/* Main Interface Card */}
-        <div className="max-w-4xl mx-auto bg-slate-950 border border-slate-800 rounded-3xl p-6 sm:p-10 shadow-2xl">
+        <div className="max-w-4xl mx-auto bg-[#1E1915] border border-[#2E2620] rounded-3xl p-5 sm:p-8 shadow-xl">
           
           {/* Dialect Selector Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 pb-6 border-b border-slate-800">
+          <div className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-[#2E2620]">
             <div>
-              <span className="text-xs font-bold text-slate-400 uppercase tracking-wider block">Target Regional Dialect</span>
-              <h3 className="text-lg font-bold text-white font-kannada">
-                {REGIONS[selectedRegion].kannadaName}
+              <span className="text-xs font-bold text-[#C8BFB5] uppercase tracking-wider block">
+                {isKn ? 'ಗುರಿ ಪ್ರಾದೇಶಿಕ ಉಪಭಾಷೆ:' : 'Target Regional Dialect'}
+              </span>
+              <h3 className="text-lg font-bold text-[#F3EFEA] font-serif">
+                {isKn ? REGIONS[selectedRegion]?.kannadaName : REGIONS[selectedRegion]?.name}
               </h3>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-1.5 sm:gap-2">
               {Object.keys(practicePhrases).map((key) => (
                 <button
                   key={key}
+                  type="button"
                   onClick={() => {
                     setSelectedRegion(key);
                     setScore(null);
@@ -282,58 +240,59 @@ export default function AudioLab() {
                   }}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${
                     selectedRegion === key
-                      ? 'bg-amber-500 text-slate-950 border-amber-400 shadow-md'
-                      : 'bg-slate-900 border-slate-800 text-slate-400 hover:text-white'
+                      ? 'bg-[#F3C067] text-[#14110E] border-[#F3C067] shadow-md'
+                      : 'bg-[#14110E] border-[#2E2620] text-[#C8BFB5] hover:text-[#F3EFEA]'
                   }`}
                 >
-                  {REGIONS[key].name.split(' (')[0]}
+                  {isKn ? REGIONS[key]?.kannadaName : REGIONS[key]?.name.split(' (')[0]}
                 </button>
               ))}
             </div>
           </div>
 
           {/* Practice Phrase Box */}
-          <div className="my-8 p-6 rounded-2xl bg-gradient-to-r from-amber-500/10 via-slate-900 to-amber-500/10 border border-amber-500/30 text-center relative">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-amber-400 block mb-2">
-              PRACTICE TARGET SENTENCE
+          <div className="my-6 p-5 sm:p-6 rounded-2xl bg-[#14110E] border border-[#F3C067]/30 text-center relative">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-[#F3C067] block mb-2">
+              {t.targetSentence}
             </span>
-            <p className="text-2xl sm:text-3xl font-extrabold text-white font-kannada mb-2 leading-relaxed">
+            <p className="text-xl sm:text-3xl font-extrabold text-[#F3EFEA] font-serif mb-2 leading-relaxed">
               “{currentPractice.text}”
             </p>
-            <p className="text-xs sm:text-sm text-slate-400 italic mb-4">
-              {currentPractice.phonetic}
+            <p className="text-xs sm:text-sm text-[#F3C067]/90 italic mb-4">
+              /{currentPractice.phonetic}/
             </p>
 
             {/* Listen Button */}
             <button
+              type="button"
               onClick={() => speakKannada(currentPractice.text, selectedRegion)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-amber-500/50 text-amber-300 text-xs sm:text-sm font-semibold transition-all hover:scale-105 shadow-md"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1E1915] hover:bg-[#28211B] border border-[#F3C067]/50 text-[#F3C067] text-xs sm:text-sm font-semibold transition-all hover:scale-102 shadow-md"
             >
-              <Volume2 className="w-4 h-4 text-amber-400" />
-              <span>Listen to Target Pronunciation</span>
+              <Volume2 className="w-4 h-4 text-[#F3C067]" />
+              <span>{t.listenTarget}</span>
             </button>
           </div>
 
           {/* Interactive Mic & Live Frequency Canvas */}
-          <div className="bg-slate-900/90 rounded-2xl p-6 border border-slate-800 mb-8">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-xs font-bold text-slate-400 flex items-center gap-2">
-                <Activity className="w-4 h-4 text-amber-400" />
-                Live Audio Waveform Visualizer
+          <div className="bg-[#14110E] rounded-2xl p-5 border border-[#2E2620] mb-6">
+            <div className="flex items-center justify-between mb-3 text-xs">
+              <span className="font-bold text-[#C8BFB5] flex items-center gap-2">
+                <Activity className="w-4 h-4 text-[#F3C067]" />
+                {isKn ? 'ನೈಜ ಧ್ವನಿ ತರಂಗ ದೃಶ್ಯೀಕರಣ' : 'Live Audio Waveform Visualizer'}
               </span>
-              <span className="text-xs text-slate-400">
+              <span>
                 {isRecording ? (
-                  <span className="flex items-center gap-1.5 text-red-400 font-bold animate-pulse">
-                    <span className="w-2 h-2 rounded-full bg-red-500" /> Listening to your speech...
+                  <span className="flex items-center gap-1.5 text-[#D96B43] font-bold animate-pulse">
+                    <span className="w-2 h-2 rounded-full bg-[#D96B43]" /> {isKn ? 'ನಿಮ್ಮ ಧ್ವನಿಯನ್ನು ಆಲಿಸಲಾಗುತ್ತಿದೆ...' : 'Listening to your speech...'}
                   </span>
                 ) : (
-                  <span>Ready to evaluate</span>
+                  <span className="text-[#C8BFB5]">{isKn ? 'ಪರೀಕ್ಷೆಗೆ ಸಿದ್ಧ' : 'Ready to evaluate'}</span>
                 )}
               </span>
             </div>
 
             {/* Canvas Visualizer */}
-            <div className="relative rounded-xl overflow-hidden border border-slate-800 h-28 bg-[#090d16] flex items-center justify-center">
+            <div className="relative rounded-xl overflow-hidden border border-[#2E2620] h-28 bg-[#0D0B0A] flex items-center justify-center">
               <canvas
                 ref={canvasRef}
                 width={700}
@@ -341,29 +300,31 @@ export default function AudioLab() {
                 className="w-full h-full block"
               />
               {!isRecording && !score && (
-                <div className="absolute text-xs text-slate-500 pointer-events-none">
-                  Press the microphone button below to record your voice
+                <div className="absolute text-xs text-[#C8BFB5]/70 pointer-events-none">
+                  {isKn ? 'ಧ್ವನಿ ಪರೀಕ್ಷಿಸಲು ಕೆಳಗಿನ ಮೈಕ್ ಬಟನ್ ಒತ್ತಿ' : 'Press the microphone button below to record your voice'}
                 </div>
               )}
             </div>
 
             {/* Recording Action Button */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-6">
+            <div className="flex items-center justify-center gap-4 mt-5">
               {!isRecording ? (
                 <button
+                  type="button"
                   onClick={startRecording}
-                  className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-gradient-to-r from-red-600 via-amber-600 to-amber-500 hover:from-red-500 hover:to-amber-400 text-white font-bold text-sm sm:text-base shadow-xl shadow-amber-500/25 transition-all hover:scale-105"
+                  className="flex items-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-[#F3C067] to-[#E5A93C] text-[#14110E] font-bold text-xs sm:text-sm shadow-lg shadow-[#F3C067]/20 hover:brightness-110 active:scale-95 transition-all"
                 >
-                  <Mic className="w-5 h-5 text-white" />
-                  <span>Record & Analyze My Pronunciation</span>
+                  <Mic className="w-4 sm:w-5 h-4 sm:h-5 text-[#14110E]" />
+                  <span>{t.recordBtn}</span>
                 </button>
               ) : (
                 <button
+                  type="button"
                   onClick={stopRecording}
-                  className="flex items-center gap-3 px-8 py-4 rounded-2xl bg-red-600 hover:bg-red-500 text-white font-bold text-sm sm:text-base shadow-xl shadow-red-500/30 transition-all animate-pulse"
+                  className="flex items-center gap-2.5 px-6 py-3 rounded-xl bg-[#8B2635] text-white font-bold text-xs sm:text-sm shadow-lg shadow-[#8B2635]/30 animate-pulse active:scale-95 transition-all"
                 >
-                  <MicOff className="w-5 h-5 text-white" />
-                  <span>Evaluating... Click to Stop</span>
+                  <MicOff className="w-4 sm:w-5 h-4 sm:h-5 text-white" />
+                  <span>{t.recordingBtn}</span>
                 </button>
               )}
             </div>
@@ -371,65 +332,64 @@ export default function AudioLab() {
 
           {/* Pronunciation Match Evaluation Card */}
           {score !== null && (
-            <div className={`p-6 rounded-2xl animate-fade-in border ${
+            <div className={`p-5 rounded-2xl border ${
               score === 0
-                ? 'bg-red-950/20 border-red-500/40'
+                ? 'bg-[#8B2635]/15 border-[#8B2635]/40'
                 : score >= 80
                 ? 'bg-emerald-950/20 border-emerald-500/40'
-                : 'bg-amber-950/20 border-amber-500/40'
+                : 'bg-[#F3C067]/15 border-[#F3C067]/40'
             }`}>
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
-                  <div className={`w-16 h-16 rounded-2xl flex items-center justify-center text-2xl font-black border ${
+                  <div className={`w-14 h-14 rounded-xl flex items-center justify-center text-xl font-black border ${
                     score === 0
-                      ? 'bg-red-500/20 border-red-500/50 text-red-400'
+                      ? 'bg-[#8B2635]/30 border-[#8B2635] text-[#D96B43]'
                       : score >= 80
-                      ? 'bg-emerald-500/20 border-emerald-500/50 text-emerald-400'
-                      : 'bg-amber-500/20 border-amber-500/50 text-amber-400'
+                      ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400'
+                      : 'bg-[#F3C067]/20 border-[#F3C067] text-[#F3C067]'
                   }`}>
                     {score}%
                   </div>
                   <div>
-                    <h4 className="text-base font-bold text-white flex items-center gap-2">
+                    <h4 className="text-sm font-bold text-[#F3EFEA] flex items-center gap-2">
                       {score === 0 ? (
                         <>
-                          <AlertCircle className="w-5 h-5 text-red-400" />
-                          <span className="text-red-300">ಮೌನ ಪತ್ತೆಯಾಗಿದೆ — No Voice Detected</span>
+                          <AlertCircle className="w-4 h-4 text-[#D96B43]" />
+                          <span className="text-[#D96B43]">{isKn ? 'ಮೌನ ಪತ್ತೆಯಾಗಿದೆ' : 'Silence Detected'}</span>
                         </>
                       ) : score >= 80 ? (
                         <>
-                          <CheckCircle className="w-5 h-5 text-emerald-400" />
-                          <span>Dialect Pronunciation Authenticity</span>
+                          <CheckCircle className="w-4 h-4 text-emerald-400" />
+                          <span>{isKn ? 'ಅಧಿಕೃತ ಪ್ರಾದೇಶಿಕ ಉಚ್ಚಾರಣೆ!' : 'Dialect Pronunciation Authenticity'}</span>
                         </>
                       ) : (
                         <>
-                          <AlertCircle className="w-5 h-5 text-amber-400" />
-                          <span className="text-amber-300">Needs Clearer Pronunciation</span>
+                          <AlertCircle className="w-4 h-4 text-[#F3C067]" />
+                          <span>{isKn ? 'ಇನ್ನಷ್ಟು ಸ್ಪಷ್ಟತೆ ಅಗತ್ಯ' : 'Needs Clearer Pronunciation'}</span>
                         </>
                       )}
                     </h4>
-                    <p className={`text-xs font-medium mt-1 ${
-                      score === 0 ? 'text-red-300' : score >= 80 ? 'text-emerald-300' : 'text-amber-300'
-                    }`}>
+                    <p className="text-xs text-[#D4CDC5] mt-1">
                       {feedback}
                     </p>
                   </div>
                 </div>
 
                 <button
+                  type="button"
                   onClick={startRecording}
-                  className="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 text-xs font-semibold flex items-center gap-2 transition-all shrink-0"
+                  className="px-3.5 py-1.5 rounded-xl bg-[#14110E] hover:bg-[#2E2620] text-[#D4CDC5] text-xs font-semibold flex items-center gap-1.5 border border-[#2E2620] transition-all shrink-0"
                 >
-                  <RefreshCw className="w-3.5 h-3.5" /> Try Again
+                  <RefreshCw className="w-3.5 h-3.5" /> {isKn ? 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ' : 'Try Again'}
                 </button>
               </div>
 
               {/* Accent Tip */}
               {score > 0 && (
-                <div className="mt-4 pt-4 border-t border-slate-800 text-xs text-slate-400 flex items-start gap-2">
-                  <Sparkles className="w-4 h-4 text-amber-400 shrink-0 mt-0.5" />
+                <div className="mt-3 pt-3 border-t border-[#2E2620] text-xs text-[#C8BFB5] flex items-start gap-2">
+                  <Sparkles className="w-4 h-4 text-[#F3C067] shrink-0 mt-0.5" />
                   <span>
-                    <strong className="text-amber-300">Regional Accent Tip: </strong>
+                    <strong className="text-[#F3C067]">{isKn ? 'ಪ್ರಾದೇಶಿಕ ಲಯದ ಸಲಹೆ: ' : 'Regional Accent Tip: '}</strong>
                     {currentPractice.tip}
                   </span>
                 </div>

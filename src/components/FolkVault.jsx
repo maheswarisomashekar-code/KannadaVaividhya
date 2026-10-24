@@ -2,21 +2,34 @@ import React, { useState, useEffect } from 'react';
 import { INITIAL_FOLK_ENTRIES } from '../data/folkVault';
 import { REGIONS } from '../data/regions';
 import { speakKannada, soundEffects } from '../utils/audioHelper';
-import { BookOpen, Search, ThumbsUp, Plus, X, Volume2, Sparkles, Filter, CheckCircle2 } from 'lucide-react';
+import { BookOpen, Search, ThumbsUp, Plus, X, Volume2, Filter, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { UI_STRINGS } from '../data/translations';
 
-export default function FolkVault() {
+export default function FolkVault({ lang = 'kn' }) {
   const [entries, setEntries] = useState(() => {
-    const saved = localStorage.getItem('kannada_folk_entries');
-    return saved ? JSON.parse(saved) : INITIAL_FOLK_ENTRIES;
+    try {
+      const saved = localStorage.getItem('kannada_folk_entries');
+      return saved ? JSON.parse(saved) : INITIAL_FOLK_ENTRIES;
+    } catch {
+      return INITIAL_FOLK_ENTRIES;
+    }
   });
 
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRegionFilter, setSelectedRegionFilter] = useState('all');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [upvotedIds, setUpvotedIds] = useState(() => {
-    const saved = localStorage.getItem('kannada_upvoted_ids');
-    return saved ? JSON.parse(saved) : [];
+    try {
+      const saved = localStorage.getItem('kannada_upvoted_ids');
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
   });
+
+  // Validation errors state
+  const [formErrors, setFormErrors] = useState({});
+  const [formSuccessMessage, setFormSuccessMessage] = useState('');
 
   // New phrase form state
   const [formData, setFormData] = useState({
@@ -28,13 +41,24 @@ export default function FolkVault() {
     contributor: ''
   });
 
+  const t = UI_STRINGS[lang] || UI_STRINGS.kn;
+  const isKn = lang === 'kn';
+
   // Save to localStorage
   useEffect(() => {
-    localStorage.setItem('kannada_folk_entries', JSON.stringify(entries));
+    try {
+      localStorage.setItem('kannada_folk_entries', JSON.stringify(entries));
+    } catch (e) {
+      console.warn('LocalStorage error:', e);
+    }
   }, [entries]);
 
   useEffect(() => {
-    localStorage.setItem('kannada_upvoted_ids', JSON.stringify(upvotedIds));
+    try {
+      localStorage.setItem('kannada_upvoted_ids', JSON.stringify(upvotedIds));
+    } catch (e) {
+      console.warn('LocalStorage error:', e);
+    }
   }, [upvotedIds]);
 
   const handleUpvote = (id) => {
@@ -46,101 +70,135 @@ export default function FolkVault() {
     setUpvotedIds((prev) => [...prev, id]);
   };
 
+  const validateForm = () => {
+    const errors = {};
+    if (!formData.kannada.trim() || formData.kannada.trim().length < 2) {
+      errors.kannada = isKn ? 'ದಯವಿಟ್ಟು ಕನಿಷ್ಠ ೨ ಅಕ್ಷರಗಳ ಕನ್ನಡ ಪದ ಅಥವಾ ನುಡಿಯನ್ನು ನಮೂದಿಸಿ.' : 'Please enter at least 2 characters in Kannada script or words.';
+    }
+    if (!formData.englishMeaning.trim() || formData.englishMeaning.trim().length < 5) {
+      errors.englishMeaning = isKn ? 'ದಯವಿಟ್ಟು ಕನಿಷ್ಠ ೫ ಅಕ್ಷರಗಳ ಅರ್ಥ ಅಥವಾ ಸಂದರ್ಭವನ್ನು ನೀಡಿ.' : 'Please enter at least 5 characters explaining meaning or context.';
+    }
+    if (!formData.regionId) {
+      errors.regionId = isKn ? 'ದಯವಿಟ್ಟು ಒಂದು ಪ್ರಾಂತ್ಯವನ್ನು ಆಯ್ಕೆಮಾಡಿ.' : 'Please select a valid region.';
+    }
+    return errors;
+  };
+
   const handleAddSubmit = (e) => {
     e.preventDefault();
-    if (!formData.kannada.trim() || !formData.englishMeaning.trim()) return;
+    const errors = validateForm();
+    if (Object.keys(errors).length > 0) {
+      setFormErrors(errors);
+      return;
+    }
 
+    const reg = REGIONS[formData.regionId];
     const newEntry = {
       id: `folk_${Date.now()}`,
-      kannada: formData.kannada,
-      transliteration: formData.transliteration || formData.kannada,
-      englishMeaning: formData.englishMeaning,
+      kannada: formData.kannada.trim(),
+      transliteration: formData.transliteration.trim() || formData.kannada.trim(),
+      englishMeaning: formData.englishMeaning.trim(),
       regionId: formData.regionId,
-      regionName: REGIONS[formData.regionId]?.name.split(' (')[0] || 'Karnataka',
+      regionName: isKn ? (reg?.kannadaName || 'ಕರ್ನಾಟಕ') : (reg?.name.split(' (')[0] || 'Karnataka'),
       category: formData.category,
       upvotes: 1,
-      contributor: formData.contributor || 'Proud Kannadiga'
+      contributor: formData.contributor.trim() || (isKn ? 'ಹೆಮ್ಮೆಯ ಕನ್ನಡಿಗ' : 'Proud Kannadiga')
     };
 
     setEntries([newEntry, ...entries]);
     soundEffects.playSuccess();
-    setIsModalOpen(false);
-    setFormData({
-      kannada: '',
-      transliteration: '',
-      englishMeaning: '',
-      regionId: 'mysuru',
-      category: 'Proverb (ಗಾದೆ)',
-      contributor: ''
-    });
+    setFormSuccessMessage(isKn ? 'ನಿಮ್ಮ ನುಡಿ ಯಶಸ್ವಿಯಾಗಿ ಸೇರ್ಪಡೆಯಾಗಿದೆ!' : 'Your expression was successfully added to the Folk Vault!');
+    setFormErrors({});
+    
+    setTimeout(() => {
+      setIsModalOpen(false);
+      setFormSuccessMessage('');
+      setFormData({
+        kannada: '',
+        transliteration: '',
+        englishMeaning: '',
+        regionId: 'mysuru',
+        category: 'Proverb (ಗಾದೆ)',
+        contributor: ''
+      });
+    }, 1200);
   };
 
   const filteredEntries = entries.filter((item) => {
     const matchesRegion = selectedRegionFilter === 'all' || item.regionId === selectedRegionFilter;
+    const q = searchQuery.toLowerCase();
     const matchesQuery =
-      item.kannada.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.transliteration.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.englishMeaning.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      item.regionName.toLowerCase().includes(searchQuery.toLowerCase());
+      item.kannada.toLowerCase().includes(q) ||
+      (item.transliteration && item.transliteration.toLowerCase().includes(q)) ||
+      (item.englishMeaning && item.englishMeaning.toLowerCase().includes(q)) ||
+      (item.regionName && item.regionName.toLowerCase().includes(q));
     return matchesRegion && matchesQuery;
   });
 
   return (
-    <section id="vault" className="py-16 bg-slate-900/50 relative border-b border-slate-800">
+    <section 
+      id="vault" 
+      aria-labelledby="vault-heading"
+      className="py-14 sm:py-18 bg-[#14110E] relative border-b border-[#2E2620]"
+    >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/10 text-amber-400 text-xs font-semibold mb-3 border border-amber-500/20">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F3C067]/15 text-[#F3C067] text-xs font-semibold mb-3 border border-[#F3C067]/40 shadow-sm">
             <BookOpen className="w-3.5 h-3.5" />
-            <span>Community-Driven Living Archive</span>
+            <span>{isKn ? 'ಜನಪದ ಜ್ಞಾನ ಭಂಡಾರ' : 'Community-Driven Living Archive'}</span>
           </div>
-          <h2 className="text-3xl sm:text-4xl font-extrabold text-white tracking-tight font-kannada">
-            ಜನಪದ ಕೋಶ — Crowdsourced Folk Vault
+          <h2 id="vault-heading" className="text-2xl sm:text-4xl font-extrabold text-[#F3EFEA] tracking-tight font-serif">
+            {t.vaultTitle}
           </h2>
-          <p className="mt-2 text-base text-slate-400">
-            A growing open repository preserving Karnataka's oral traditions, regional idioms, grandma's proverbs, and youth slang.
+          <p className="mt-2 text-xs sm:text-base text-[#D4CDC5]">
+            {t.vaultSubtitle}
           </p>
         </div>
 
-        {/* Action Controls Bar */}
-        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-8">
-          
-          {/* Search Input */}
-          <div className="relative w-full md:w-96">
-            <Search className="absolute left-3.5 top-3 w-4 h-4 text-slate-500" />
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search phrases, proverbs, meanings..."
-              className="w-full bg-slate-950 border border-slate-800 rounded-xl pl-10 pr-4 py-2.5 text-xs sm:text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
-            />
-          </div>
+        {/* Search, Filter & Contribute Row */}
+        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 mb-8 bg-[#1E1915] p-4 rounded-2xl border border-[#2E2620]">
+          <div className="flex flex-1 items-center gap-3 w-full sm:w-auto">
+            <div className="relative flex-1">
+              <Search className="absolute left-3 top-3 w-4 h-4 text-[#C8BFB5]" />
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder={isKn ? 'ಜನಪದ ಕೋಶದಲ್ಲಿ ಹುಡುಕಿ...' : 'Search idioms, proverbs, slangs...'}
+                className="w-full bg-[#14110E] border border-[#2E2620] rounded-xl pl-9 pr-4 py-2 text-xs sm:text-sm text-[#F3EFEA] placeholder-[#C8BFB5]/50 focus:outline-none focus:border-[#F3C067]"
+                aria-label="Search folk vault"
+              />
+            </div>
 
-          {/* Region Filter & Add Button */}
-          <div className="flex flex-wrap items-center gap-3 w-full md:w-auto justify-end">
             <select
               value={selectedRegionFilter}
               onChange={(e) => setSelectedRegionFilter(e.target.value)}
-              className="bg-slate-950 border border-slate-800 rounded-xl px-3 py-2.5 text-xs font-semibold text-amber-300 focus:outline-none focus:border-amber-500"
+              className="bg-[#14110E] border border-[#2E2620] text-[#F3C067] text-xs rounded-xl px-3 py-2 focus:outline-none"
+              aria-label="Filter vault by region"
             >
-              <option value="all">All Karnataka Regions</option>
+              <option value="all">{isKn ? 'ಎಲ್ಲ ಪ್ರಾಂತ್ಯಗಳು' : 'All Regions'}</option>
               {Object.values(REGIONS).map((r) => (
                 <option key={r.id} value={r.id}>
-                  {r.name.split(' (')[0]}
+                  {isKn ? r.kannadaName : r.name.split(' (')[0]}
                 </option>
               ))}
             </select>
-
-            <button
-              onClick={() => setIsModalOpen(true)}
-              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm transition-all shadow-md shadow-amber-500/20 shrink-0"
-            >
-              <Plus className="w-4 h-4 text-slate-950" />
-              <span>Contribute Phrase</span>
-            </button>
           </div>
+
+          <button
+            type="button"
+            onClick={() => {
+              setFormErrors({});
+              setFormSuccessMessage('');
+              setIsModalOpen(true);
+            }}
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#F3C067] to-[#E5A93C] text-[#14110E] font-bold text-xs sm:text-sm hover:brightness-110 shadow-md active:scale-95 transition-all shrink-0"
+          >
+            <Plus className="w-4 h-4" />
+            <span>{t.btnContribute}</span>
+          </button>
         </div>
 
         {/* Entries Grid */}
@@ -150,140 +208,174 @@ export default function FolkVault() {
             return (
               <div
                 key={item.id}
-                className="bg-slate-950/80 border border-slate-800 hover:border-amber-500/40 rounded-2xl p-5 transition-all flex flex-col justify-between group shadow-lg"
+                className="bg-[#1E1915] border border-[#2E2620] rounded-xl p-5 hover:border-[#F3C067]/40 transition-all flex flex-col justify-between shadow-md"
               >
                 <div>
-                  {/* Category and Region Tag */}
-                  <div className="flex items-center justify-between mb-3">
-                    <span className="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-amber-500/10 text-amber-400 border border-amber-500/20">
+                  <div className="flex items-center justify-between gap-2 mb-2">
+                    <span className="text-[11px] font-semibold text-[#F3C067] bg-[#F3C067]/10 px-2 py-0.5 rounded border border-[#F3C067]/20">
                       {item.regionName}
                     </span>
-                    <span className="text-[11px] text-slate-400 font-medium">{item.category}</span>
+                    <span className="text-[10px] uppercase font-bold text-[#C8BFB5] bg-[#14110E] px-2 py-0.5 rounded border border-[#2E2620]">
+                      {item.category}
+                    </span>
                   </div>
 
-                  {/* Kannada Phrase */}
-                  <div className="flex items-start justify-between gap-2 mb-2">
-                    <h3 className="text-lg font-bold text-white font-kannada leading-snug">
-                      “{item.kannada}”
-                    </h3>
-                    <button
-                      onClick={() => speakKannada(item.kannada, item.regionId)}
-                      className="p-1.5 rounded-lg bg-slate-900 hover:bg-amber-500 hover:text-slate-950 text-amber-400 transition-all opacity-70 group-hover:opacity-100"
-                      title="Pronounce"
-                    >
-                      <Volume2 className="w-4 h-4" />
-                    </button>
-                  </div>
+                  <h3 className="text-lg font-bold text-[#F3EFEA] font-serif leading-relaxed mt-1">
+                    “{item.kannada}”
+                  </h3>
 
-                  <p className="text-xs text-slate-400 italic mb-2">{item.transliteration}</p>
-                  <p className="text-xs text-slate-300 font-medium mb-4">{item.englishMeaning}</p>
+                  {item.transliteration && (
+                    <p className="text-xs text-[#F3C067]/90 italic mt-0.5 mb-2">
+                      /{item.transliteration}/
+                    </p>
+                  )}
+
+                  <p className="text-xs sm:text-sm text-[#D4CDC5] leading-relaxed mb-4">
+                    {item.englishMeaning}
+                  </p>
                 </div>
 
-                {/* Footer with Upvote and Contributor */}
-                <div className="pt-3 border-t border-slate-800/80 flex items-center justify-between text-xs text-slate-400">
-                  <span className="text-[11px] truncate max-w-[150px]">
-                    Added by: <strong className="text-slate-300">{item.contributor}</strong>
+                <div className="pt-3 border-t border-[#2E2620] flex items-center justify-between text-xs">
+                  <span className="text-[11px] text-[#C8BFB5]">
+                    {t.addedBy} <strong className="text-[#F3EFEA] font-medium">{item.contributor}</strong>
                   </span>
 
-                  <button
-                    onClick={() => handleUpvote(item.id)}
-                    className={`flex items-center gap-1.5 px-2.5 py-1 rounded-lg border text-xs font-semibold transition-all ${
-                      hasUpvoted
-                        ? 'bg-amber-500/20 text-amber-400 border-amber-500/40'
-                        : 'bg-slate-900 border-slate-800 hover:border-slate-700 text-slate-300'
-                    }`}
-                  >
-                    <ThumbsUp className="w-3.5 h-3.5" />
-                    <span>{item.upvotes}</span>
-                  </button>
+                  <div className="flex items-center gap-2">
+                    <button
+                      type="button"
+                      onClick={() => speakKannada(item.kannada)}
+                      className="p-1.5 rounded-lg bg-[#14110E] text-[#F3C067] hover:bg-[#F3C067] hover:text-[#14110E] border border-[#2E2620] transition-colors"
+                      aria-label={`Pronounce ${item.kannada}`}
+                    >
+                      <Volume2 className="w-3.5 h-3.5" />
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={() => handleUpvote(item.id)}
+                      disabled={hasUpvoted}
+                      className={`flex items-center gap-1 px-2.5 py-1 rounded-lg transition-all ${
+                        hasUpvoted
+                          ? 'bg-[#F3C067]/20 text-[#F3C067] border border-[#F3C067]/40 cursor-default'
+                          : 'bg-[#14110E] text-[#C8BFB5] hover:text-[#F3EFEA] border border-[#2E2620]'
+                      }`}
+                      aria-label="Upvote phrase"
+                    >
+                      <ThumbsUp className="w-3.5 h-3.5" />
+                      <span className="font-bold text-[11px]">{item.upvotes}</span>
+                    </button>
+                  </div>
                 </div>
               </div>
             );
           })}
         </div>
 
-        {/* Modal: Contribute New Phrase */}
+        {/* Modal: Contribute New Phrase with Strict Validation */}
         {isModalOpen && (
-          <div className="fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4">
-            <div className="bg-slate-900 border border-slate-800 rounded-3xl max-w-lg w-full p-6 sm:p-8 shadow-2xl relative">
+          <div className="fixed inset-0 z-50 bg-[#14110E]/85 backdrop-blur-sm flex items-center justify-center p-4">
+            <div className="bg-[#1E1915] border border-[#F3C067]/40 rounded-2xl max-w-lg w-full p-5 sm:p-7 shadow-2xl relative">
               <button
+                type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="absolute top-5 right-5 text-slate-400 hover:text-white"
+                className="absolute top-4 right-4 text-[#C8BFB5] hover:text-[#F3EFEA] p-1"
+                aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
               </button>
 
-              <h3 className="text-xl font-bold text-white mb-1 font-kannada">
-                ಹೊಸ ನುಡಿಗಟ್ಟು ಸೇರಿಸಿ — Contribute a Dialect Expression
+              <h3 className="text-lg sm:text-xl font-bold text-[#F3EFEA] mb-1 font-serif">
+                {t.modalTitle}
               </h3>
-              <p className="text-xs text-slate-400 mb-6">
-                Share a native word, proverb, or phrase from your district to preserve Karnataka's heritage.
+              <p className="text-xs text-[#D4CDC5] mb-5">
+                {t.modalSubtitle}
               </p>
 
-              <form onSubmit={handleAddSubmit} className="space-y-4 text-xs sm:text-sm">
+              {formSuccessMessage && (
+                <div className="mb-4 p-3 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300 text-xs flex items-center gap-2">
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <span>{formSuccessMessage}</span>
+                </div>
+              )}
+
+              <form onSubmit={handleAddSubmit} className="space-y-3.5 text-xs sm:text-sm">
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">
-                    Kannada Phrase / Idiom <span className="text-red-400">*</span>
+                  <label className="block text-[#D4CDC5] font-semibold mb-1">
+                    {t.fieldKannada}
                   </label>
                   <input
                     type="text"
-                    required
                     value={formData.kannada}
-                    onChange={(e) => setFormData({ ...formData, kannada: e.target.value })}
-                    placeholder="E.g., ಚಿಂದಿ ಚಿತ್ರಾನ್ನ / ಬರಿ ಬಿಸಿ ಕೂಡು"
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                    onChange={(e) => {
+                      setFormData({ ...formData, kannada: e.target.value });
+                      if (formErrors.kannada) setFormErrors({ ...formErrors, kannada: null });
+                    }}
+                    placeholder="ಉದಾ: ಚಿಂದಿ ಚಿತ್ರಾನ್ನ / ಬರಿ ಬಿಸಿ ಕೂಡು"
+                    className="w-full bg-[#14110E] border border-[#2E2620] rounded-xl px-3.5 py-2 text-[#F3EFEA] placeholder-[#C8BFB5]/50 focus:outline-none focus:border-[#F3C067]"
                   />
+                  {formErrors.kannada && (
+                    <p className="text-[11px] text-[#D96B43] mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" /> {formErrors.kannada}
+                    </p>
+                  )}
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">
-                    English Pronunciation / Transliteration
+                  <label className="block text-[#D4CDC5] font-semibold mb-1">
+                    {t.fieldTranslit}
                   </label>
                   <input
                     type="text"
                     value={formData.transliteration}
                     onChange={(e) => setFormData({ ...formData, transliteration: e.target.value })}
                     placeholder="E.g., Chindi Chithranna"
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                    className="w-full bg-[#14110E] border border-[#2E2620] rounded-xl px-3.5 py-2 text-[#F3EFEA] placeholder-[#C8BFB5]/50 focus:outline-none focus:border-[#F3C067]"
                   />
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">
-                    English Meaning / Context <span className="text-red-400">*</span>
+                  <label className="block text-[#D4CDC5] font-semibold mb-1">
+                    {t.fieldMeaning}
                   </label>
                   <input
                     type="text"
-                    required
                     value={formData.englishMeaning}
-                    onChange={(e) => setFormData({ ...formData, englishMeaning: e.target.value })}
+                    onChange={(e) => {
+                      setFormData({ ...formData, englishMeaning: e.target.value });
+                      if (formErrors.englishMeaning) setFormErrors({ ...formErrors, englishMeaning: null });
+                    }}
                     placeholder="E.g., Something completely extraordinary and epic"
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                    className="w-full bg-[#14110E] border border-[#2E2620] rounded-xl px-3.5 py-2 text-[#F3EFEA] placeholder-[#C8BFB5]/50 focus:outline-none focus:border-[#F3C067]"
                   />
+                  {formErrors.englishMeaning && (
+                    <p className="text-[11px] text-[#D96B43] mt-1 flex items-center gap-1">
+                      <AlertCircle className="w-3 h-3" /> {formErrors.englishMeaning}
+                    </p>
+                  )}
                 </div>
 
                 <div className="grid grid-cols-2 gap-3">
                   <div>
-                    <label className="block text-slate-300 font-semibold mb-1">Region</label>
+                    <label className="block text-[#D4CDC5] font-semibold mb-1">{t.fieldRegion}</label>
                     <select
                       value={formData.regionId}
                       onChange={(e) => setFormData({ ...formData, regionId: e.target.value })}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white"
+                      className="w-full bg-[#14110E] border border-[#2E2620] rounded-xl px-3 py-2 text-[#F3EFEA]"
                     >
                       {Object.values(REGIONS).map((r) => (
                         <option key={r.id} value={r.id}>
-                          {r.name.split(' (')[0]}
+                          {isKn ? r.kannadaName : r.name.split(' (')[0]}
                         </option>
                       ))}
                     </select>
                   </div>
 
                   <div>
-                    <label className="block text-slate-300 font-semibold mb-1">Category</label>
+                    <label className="block text-[#D4CDC5] font-semibold mb-1">Category</label>
                     <select
                       value={formData.category}
                       onChange={(e) => setFormData({ ...formData, category: e.target.value })}
-                      className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2.5 text-white"
+                      className="w-full bg-[#14110E] border border-[#2E2620] rounded-xl px-3 py-2 text-[#F3EFEA]"
                     >
                       <option>Proverb (ಗಾದೆ)</option>
                       <option>Street Slang</option>
@@ -295,29 +387,29 @@ export default function FolkVault() {
                 </div>
 
                 <div>
-                  <label className="block text-slate-300 font-semibold mb-1">Your Name & District</label>
+                  <label className="block text-[#D4CDC5] font-semibold mb-1">{t.fieldDistrict}</label>
                   <input
                     type="text"
                     value={formData.contributor}
                     onChange={(e) => setFormData({ ...formData, contributor: e.target.value })}
                     placeholder="E.g., Chetan Kumar (Belagavi)"
-                    className="w-full bg-slate-950 border border-slate-700 rounded-xl px-3.5 py-2.5 text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
+                    className="w-full bg-[#14110E] border border-[#2E2620] rounded-xl px-3.5 py-2 text-[#F3EFEA] placeholder-[#C8BFB5]/50 focus:outline-none focus:border-[#F3C067]"
                   />
                 </div>
 
-                <div className="pt-4 flex justify-end gap-3">
+                <div className="pt-3 flex justify-end gap-2.5">
                   <button
                     type="button"
                     onClick={() => setIsModalOpen(false)}
-                    className="px-4 py-2.5 rounded-xl bg-slate-800 text-slate-300 font-semibold text-xs"
+                    className="px-4 py-2 rounded-xl bg-[#14110E] border border-[#2E2620] text-[#D4CDC5] font-semibold text-xs hover:text-[#F3EFEA]"
                   >
-                    Cancel
+                    {t.btnCancel}
                   </button>
                   <button
                     type="submit"
-                    className="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs"
+                    className="px-5 py-2 rounded-xl bg-gradient-to-r from-[#F3C067] to-[#E5A93C] text-[#14110E] font-bold text-xs hover:brightness-110 shadow-md transition-all"
                   >
-                    Save & Publish to Vault
+                    {t.btnSubmit}
                   </button>
                 </div>
               </form>
