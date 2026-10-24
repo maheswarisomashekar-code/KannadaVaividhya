@@ -5,7 +5,7 @@ import { speakKannada, soundEffects } from '../utils/audioHelper';
 import { BookOpen, Search, ThumbsUp, Plus, X, Volume2, Filter, AlertCircle, CheckCircle2 } from 'lucide-react';
 import { UI_STRINGS } from '../data/translations';
 
-export default function FolkVault({ lang = 'kn' }) {
+export default function FolkVault({ lang = 'kn', user }) {
   const [entries, setEntries] = useState(() => {
     try {
       const saved = localStorage.getItem('kannada_folk_entries');
@@ -192,6 +192,13 @@ export default function FolkVault({ lang = 'kn' }) {
             onClick={() => {
               setFormErrors({});
               setFormSuccessMessage('');
+              if (user) {
+                setFormData(prev => ({
+                  ...prev,
+                  contributor: `${user.name} (${user.district || 'Karnataka'})`,
+                  regionId: user.regionId || prev.regionId
+                }));
+              }
               setIsModalOpen(true);
             }}
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-[#F3C067] to-[#E5A93C] text-[#14110E] font-bold text-xs sm:text-sm hover:brightness-110 shadow-md active:scale-95 transition-all shrink-0"

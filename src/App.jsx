@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
-import Navbar from './components/Navbar';
-import HeroSection from './components/HeroSection';
-import GlobalSearch from './components/GlobalSearch';
+import React, { useState, useEffect } from 'react';
+import Sidebar from './components/Sidebar';
+import TopBar from './components/TopBar';
+import HomePage from './components/HomePage';
 import KarnatakaMap from './components/KarnatakaMap';
 import DialectMorph from './components/DialectMorph';
 import DialectMitra from './components/DialectMitra';
@@ -9,94 +9,158 @@ import AudioLab from './components/AudioLab';
 import DialectQuiz from './components/DialectQuiz';
 import FolkVault from './components/FolkVault';
 import RegionalShowcase from './components/RegionalShowcase';
+import GlobalSearch from './components/GlobalSearch';
+import AuthModal from './components/AuthModal';
 import Footer from './components/Footer';
 
 export default function App() {
+  const [activePage, setActivePage] = useState('home'); // 'home' | 'map' | 'morph' | 'mitra' | 'audiolab' | 'quiz' | 'vault' | 'culture' | 'search'
   const [currentRegion, setCurrentRegion] = useState('mysuru');
-  const [activeSection, setActiveSection] = useState('map');
   const [lang, setLang] = useState('kn'); // 'kn' (Kannada default) or 'en' (English)
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isAuthOpen, setIsAuthOpen] = useState(false);
 
-  const scrollToSection = (id) => {
-    setActiveSection(id);
-    const element = document.getElementById(id);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
+  // User authentication session state with localStorage persistence
+  const [user, setUser] = useState(() => {
+    try {
+      const savedUser = localStorage.getItem('kannada_user_session');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch {
+      return null;
+    }
+  });
+
+  const handleLogin = (userData) => {
+    setUser(userData);
+    try {
+      localStorage.setItem('kannada_user_session', JSON.stringify(userData));
+    } catch (e) {
+      console.warn('LocalStorage error:', e);
+    }
+  };
+
+  const handleLogout = () => {
+    setUser(null);
+    try {
+      localStorage.removeItem('kannada_user_session');
+    } catch (e) {
+      console.warn('LocalStorage error:', e);
     }
   };
 
   return (
-    <div className="min-h-screen bg-[#14110E] text-[#F3EFEA] flex flex-col font-sans selection:bg-[#F3C067] selection:text-[#14110E]">
-      {/* Sticky Top Navigation with Kannada / English Toggle */}
-      <Navbar
-        activeSection={activeSection}
-        setActiveSection={setActiveSection}
+    <div className="min-h-screen bg-[#14110E] text-[#F3EFEA] flex flex-col md:flex-row font-sans selection:bg-[#F3C067] selection:text-[#14110E]">
+      
+      {/* 1. Left Vertical Sidebar Navigation */}
+      <Sidebar
+        activePage={activePage}
+        setActivePage={setActivePage}
         currentRegion={currentRegion}
         setCurrentRegion={setCurrentRegion}
         lang={lang}
         setLang={setLang}
+        user={user}
+        onOpenAuth={() => setIsAuthOpen(true)}
+        isMobileOpen={isMobileMenuOpen}
+        setIsMobileOpen={setIsMobileMenuOpen}
       />
 
-      {/* Main Content Flow */}
-      <main className="flex-1">
-        {/* Hero Section with Embedded Word of the Day & Audio Greeting */}
-        <HeroSection
-          onExploreMap={() => scrollToSection('map')}
-          onTryMorph={() => scrollToSection('morph')}
-          onPlayQuiz={() => scrollToSection('quiz')}
-          onSearchClick={() => scrollToSection('search')}
+      {/* 2. Main App Content Container */}
+      <div className="flex-1 flex flex-col min-w-0">
+        
+        {/* Sticky Top Header Bar */}
+        <TopBar
+          activePage={activePage}
+          onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
+          user={user}
+          onOpenAuth={() => setIsAuthOpen(true)}
           lang={lang}
-          onSelectRegion={setCurrentRegion}
+          setLang={setLang}
         />
 
-        {/* Upgrade (d): Global Search & Multi-Filter Matrix */}
-        <GlobalSearch
+        {/* Dynamic Page Workspace: Displays the selected module or Home Dashboard */}
+        <main className="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl mx-auto w-full">
+          {activePage === 'home' && (
+            <HomePage
+              onNavigate={(pageId) => {
+                setActivePage(pageId);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
+              lang={lang}
+              onSelectRegion={setCurrentRegion}
+            />
+          )}
+
+          {activePage === 'map' && (
+            <KarnatakaMap
+              currentRegion={currentRegion}
+              setCurrentRegion={setCurrentRegion}
+              lang={lang}
+            />
+          )}
+
+          {activePage === 'morph' && (
+            <DialectMorph
+              lang={lang}
+            />
+          )}
+
+          {activePage === 'mitra' && (
+            <DialectMitra
+              lang={lang}
+            />
+          )}
+
+          {activePage === 'audiolab' && (
+            <AudioLab
+              lang={lang}
+            />
+          )}
+
+          {activePage === 'quiz' && (
+            <DialectQuiz
+              lang={lang}
+            />
+          )}
+
+          {activePage === 'vault' && (
+            <FolkVault
+              lang={lang}
+              user={user}
+            />
+          )}
+
+          {activePage === 'culture' && (
+            <RegionalShowcase
+              currentRegion={currentRegion}
+              setCurrentRegion={setCurrentRegion}
+              lang={lang}
+            />
+          )}
+
+          {activePage === 'search' && (
+            <GlobalSearch
+              lang={lang}
+            />
+          )}
+        </main>
+
+        {/* Footer */}
+        <Footer
           lang={lang}
         />
+      </div>
 
-        {/* Upgrade (a): Interactive Karnataka Regional Map & Dialect Entries */}
-        <KarnatakaMap
-          currentRegion={currentRegion}
-          setCurrentRegion={setCurrentRegion}
-          lang={lang}
-        />
-
-        {/* Upgrade (b): 5-Way Multi-Dialect Morph Cross-Translator */}
-        <DialectMorph
-          lang={lang}
-        />
-
-        {/* Real-Time AI Dialect Mitra & Word Explorer */}
-        <DialectMitra
-          lang={lang}
-        />
-
-        {/* Upgrade (c): Real-Time Voice Waveform & Pronunciation Lab */}
-        <AudioLab
-          lang={lang}
-        />
-
-        {/* Gamified Dialect Detective Quiz with Dynamic Question Shuffling */}
-        <DialectQuiz
-          lang={lang}
-        />
-
-        {/* Upgrade (g): Janapada Kosha Folk Vault with Validated Contribution Form */}
-        <FolkVault
-          lang={lang}
-        />
-
-        {/* Regional Heritage, Literature & Cuisine Showcase */}
-        <RegionalShowcase
-          currentRegion={currentRegion}
-          setCurrentRegion={setCurrentRegion}
-          lang={lang}
-        />
-      </main>
-
-      {/* Footer & Hackathon Attribution */}
-      <Footer
+      {/* 3. Authentication & Profile Modal */}
+      <AuthModal
+        isOpen={isAuthOpen}
+        onClose={() => setIsAuthOpen(false)}
+        user={user}
+        onLogin={handleLogin}
+        onLogout={handleLogout}
         lang={lang}
       />
+
     </div>
   );
 }
