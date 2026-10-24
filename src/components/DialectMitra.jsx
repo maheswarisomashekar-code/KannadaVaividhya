@@ -4,6 +4,7 @@ import {
   fetchOnlineKannadaTranslation,
   transformToRegionalDialects
 } from '../utils/universalTranslator';
+import { parseAndMorphDialect } from '../utils/regionalLexiconEngine';
 import { REGIONS } from '../data/regions';
 import { speakKannada, soundEffects } from '../utils/audioHelper';
 import {
@@ -65,13 +66,16 @@ export default function DialectMitra() {
         }
       }
 
-      // 3. Decompose into 5 regional variations
-      const regionalVariants = transformToRegionalDialects(text, standardKn);
+      // 3. Decompose into 5 regional variations using Semantic Lexicon Engine
+      const parsedSemantic = parseAndMorphDialect(text);
+      const regionalVariants = (parsedSemantic && parsedSemantic.type !== 'general_morph')
+        ? parsedSemantic.variants
+        : transformToRegionalDialects(text, standardKn);
 
       setActiveResult({
         original: text,
         standardKannada: standardKn,
-        isLexicon: !!lexiconMatch,
+        isLexicon: !!lexiconMatch || (parsedSemantic && parsedSemantic.type !== 'general_morph'),
         lexiconData: lexiconMatch,
         variants: regionalVariants
       });

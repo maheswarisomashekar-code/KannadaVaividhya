@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
 import { CATEGORIES, PHRASES } from '../data/phrases';
 import { REGIONS } from '../data/regions';
-import { Sparkles, Volume2, Copy, Check, Filter, Layers, MessageSquare, ArrowRight } from 'lucide-react';
-import { speakKannada } from '../utils/audioHelper';
+import { Sparkles, Volume2, Copy, Check, Filter, Layers, MessageSquare, ArrowRight, Lightbulb } from 'lucide-react';
+import { speakKannada, soundEffects } from '../utils/audioHelper';
+import { parseAndMorphDialect } from '../utils/regionalLexiconEngine';
 
 export default function DialectMorph() {
   const [selectedCategory, setSelectedCategory] = useState('all');
@@ -23,46 +24,8 @@ export default function DialectMorph() {
     setTimeout(() => setCopiedId(null), 2000);
   };
 
-  // Custom translation rule simulator for user custom input
-  const getSimulatedDialect = (text, regionKey) => {
-    if (!text.trim()) return null;
-    const lower = text.toLowerCase();
-
-    switch (regionKey) {
-      case 'mysuru':
-        return {
-          text: `${text} ಅಲ್ವೇನ್ರೀ? ಸ್ವಲ್ಪ ತಾಳ್ಮೆಯಿಂದ ವಿಚಾರ ಮಾಡೋಣ ಬನ್ನಿ.`,
-          phonetic: `${text} alveenree? Swalpa thaalmeyinda vichaara maadona banni.`,
-          trait: 'Polite honorific tone with respectful Mysore courtly cadence'
-        };
-      case 'north_karnataka':
-        return {
-          text: `ಏನ್ರೀ, ${text} ನೋಡ್ರಿ! ನಾವೂ ಒಟ್ಟಿಗೆ ಬರತೇವಿಪಾ!`,
-          phonetic: `Eenree, ${text} nodree! Naavoo ottige baratheevipaa!`,
-          trait: 'Rhythmic Dharwad warmth with "-nodree" and energetic markers'
-        };
-      case 'karavali':
-        return {
-          text: `ಮಾರಾಯ, ${text} ಹೌದಾ? ತಡಿ ಬಪ್ಪ!`,
-          phonetic: `Maaraya, ${text} houdaa? Thadi bappa!`,
-          trait: 'Coastal Kundapura melody with "Maaraya" and "Bappa"'
-        };
-      case 'kalyana_karnataka':
-        return {
-          text: `ದೋಸ್ತ, ${text} ಬರಾಬರ್ ಅದ ನೋಡಪ್ಪ! ಖರೇ ಹೇಳಕತ್ತೀನಿ.`,
-          phonetic: `Dosta, ${text} baraabar ada nodappa! Kharee helakattheeni.`,
-          trait: 'Kalaburagi expression with "Baraabar" and "Dosta"'
-        };
-      case 'bengaluru':
-        return {
-          text: `ಗುರು, ${text} ಸೀನ್ ಇಲ್ಲ ಮಗಾ, ಚಿಂದಿ ಮಾಡೋಣ!`,
-          phonetic: `Guru, ${text} scene illa maga, chindi maadona!`,
-          trait: 'Bengaluru cosmopolitan youth and auto street lingo'
-        };
-      default:
-        return { text, phonetic: text, trait: 'Standard Kannada' };
-    }
-  };
+  // Process custom input through intelligent Semantic & Lexical Regional Engine
+  const parsedCustomResult = customInput.trim() ? parseAndMorphDialect(customInput) : null;
 
   return (
     <section id="morph" className="py-16 bg-slate-950 relative border-b border-slate-800">
@@ -247,39 +210,110 @@ export default function DialectMorph() {
                 className="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-4 py-3 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-amber-500"
               />
               <button
-                onClick={() => setCustomInput('ನಾವು ನಾಳೆ ಊರಿಗೆ ಹೋಗುತ್ತಿದ್ದೇವೆ (We are travelling tomorrow)')}
-                className="px-4 py-3 bg-slate-800 hover:bg-slate-700 text-amber-300 rounded-xl text-xs font-semibold transition-all shrink-0"
+                onClick={() => setCustomInput('kesaribath thinbeku')}
+                className="px-4 py-3 bg-amber-500/10 hover:bg-amber-500/20 border border-amber-500/40 text-amber-300 rounded-xl text-xs font-semibold transition-all shrink-0 flex items-center gap-1.5"
               >
-                Insert Sample Phrase
+                <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+                <span>Try "kesaribath thinbeku"</span>
               </button>
             </div>
 
-            {customInput.trim() ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-6">
-                {Object.keys(REGIONS).map((regKey) => {
-                  const reg = REGIONS[regKey];
-                  const result = getSimulatedDialect(customInput, regKey);
-                  return (
-                    <div key={regKey} className="bg-slate-950 p-4 rounded-xl border border-slate-800">
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs font-bold text-amber-400">{reg.name}</span>
-                        <button
-                          onClick={() => speakKannada(result.text, regKey)}
-                          className="p-1 rounded bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-amber-400"
-                        >
-                          <Volume2 className="w-3.5 h-3.5" />
-                        </button>
+            {/* Quick Prompt Suggestions */}
+            <div className="flex flex-wrap items-center gap-2 mb-6">
+              <span className="text-[11px] text-slate-400 flex items-center gap-1">
+                <Lightbulb className="w-3.5 h-3.5 text-amber-400" /> Quick Tests:
+              </span>
+              {[
+                'kesaribath thinbeku',
+                'girmit thinbeku',
+                'jolada rotti kodi',
+                'station hogbeku',
+                'filter coffee kodi'
+              ].map((sample) => (
+                <button
+                  key={sample}
+                  onClick={() => setCustomInput(sample)}
+                  className="text-[11px] bg-slate-950 hover:bg-slate-800 text-slate-300 hover:text-amber-300 px-2.5 py-1 rounded-lg border border-slate-800 transition-all"
+                >
+                  {sample}
+                </button>
+              ))}
+            </div>
+
+            {parsedCustomResult ? (
+              <div className="space-y-4">
+                <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-xs text-amber-300 flex items-center justify-between">
+                  <span>
+                    💡 <strong>Real-Time Semantic Detection:</strong> Transformed "{customInput}" using regional food & verb lexicons!
+                  </span>
+                  <span className="text-[10px] bg-amber-500/20 px-2 py-0.5 rounded text-amber-200 uppercase font-bold">
+                    5 Regional Dialects Active
+                  </span>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                  {Object.keys(REGIONS).map((regKey) => {
+                    const reg = REGIONS[regKey];
+                    const result = parsedCustomResult.variants[regKey];
+                    const copyId = `custom-${regKey}`;
+                    const isCopied = copiedId === copyId;
+
+                    return (
+                      <div
+                        key={regKey}
+                        className="bg-slate-950 p-5 rounded-2xl border border-slate-800 hover:border-amber-500/50 transition-all flex flex-col justify-between shadow-lg"
+                      >
+                        <div>
+                          <div className="flex items-center justify-between mb-2">
+                            <span
+                              className="text-xs font-bold px-2.5 py-0.5 rounded-md border"
+                              style={{
+                                backgroundColor: `${reg.color}15`,
+                                color: reg.color,
+                                borderColor: `${reg.color}40`
+                              }}
+                            >
+                              {reg.name.split(' (')[0]}
+                            </span>
+                            
+                            <div className="flex items-center gap-1.5">
+                              <button
+                                onClick={() => speakKannada(result.text, regKey)}
+                                className="p-1.5 rounded-lg bg-slate-800 hover:bg-amber-500 hover:text-slate-950 text-amber-400 transition-all"
+                                title="Listen to regional pronunciation"
+                              >
+                                <Volume2 className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => handleCopy(result.text, copyId)}
+                                className="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-white transition-all"
+                                title="Copy"
+                              >
+                                {isCopied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
+                              </button>
+                            </div>
+                          </div>
+
+                          <p className="text-base font-bold text-white font-kannada leading-relaxed mb-1.5">
+                            “{result.text}”
+                          </p>
+                          <p className="text-xs text-slate-400 italic mb-3">
+                            {result.phonetic}
+                          </p>
+                        </div>
+
+                        <div className="pt-2 border-t border-slate-800/80 text-[11px] text-amber-300/80">
+                          <strong className="text-slate-300">Nuance: </strong>
+                          {result.trait}
+                        </div>
                       </div>
-                      <p className="text-sm font-bold text-white font-kannada">{result.text}</p>
-                      <p className="text-xs text-slate-400 italic mt-1">{result.phonetic}</p>
-                      <p className="text-[11px] text-amber-300/80 mt-2 font-medium">Trait: {result.trait}</p>
-                    </div>
-                  );
-                })}
+                    );
+                  })}
+                </div>
               </div>
             ) : (
               <div className="text-center py-8 text-slate-500 text-xs">
-                Type above or click 'Insert Sample Phrase' to trigger live regional adaptation.
+                Type above or click any sample prompt to see how North Karnataka, Karavali, Mysuru, Kalyana, and Bengaluru express it differently!
               </div>
             )}
           </div>
