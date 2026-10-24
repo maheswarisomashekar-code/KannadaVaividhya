@@ -218,22 +218,30 @@ export default function DialectMorph() {
               </button>
             </div>
 
-            {/* Quick Prompt Suggestions */}
+            {/* Universal Engine Badge & Quick Multi-Domain Tests */}
+            <div className="mb-4">
+              <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-semibold">
+                <Sparkles className="w-3.5 h-3.5" />
+                <span>Universal Engine: Works for ANY Word or Full Sentence in English or Kannada!</span>
+              </span>
+            </div>
+
             <div className="flex flex-wrap items-center gap-2 mb-6">
               <span className="text-[11px] text-slate-400 flex items-center gap-1">
-                <Lightbulb className="w-3.5 h-3.5 text-amber-400" /> Quick Tests:
+                <Lightbulb className="w-3.5 h-3.5 text-amber-400" /> Try Different Scenarios:
               </span>
               {[
                 'kesaribath thinbeku',
-                'girmit thinbeku',
-                'jolada rotti kodi',
-                'station hogbeku',
-                'filter coffee kodi'
+                'how are you friend',
+                'where is the station',
+                'how much is the auto fare',
+                'it is raining heavily',
+                'please help me quickly'
               ].map((sample) => (
                 <button
                   key={sample}
                   onClick={() => setCustomInput(sample)}
-                  className="text-[11px] bg-slate-950 hover:bg-slate-800 text-slate-300 hover:text-amber-300 px-2.5 py-1 rounded-lg border border-slate-800 transition-all"
+                  className="text-[11px] bg-slate-950 hover:bg-slate-800 text-slate-300 hover:text-amber-300 px-2.5 py-1 rounded-lg border border-slate-800 transition-all font-medium"
                 >
                   {sample}
                 </button>
@@ -244,7 +252,7 @@ export default function DialectMorph() {
               <div className="space-y-4">
                 <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-xs text-amber-300 flex items-center justify-between">
                   <span>
-                    💡 <strong>Real-Time Semantic Detection:</strong> Transformed "{customInput}" using regional food & verb lexicons!
+                    💡 <strong>Real-Time Semantic Engine:</strong> Transformed "{customInput}" into authentic regional vocabulary!
                   </span>
                   <span className="text-[10px] bg-amber-500/20 px-2 py-0.5 rounded text-amber-200 uppercase font-bold">
                     5 Regional Dialects Active

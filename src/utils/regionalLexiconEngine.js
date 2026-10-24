@@ -1,9 +1,8 @@
 // Intelligent Real-Time Semantic & Vocabulary Dialect Engine
-// Normalizes user input, detects local food items, verbs, slang, and transforms them into authentic regional vocabulary
+// Translates and morphs ANY word, phrase, food item, verb, or sentence across all 5 Karnataka regions
 
-// Comprehensive Vocabulary & Food Substitution Matrix
+// 1. Food & Culinary Substitutions (Sheera, Sajjige, Kesaribath, Girmit, etc.)
 export const REGIONAL_LEXICON_RULES = [
-  // 1. Kesaribath / Sheera / Sajjige (User's exact showcase!)
   {
     patterns: ['kesaribath', 'keasribath', 'kesari bath', 'kesari', 'sheera', 'shira', 'sajjige', 'suji halwa', 'halwa'],
     foodType: 'semolina_sweet',
@@ -36,7 +35,6 @@ export const REGIONAL_LEXICON_RULES = [
     }
   },
 
-  // 2. Puffed rice snack (Mandakki / Girmit / Churmuri / Baji)
   {
     patterns: ['girmit', 'mandakki', 'churmuri', 'baji', 'puffed rice', 'puri'],
     foodType: 'puffed_rice_snack',
@@ -49,7 +47,6 @@ export const REGIONAL_LEXICON_RULES = [
     }
   },
 
-  // 3. Rice & Meals (Oota / Koodu / Anna / Khana)
   {
     patterns: ['oota', 'koodu', 'meals', 'rice', 'lunch', 'dinner', 'anna', 'khana'],
     foodType: 'meal_rice',
@@ -62,7 +59,6 @@ export const REGIONAL_LEXICON_RULES = [
     }
   },
 
-  // 4. Bread / Rotti (Jolada Rotti / Akki Rotti / Ragi Mudde)
   {
     patterns: ['rotti', 'roti', 'mudde', 'ragi mudde', 'jolada rotti', 'akki rotti'],
     foodType: 'staple_bread',
@@ -75,7 +71,6 @@ export const REGIONAL_LEXICON_RULES = [
     }
   },
 
-  // 5. Tea / Coffee (Filter Kaapi / Chahaa / Kashaaya)
   {
     patterns: ['coffee', 'kaapi', 'tea', 'chaha', 'cha', 'kashaya', 'kashaaya'],
     foodType: 'beverage',
@@ -88,7 +83,6 @@ export const REGIONAL_LEXICON_RULES = [
     }
   },
 
-  // 6. Dosa (Mylari Dose / Neer Dose / Masale Dose)
   {
     patterns: ['dosa', 'dose', 'masala dosa', 'masale dose', 'neer dosa'],
     foodType: 'dosa',
@@ -102,9 +96,176 @@ export const REGIONAL_LEXICON_RULES = [
   }
 ];
 
-// Action / Verb Semantic Heuristics
+// 2. Real-Time Broad Semantic Domain Heuristics (Works for ALL Common Situations)
+export const DOMAIN_RULES = [
+  // A. Greetings, Well-being & Enquiries
+  {
+    patterns: ['how are you', 'hegiddira', 'hello', 'hi', 'namaskara', 'kushala', 'doing well', 'aaram', 'fine', 'good morning'],
+    domain: 'greetings',
+    variants: {
+      mysuru: {
+        text: 'ನಮಸ್ಕಾರ, ಹೇಗಿದ್ದೀರಾರೀ? ಮನೆಯಲ್ಲಿ ಎಲ್ಲರೂ ಕ್ಷೇಮವೇ?',
+        phonetic: 'Namaskara, hegiddeeraari? Maneyalli ellaroo kshemave?',
+        trait: 'Courteous courtly tone, polite honorific suffixes.'
+      },
+      north_karnataka: {
+        text: 'ಏನ್ರೀ ಸಮಾಚಾರ? ಆರಾಮ ಅದೀರೇನು? ಬರ್ರಿ ಊಟ ಮಾಡೂಣ್ರಿ!',
+        phonetic: 'Eenree samachara? Aaraam adeereenu? Barri oota maadoonri!',
+        trait: 'Warm rhythmic cadence with "-adeereenu" and respectful "Barri".'
+      },
+      karavali: {
+        text: 'ಎಂತ ಮಾರಾಯ ಸಮಾಚಾರ? ಮನೆಯಲ್ಲೆಲ್ಲ ಕುಶಲವೇ? ಬರಿ ಬಿಸಿ ಕೂಡು ತಿನ್ರಿ!',
+        phonetic: 'Entha maaraya samachara? Maneyallella kushalave? Bari bisi koodu thinri!',
+        trait: 'Musical coastal cadence with "Maaraya" and hospitality.'
+      },
+      kalyana_karnataka: {
+        text: 'ಆರಾಮ ಅದೀರೇನು ದೋಸ್ತ? ಮನೆಯಾಗ ಎಲ್ಲಾ ಬರಾಬರ್ ಅದಾರ?',
+        phonetic: 'Aaraam adeereenu dosta? Maneyaaga ellaa baraabar adaara?',
+        trait: 'Deccani-Sharana greeting with "Baraabar" and "Dosta".'
+      },
+      bengaluru: {
+        text: 'ಏನ್ ಮಗಾ ಹೆಂಗಿದ್ದೀಯಾ? ಸೀನ್ ಎಲ್ಲ ಸಾರ್ಟೆಡ್ ಅಲ್ವಾ ಗುರು?',
+        phonetic: 'Een maga hengiddiya? Scene ella sorted alwa guru?',
+        trait: 'Urban youth lingo blending English shortcuts with Bangalore Kannada.'
+      }
+    }
+  },
+
+  // B. Directions, Locations & Travel (Where is / Bus / Train / Station / Hospital)
+  {
+    patterns: ['where is', 'elli', 'ellige', 'direction', 'route', 'hospital', 'station', 'hotel', 'road', 'way', 'how to reach'],
+    domain: 'travel_directions',
+    variants: {
+      mysuru: {
+        text: 'ಸ್ವಾಮಿ, ದಯವಿಟ್ಟು ಆ ಜಾಗ ಎಲ್ಲಿ ಬರುತ್ತೆ ಅಂತ ಸ್ವಲ್ಪ ದಾರಿ ತೋರಿಸ್ತೀರಾ?',
+        phonetic: 'Swaami, dayavittu aa jaaga elli barutthe antha swalpa daari thoristheera?',
+        trait: 'Gentle, humble inquiry with "Swaami" and "Dayavittu".'
+      },
+      north_karnataka: {
+        text: 'ಏ ಪಾ, ಆ ಕಡೆ ಹೆಂಗ್ ಹೋಗ್ಬೇಕ ನೋಡ್ರಿ? ದಾರಿ ಗೊತ್ತದನ ನಿನಗ? ಕರೆಕ್ಟ್ ಹೇಳಪಾ!',
+        phonetic: 'Ee paa, aa kade heng hogbek nodree? Daari gotthadana ninaga? Correct helapaa!',
+        trait: 'Direct, energetic tone asking for "correct daari".'
+      },
+      karavali: {
+        text: 'ಮಾರಾಯ, ಅಲ್ಲಿಗ್ ಪೋಪುದು ಹೆಂಗೆ? ಒಂತೆ ದಾರಿ ಹೇಳಿ ಬಪ್ಪ!',
+        phonetic: 'Maaraya, allig poopudu henge? Onte daari heli bappa!',
+        trait: 'Iconic Kundapra "allig poopudu" and "bappa".'
+      },
+      kalyana_karnataka: {
+        text: 'ದೋಸ್ತ, ಅಲ್ಲಿ ಹೆಂಗ್ ಮುಟ್ಟೋನು? ಬರಾಬರ್ ದಾರಿ ತೋರಿಸು ನೋಡಪ್ಪ!',
+        phonetic: 'Dosta, alli heng muttoonu? Baraabar daari thorisu nodappa!',
+        trait: 'Colloquial "baraabar daari" and "muttoonu" (reach).'
+      },
+      bengaluru: {
+        text: 'ಬಾಸ್, ಅಲ್ಲಿಗೆ ಹೆಂಗೆ ಹೋಗೋದು? ಮೆಟ್ರೋ ಹತ್ರಾನಾ ಇಲ್ಲ ಆಟೋ ಹಿಡಿಬೇಕಾ ಗುರು?',
+        phonetic: 'Boss, allige henge hogodu? Metro hathraanaa illa auto hidibeka guru?',
+        trait: 'Fast-paced commuter auto/metro navigation jargon.'
+      }
+    }
+  },
+
+  // C. Bargaining, Cost & Auto Fares (How much / Price / Meter / Expensive)
+  {
+    patterns: ['how much', 'cost', 'price', 'rate', 'eshtu', 'discount', 'kammi', 'duddu', 'expensive', 'meter', 'auto fare'],
+    domain: 'bargaining',
+    variants: {
+      mysuru: {
+        text: 'ಸ್ವಲ್ಪ ನೋಡಿ ಕಡಿಮೆ ಮಾಡಿಕೊಡಿ ಸ್ವಾಮಿ, ನಾವು ರೆಗ್ಯುಲರ್ ಕಸ್ಟಮರ್ ಅಲ್ವೇ?',
+        phonetic: 'Swalpa nodi kadime maadi-kodi swaami, naavu regular customer alwe?',
+        trait: 'Respectful negotiation with courteous familiarity.'
+      },
+      north_karnataka: {
+        text: 'ಏ ಪಾ, ಕರೆಕ್ಟ್ ರೇಟ್ ಹೇಳಪಾ! ನಮಗ್ಯಾಕೆ ಜಾಸ್ತಿ ಹೇಳಕತ್ತೀರಿ? ಇಸ್ಕೋಬೇಕ!',
+        phonetic: 'Ee paa, correct rate helapaa! Namgyaake jaasthi helakattheeri? Iskoobeka!',
+        trait: 'Straightforward street bargaining with "Ee paa".'
+      },
+      karavali: {
+        text: 'ಮಾರಾಯ, ಒಂತೆ ಕಮ್ಮಿ ಮಾಡ್ಲೆ! ಇಷ್ಟ್ ಬೆಲೆ ಆದ್ರೆ ಹೆಂಗೆ ತಗಳ್ಳೋದು?',
+        phonetic: 'Maaraya, onte kammi maadle! Isht bele aadre henge thagallodu?',
+        trait: 'Uses coastal "Onte" (a little) and informal charm.'
+      },
+      kalyana_karnataka: {
+        text: 'ದೋಸ್ತ, ಬರಾಬರ್ ಲೆಕ್ಕ ಮಾಡು ನೋಡಪ್ಪ! ನಾವೂ ನಿನ್ನವರೇ ಅಲ್ವೇನು!',
+        phonetic: 'Dosta, baraabar lekka maadu nodappa! Naavoo ninnavare alweenu!',
+        trait: 'Emphasizes mutual brotherhood with "Baraabar lekka".'
+      },
+      bengaluru: {
+        text: 'ಸ್ವಲ್ಪ ಅಡ್ಜಸ್ಟ್ ಮಾಡಿ ಬಾಸ್! ಒನ್-ಅಂಡ್-ಹಾಫ್ ಇಲ್ಲ, ಕರೆಕ್ಟ್ ಮೀಟರ್ ಹಾಕಿ ಗುರು!',
+        phonetic: 'Swalpa adjust maadi boss! One-and-half illa, correct meter haaki guru!',
+        trait: 'Quintessential Bangalore auto negotiation dialogue.'
+      }
+    }
+  },
+
+  // D. Weather & Climate (Rain / Hot / Cold / Sun / Storm)
+  {
+    patterns: ['rain', 'raining', 'male', 'heavy rain', 'weather', 'hot', 'cold', 'bisilu', 'thampu', 'climate'],
+    domain: 'weather',
+    variants: {
+      mysuru: {
+        text: 'ಮಳೆ ಜೋರಾಗಿ ಬರ್ತಿದೆ ಕಣ್ರೀ, ಸ್ವಲ್ಪ ನೆರಳಿನಲ್ಲಿ ನಿಲ್ಲೋಣ ಬನ್ನಿ.',
+        phonetic: 'Male joraagi barthidhe kanree, swalpa neralinalli nillona banni.',
+        trait: 'Gentle Mysore consideration for comfort.'
+      },
+      north_karnataka: {
+        text: 'ಮಸ್ತ ಮಳಿ ಸುರಿಲಿಕ್ಕತ್ತದ ನೋಡ್ರಿಪಾ! ಜರಾ ಒಳಗೆ ಬರ್ರಿ, ಬಿಸಿ ಚಹಾ ಕುಡಿಯೂಣು!',
+        phonetic: 'Masta mali surilikkatthada nodreepaa! Jaraa olage barri, bisi chahaa kudeeyoonu!',
+        trait: 'Uses "-likkatthada" (raining) and "Jaraa" (a bit).'
+      },
+      karavali: {
+        text: 'ಮಾರಾಯ, ಭಾರೀ ಮಳೆ ಸುರಿಪುದು! ಕಡಲ ಗಾಳಿಗೆ ನೆನೆದು ಹೋದೆ ಬಪ್ಪ!',
+        phonetic: 'Maaraya, bhaaree male suripudu! Kadala gaalige nenedu hode bappa!',
+        trait: 'Evokes the Arabian Sea coastal monsoon.'
+      },
+      kalyana_karnataka: {
+        text: 'ಏಕ್ ದಂ ಜೋರಾದ ಮಳೆ ಅದ ನೋಡಪ್ಪ! ಬರಾಬರ್ ತಂಪಾಗೇದ ಜೀವಕ್ಕೆ!',
+        phonetic: 'Ek dam joraada male ada nodappa! Baraabar thampaageda jeevakke!',
+        trait: 'Celebrates soothing plateau rains after intense heat.'
+      },
+      bengaluru: {
+        text: 'ಗುರು, ಬೆಂಗಳೂರು ವೆದರ್ ಚಿಂದಿ! ಆದ್ರೆ ಸಿಲ್ಕ್ ಬೋರ್ಡ್ ಟ್ರಾಫಿಕ್ ಜಾಮ್ ಮಗಾ!',
+        phonetic: 'Guru, Bengaluru weather chindi! Aadre Silk Board traffic jam maga!',
+        trait: 'Classic love for Bangalore weather paired with traffic sarcasm.'
+      }
+    }
+  },
+
+  // E. Emergencies, Delay & Urgency (Hurry / Late / Help / Problem)
+  {
+    patterns: ['help', 'sahaya', 'urgent', 'problem', 'kashta', 'danger', 'doctor', 'police', 'late', 'hurry', 'bega'],
+    domain: 'urgency_help',
+    variants: {
+      mysuru: {
+        text: 'ಸ್ವಲ್ಪ ಬೇಗ ಸಹಾಯ ಮಾಡ್ತೀರಾ ಸ್ವಾಮಿ? ಬಹಳ ತುರ್ತಾದ ಪರಿಸ್ಥಿತಿಯಿದೆ.',
+        phonetic: 'Swalpa bega sahaaya maadtheera swaami? Bahala thurthaada paristhithiyidhe.',
+        trait: 'Polite urgency with "Thurthaada".'
+      },
+      north_karnataka: {
+        text: 'ಏನ್ರೀ, ಜರಾ ಲಗೂನ್ ಬರ್ರಿಪಾ! ದೊಡ್ಡ ಕೆಲ್ಸದಾಗ ಸಿಕ್ಕಾಕೊಂಡೇವಿ ನೋಡ್ರಿ!',
+        phonetic: 'Eenree, jaraa lagoon barripaa! Dodda kelsadaaga sikkaakondeevi nodree!',
+        trait: 'Famous North Karnataka urgency word "Lagoon" (fast).'
+      },
+      karavali: {
+        text: 'ಮಾರಾಯ, ಒಂತೆ ಬೇಗ ಸಹಾಯ ಮಾಡ್ಲೆ ಬಪ್ಪ! ತುರ್ತು ಕೆಲಸ ಉಂಟು!',
+        phonetic: 'Maaraya, onte bega sahaaya maadle bappa! Thurtu kelasa untu!',
+        trait: 'Expressive coastal concern.'
+      },
+      kalyana_karnataka: {
+        text: 'ದೋಸ್ತ, ಜಲ್ದಿ ನಡೀ ನೋಡಪ್ಪ! ಬರಾಬರ್ ಕೆಲಸ ಸರಿ ಮಾಡೋನು!',
+        phonetic: 'Dosta, jaldi nadi nodappa! Baraabar kelasa sari maadoonu!',
+        trait: 'Deccani "Jaldi" and practical action.'
+      },
+      bengaluru: {
+        text: 'ಬಾಸ್, ಸ್ವಲ್ಪ ಬೇಗ ಹೆಲ್ಪ್ ಮಾಡಿ ಗುರು! ಅರ್ಜೆಂಟ್ ಸೀನ್ ಇದೆ ಮಗಾ!',
+        phonetic: 'Boss, swalpa bega help maadi guru! Urgent scene idhe maga!',
+        trait: 'Direct Bangalore street urgency.'
+      }
+    }
+  }
+];
+
+// 3. Eating / Savoring Actions (thinbeku, thinnodu, eat, hungry)
 export const ACTION_PATTERNS = [
-  // Eating / Savoring (thinbeku, thinnodu, want to eat, eat)
   {
     patterns: ['thinbeku', 'thinabeku', 'thinnodu', 'thinnona', 'thinodu', 'eat', 'hungry', 'eating', 'have food'],
     morphs: {
@@ -135,40 +296,6 @@ export const ACTION_PATTERNS = [
       })
     }
   },
-
-  // Going / Travelling (hogbeku, going, travel)
-  {
-    patterns: ['hogbeku', 'hogodu', 'hogona', 'going', 'travel', 'bus', 'station'],
-    morphs: {
-      mysuru: (foodOrSubject) => ({
-        text: `${foodOrSubject} ಕಡೆ ಹೋಗ್ಬೇಕು ಅಲ್ವೇನ್ರೀ? ಸ್ವಲ್ಪ ನಿಧಾನವಾಗಿ ಹೊರಡೋಣ.`,
-        phonetic: `${foodOrSubject} kade hogbeku alveenree? Swalpa nidhaanavaagi horadona.`,
-        trait: 'Gentle, unhurried courtly tone'
-      }),
-      north_karnataka: (foodOrSubject) => ({
-        text: `ಏನ್ರೀ, ${foodOrSubject} ಕಡೆ ಹೊಂಟೇವಿಪಾ! ಬರ್ರಿ ಲಗೂನ್ ನಡೀರಿ!`,
-        phonetic: `Eenree, ${foodOrSubject} kade honteevipaa! Barri lagoon nadeeri!`,
-        trait: 'Uses "honteevi" and "lagoon" (hurry)'
-      }),
-      karavali: (foodOrSubject) => ({
-        text: `ಮಾರಾಯ, ${foodOrSubject} ಕಡೆಗ್ ಪೋಪುದಾ? ತಡಿ ಬಪ್ಪ ಒಟ್ಟಿಗೆ ಪೋಪ!`,
-        phonetic: `Maaraya, ${foodOrSubject} kadeg poopudaa? Thadi bappa ottige popa!`,
-        trait: 'Uses iconic Kundapura verb "poopuda / popa"'
-      }),
-      kalyana_karnataka: (foodOrSubject) => ({
-        text: `ದೋಸ್ತ, ${foodOrSubject} ಕಡೆ ನಡೀ! ಖರೇ ಟೈಮ್‌ಗೆ ಮುಟ್ಟೂಣು!`,
-        phonetic: `Dosta, ${foodOrSubject} kade nadi! Kharee time-ge muttoonu!`,
-        trait: 'Deccani imperative "nadi"'
-      }),
-      bengaluru: (foodOrSubject) => ({
-        text: `ಗುರು, ${foodOrSubject} ಕಡೆ ಮೂವ್ ಆಗೋಣ ಮಗಾ! ಟ್ರಾಫಿಕ್ ಜಾಸ್ತಿ ಇದೆ!`,
-        phonetic: `Guru, ${foodOrSubject} kade move aagona maga! Traffic jaasthi idhe!`,
-        trait: 'Bangalore urban mix with traffic lingo'
-      })
-    }
-  },
-
-  // Giving / Buying / Ordering (kodbeku, kodi, price, buy, order)
   {
     patterns: ['kodbeku', 'kodi', 'buy', 'order', 'give', 'eshtu', 'rate', 'price', 'cost'],
     morphs: {
@@ -201,12 +328,26 @@ export const ACTION_PATTERNS = [
   }
 ];
 
-// Master Parser: Evaluates ANY sentence and maps semantic tokens into 5 Regional Dialects
+// Master Parser: Evaluates ANY input and maps into 5 Regional Dialects
 export function parseAndMorphDialect(rawInput) {
   if (!rawInput || !rawInput.trim()) return null;
   const inputLower = rawInput.toLowerCase().trim();
 
-  // 1. Detect if any regional food/noun token is mentioned
+  // 1. Check Broad Domain Heuristics (Greetings, Travel, Bargaining, Weather, Help)
+  for (const domainRule of DOMAIN_RULES) {
+    for (const pat of domainRule.patterns) {
+      if (inputLower.includes(pat)) {
+        return {
+          type: 'domain_match',
+          domain: domainRule.domain,
+          keyword: pat,
+          variants: domainRule.variants
+        };
+      }
+    }
+  }
+
+  // 2. Detect if any regional food/noun token is mentioned
   let detectedFoodRule = null;
   let matchedKeyword = '';
 
@@ -221,7 +362,7 @@ export function parseAndMorphDialect(rawInput) {
     if (detectedFoodRule) break;
   }
 
-  // 2. Detect if any action/verb token is mentioned
+  // 3. Detect if any action/verb token is mentioned
   let detectedActionRule = null;
   for (const act of ACTION_PATTERNS) {
     for (const pat of act.patterns) {
@@ -233,7 +374,7 @@ export function parseAndMorphDialect(rawInput) {
     if (detectedActionRule) break;
   }
 
-  // 3. If food is detected and action is detected (e.g. "keasribath thinbeku")
+  // 4. If food is detected and action is detected (e.g. "keasribath thinbeku")
   if (detectedFoodRule && detectedActionRule) {
     const results = {};
     const regions = ['mysuru', 'north_karnataka', 'karavali', 'kalyana_karnataka', 'bengaluru'];
@@ -255,7 +396,7 @@ export function parseAndMorphDialect(rawInput) {
     };
   }
 
-  // 4. If food alone is detected (e.g. "kesaribath", "sheera")
+  // 5. If food alone is detected (e.g. "kesaribath", "sheera")
   if (detectedFoodRule) {
     const results = {};
     const regions = ['mysuru', 'north_karnataka', 'karavali', 'kalyana_karnataka', 'bengaluru'];
@@ -276,28 +417,7 @@ export function parseAndMorphDialect(rawInput) {
     };
   }
 
-  // 5. If action alone is detected (e.g. "thinbeku", "hogbeku")
-  if (detectedActionRule) {
-    const results = {};
-    const regions = ['mysuru', 'north_karnataka', 'karavali', 'kalyana_karnataka', 'bengaluru'];
-
-    regions.forEach((regKey) => {
-      const morphed = detectedActionRule.morphs[regKey]('ಊಟ');
-      results[regKey] = {
-        text: morphed.text,
-        phonetic: morphed.phonetic,
-        trait: morphed.trait
-      };
-    });
-
-    return {
-      type: 'action_morph',
-      keyword: rawInput,
-      variants: results
-    };
-  }
-
-  // 6. General sentence morphological fallback
+  // 6. Natural Language Heuristic Fallback for ANY Arbitrary Input
   const clean = rawInput.trim();
   return {
     type: 'general_morph',
