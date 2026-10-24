@@ -5,6 +5,7 @@ import { speakKannada } from '../utils/audioHelper';
 
 export default function KarnatakaMap({ currentRegion, setCurrentRegion }) {
   const [hoveredRegion, setHoveredRegion] = useState(null);
+  const [playingPhraseIdx, setPlayingPhraseIdx] = useState(null);
   const regionData = REGIONS[currentRegion] || REGIONS.mysuru;
 
   // Visual coordinates and regions mapping for the Karnataka SVG Map
@@ -262,27 +263,42 @@ export default function KarnatakaMap({ currentRegion, setCurrentRegion }) {
                 Popular Everyday Phrases in this Dialect
               </h4>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {regionData.samplePhrases.map((phrase, idx) => (
-                  <div
-                    key={idx}
-                    className="p-3 rounded-xl bg-slate-900/70 border border-slate-800 hover:border-amber-500/40 transition-all group"
-                  >
-                    <div className="flex items-start justify-between gap-2">
-                      <p className="text-sm font-bold text-amber-200 font-kannada">
-                        {phrase.kannada}
-                      </p>
-                      <button
-                        onClick={() => speakKannada(phrase.kannada, regionData.id)}
-                        className="opacity-60 group-hover:opacity-100 text-amber-400 hover:text-amber-300 transition-opacity"
-                        title="Pronounce phrase"
-                      >
-                        <Volume2 className="w-4 h-4" />
-                      </button>
+                {regionData.samplePhrases.map((phrase, idx) => {
+                  const isPlaying = playingPhraseIdx === idx;
+                  return (
+                    <div
+                      key={idx}
+                      className={`p-3 rounded-xl border transition-all group ${
+                        isPlaying
+                          ? 'bg-amber-500/15 border-amber-400 shadow-md ring-1 ring-amber-400/40'
+                          : 'bg-slate-900/70 border-slate-800 hover:border-amber-500/40'
+                      }`}
+                    >
+                      <div className="flex items-start justify-between gap-2">
+                        <p className="text-sm font-bold text-amber-200 font-kannada">
+                          {phrase.kannada}
+                        </p>
+                        <button
+                          onClick={() => {
+                            setPlayingPhraseIdx(idx);
+                            speakKannada(phrase.kannada, regionData.id);
+                            setTimeout(() => setPlayingPhraseIdx(null), 2500);
+                          }}
+                          className={`p-1.5 rounded-lg transition-all ${
+                            isPlaying
+                              ? 'bg-amber-500 text-slate-950 scale-110 shadow-md animate-pulse'
+                              : 'opacity-70 group-hover:opacity-100 text-amber-400 hover:bg-slate-800 hover:text-amber-300'
+                          }`}
+                          title="Listen to phrase"
+                        >
+                          <Volume2 className="w-4 h-4" />
+                        </button>
+                      </div>
+                      <p className="text-[11px] text-slate-400 italic mt-0.5">{phrase.transliteration}</p>
+                      <p className="text-xs text-slate-300 mt-1">{phrase.meaning}</p>
                     </div>
-                    <p className="text-[11px] text-slate-400 italic mt-0.5">{phrase.transliteration}</p>
-                    <p className="text-xs text-slate-300 mt-1">{phrase.meaning}</p>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             </div>
 
