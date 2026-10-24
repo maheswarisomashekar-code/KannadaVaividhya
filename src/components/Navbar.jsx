@@ -8,6 +8,7 @@ export default function Navbar({ activeSection, setActiveSection, currentRegion,
   const navLinks = [
     { id: 'map', label: 'Dialect Map', kannada: 'ಪ್ರಾದೇಶಿಕ ನಕ್ಷೆ', icon: MapPin },
     { id: 'morph', label: 'Dialect Morph', kannada: 'ನುಡಿ ರೂಪಾಂತರ', icon: Sparkles },
+    { id: 'mitra', label: 'AI Dialect Mitra', kannada: 'ನುಡಿ ಮಿತ್ರ', icon: Sparkles },
     { id: 'audiolab', label: 'Voice Lab', kannada: 'ಧ್ವನಿ ಪ್ರಯೋಗಾಲಯ', icon: Mic },
     { id: 'quiz', label: 'Detective Quiz', kannada: 'ಯಾವ ಕನ್ನಡ? ರಸಪ್ರಶ್ನೆ', icon: HelpCircle },
     { id: 'vault', label: 'Folk Vault', kannada: 'ಜನಪದ ಕೋಶ', icon: BookOpen },

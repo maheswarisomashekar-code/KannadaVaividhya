@@ -3,6 +3,7 @@ import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import KarnatakaMap from './components/KarnatakaMap';
 import DialectMorph from './components/DialectMorph';
+import DialectMitra from './components/DialectMitra';
 import AudioLab from './components/AudioLab';
 import DialectQuiz from './components/DialectQuiz';
 import FolkVault from './components/FolkVault';
@@ -48,6 +49,9 @@ export default function App() {
 
         {/* Feature 2: 5-Way Dialect Morph Cross-Translator */}
         <DialectMorph />
+
+        {/* Feature 2B: Real-Time AI Dialect Mitra & Word Explorer */}
+        <DialectMitra />
 
         {/* Feature 3: Audio Waveform & Pronunciation Lab */}
         <AudioLab />

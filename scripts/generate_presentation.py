@@ -383,11 +383,11 @@ def create_deck():
 
     features = [
         ("Karnataka Interactive Map", "Clickable SVG state map with 5 color-coded dialect zones, district listings, audio greetings, and proverbs.", "🗺️"),
-        ("Dialect Morph Matrix", "Side-by-side comparative cards with audio synthesis, phonetic guides, and custom sentence morphing.", "✨"),
+        ("Real-Time AI Dialect Mitra", "Translates ANY arbitrary sentence or word into 5 regional dialects with instant audio & etiquette tips.", "🧠"),
+        ("5-Way Dialect Morph", "Curated side-by-side comparative matrices across key domains with authentic audio pacing & transliteration.", "✨"),
         ("Acoustic Frequency Lab", "Live microphone waveform visualizer on HTML5 canvas with automated pronunciation match scoring.", "🎙️"),
-        ("Dialect Detective Quiz", "Interactive trivia with audio clues, streak counter, sound effects, and 3 tiers of cultural badges.", "🎮"),
-        ("Janapada Kosha Vault", "Searchable archive of regional proverbs & slang with real-time upvoting and community submission modal.", "📚"),
-        ("Cultural Heritage Hub", "Deep dive into regional folk drama (Yakshagana), literary masters (Kuvempu, Bendre), and local cuisine.", "🏛️")
+        ("Dynamic Detective Quiz", "Endless randomized trivia rounds with shuffled options, sound effects, and 3 cultural badge tiers.", "🎮"),
+        ("Janapada Kosha Vault", "Searchable archive of regional proverbs & slang with real-time upvoting and community submission modal.", "📚")
     ]
 
     for idx, (f_title, f_desc, icon) in enumerate(features):

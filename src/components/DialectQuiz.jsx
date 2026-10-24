@@ -1,17 +1,22 @@
-import React, { useState } from 'react';
-import { QUIZ_QUESTIONS, BADGES } from '../data/quizData';
+import React, { useState, useEffect } from 'react';
+import { getRandomQuizSet, BADGES, ALL_QUIZ_QUESTIONS } from '../data/quizData';
 import { soundEffects, speakKannada } from '../utils/audioHelper';
-import { HelpCircle, CheckCircle, XCircle, Award, Volume2, Sparkles, RefreshCw, ArrowRight } from 'lucide-react';
+import { HelpCircle, CheckCircle, XCircle, Award, Volume2, Sparkles, RefreshCw, ArrowRight, Shuffle } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
+const QUESTIONS_PER_ROUND = 5;
+
 export default function DialectQuiz() {
+  const [questions, setQuestions] = useState(() => getRandomQuizSet(QUESTIONS_PER_ROUND));
   const [currentIdx, setCurrentIdx] = useState(0);
   const [selectedOption, setSelectedOption] = useState(null);
   const [isAnswered, setIsAnswered] = useState(false);
   const [score, setScore] = useState(0);
   const [quizFinished, setQuizFinished] = useState(false);
+  const [roundNumber, setRoundNumber] = useState(1);
+  const [historyIds, setHistoryIds] = useState([]);
 
-  const question = QUIZ_QUESTIONS[currentIdx];
+  const question = questions[currentIdx] || questions[0];
 
   const handleSelectOption = (option) => {
     if (isAnswered) return;
@@ -27,31 +32,42 @@ export default function DialectQuiz() {
   };
 
   const handleNext = () => {
-    if (currentIdx + 1 < QUIZ_QUESTIONS.length) {
+    if (currentIdx + 1 < questions.length) {
       setCurrentIdx((prev) => prev + 1);
       setSelectedOption(null);
       setIsAnswered(false);
     } else {
       setQuizFinished(true);
-      // Trigger festive celebration confetti
-      try {
-        confetti({
-          particleCount: 100,
-          spread: 70,
-          origin: { y: 0.6 }
-        });
-      } catch (e) {
-        console.warn('Confetti error', e);
+      // Trigger festive celebration confetti if score is high
+      if (score >= 3) {
+        try {
+          confetti({
+            particleCount: 120,
+            spread: 80,
+            origin: { y: 0.6 }
+          });
+        } catch (e) {
+          console.warn('Confetti error', e);
+        }
       }
     }
   };
 
-  const restartQuiz = () => {
+  const startNewQuiz = () => {
+    // Record current question IDs in history to prevent repeats in next round
+    const currentIds = questions.map((q) => q.id);
+    const newHistory = [...historyIds, ...currentIds];
+    setHistoryIds(newHistory);
+
+    const freshSet = getRandomQuizSet(QUESTIONS_PER_ROUND, newHistory);
+    setQuestions(freshSet);
     setCurrentIdx(0);
     setSelectedOption(null);
     setIsAnswered(false);
     setScore(0);
     setQuizFinished(false);
+    setRoundNumber((r) => r + 1);
+    soundEffects.playClick();
   };
 
   const earnedBadge = [...BADGES].reverse().find((b) => score >= b.threshold) || BADGES[0];
@@ -70,7 +86,7 @@ export default function DialectQuiz() {
             ಯಾವ ಕನ್ನಡ? — Dialect Detective Game
           </h2>
           <p className="mt-2 text-base text-slate-400">
-            Test your ear for Karnataka's linguistic flavors! Identify the regional origin of phrases, idioms, and local expressions.
+            Test your ear for Karnataka's linguistic flavors! Every attempt serves <strong className="text-amber-300">fresh randomized questions</strong> from our extensive regional bank.
           </p>
         </div>
 
@@ -81,19 +97,35 @@ export default function DialectQuiz() {
             <div>
               {/* Progress Bar & Score header */}
               <div className="flex items-center justify-between pb-4 border-b border-slate-800 text-xs text-slate-400">
-                <span className="font-semibold text-amber-400">
-                  Question {currentIdx + 1} of {QUIZ_QUESTIONS.length}
-                </span>
-                <span className="bg-slate-800 px-3 py-1 rounded-full text-white font-bold">
-                  Score: {score}
-                </span>
+                <div className="flex items-center gap-2">
+                  <span className="font-semibold text-amber-400">
+                    Question {currentIdx + 1} of {questions.length}
+                  </span>
+                  <span className="px-2 py-0.5 rounded bg-slate-800 text-slate-300 text-[10px]">
+                    Round #{roundNumber}
+                  </span>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <span className="bg-slate-800 px-3 py-1 rounded-full text-white font-bold">
+                    Score: {score}
+                  </span>
+                  <button
+                    onClick={startNewQuiz}
+                    className="p-1 rounded bg-slate-800 hover:bg-slate-700 text-slate-400 hover:text-amber-400 transition-colors text-xs flex items-center gap-1"
+                    title="Shuffle & Load New Random Questions"
+                  >
+                    <Shuffle className="w-3.5 h-3.5" />
+                    <span className="hidden sm:inline">Shuffle</span>
+                  </button>
+                </div>
               </div>
 
               {/* Progress line */}
               <div className="w-full bg-slate-800 h-1.5 rounded-full my-4 overflow-hidden">
                 <div
                   className="bg-amber-500 h-full transition-all duration-300"
-                  style={{ width: `${((currentIdx + 1) / QUIZ_QUESTIONS.length) * 100}%` }}
+                  style={{ width: `${((currentIdx + 1) / questions.length) * 100}%` }}
                 />
               </div>
 
@@ -171,7 +203,7 @@ export default function DialectQuiz() {
                     onClick={handleNext}
                     className="px-6 py-2.5 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-xs sm:text-sm flex items-center justify-center gap-2 transition-all shrink-0 shadow-md shadow-amber-500/20"
                   >
-                    <span>{currentIdx + 1 === QUIZ_QUESTIONS.length ? 'View Final Results' : 'Next Clue'}</span>
+                    <span>{currentIdx + 1 === questions.length ? 'View Final Results' : 'Next Clue'}</span>
                     <ArrowRight className="w-4 h-4" />
                   </button>
                 </div>
@@ -186,7 +218,7 @@ export default function DialectQuiz() {
                 ಅಭಿನಂದನೆಗಳು! (Congratulations!)
               </h3>
               <p className="text-sm text-slate-300 mb-6">
-                You scored <strong className="text-amber-400 text-lg font-bold">{score}</strong> out of {QUIZ_QUESTIONS.length}!
+                You scored <strong className="text-amber-400 text-lg font-bold">{score}</strong> out of {questions.length} in Round #{roundNumber}!
               </p>
 
               {/* Badge Certificate */}
@@ -202,13 +234,15 @@ export default function DialectQuiz() {
                 </p>
               </div>
 
-              <button
-                onClick={restartQuiz}
-                className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm shadow-xl shadow-amber-500/25 transition-all hover:scale-105"
-              >
-                <RefreshCw className="w-4 h-4" />
-                <span>Play Again & Improve Score</span>
-              </button>
+              <div className="flex flex-wrap items-center justify-center gap-3">
+                <button
+                  onClick={startNewQuiz}
+                  className="inline-flex items-center gap-2 px-6 py-3 rounded-xl bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold text-sm shadow-xl shadow-amber-500/25 transition-all hover:scale-105"
+                >
+                  <RefreshCw className="w-4 h-4" />
+                  <span>Play Next Round (5 Fresh Questions)</span>
+                </button>
+              </div>
             </div>
           )}
 
