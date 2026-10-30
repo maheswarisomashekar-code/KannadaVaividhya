@@ -3,6 +3,7 @@ import { Search, Filter, Volume2, X, Sparkles, BookOpen, MapPin, Tag } from 'luc
 import { PHRASES, CATEGORIES } from '../data/phrases';
 import { INITIAL_FOLK_ENTRIES } from '../data/folkVault';
 import { WORDS_OF_THE_DAY } from '../data/wordOfTheDay';
+import { REGIONS } from '../data/regions';
 import { speakKannada } from '../utils/audioHelper';
 
 export default function GlobalSearch({ lang = 'kn' }) {
@@ -83,6 +84,24 @@ export default function GlobalSearch({ lang = 'kn' }) {
         regionName: isKn ? w.regionNameKn : w.regionNameEn,
         category: 'vocabulary',
         source: 'wotd'
+      });
+    });
+
+    // From REGIONS samplePhrases
+    Object.values(REGIONS).forEach((reg) => {
+      (reg.samplePhrases || []).forEach((sp, idx) => {
+        list.push({
+          id: `regional-${reg.id}-${idx}`,
+          kannada: sp.kannada,
+          phonetic: sp.transliteration,
+          meaning: sp.meaning,
+          standardKannada: sp.kannada,
+          note: `${sp.district ? sp.district + ': ' : ''}${sp.culturalNuance || ''}`,
+          regionId: reg.id,
+          regionName: isKn ? reg.kannadaName.split(' (')[0] : reg.name.split(' (')[0],
+          category: sp.category || 'slang',
+          source: 'regional_map'
+        });
       });
     });
 

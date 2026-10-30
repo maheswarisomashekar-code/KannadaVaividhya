@@ -1,11 +1,24 @@
 import React, { useState } from 'react';
 import { REGIONS } from '../data/regions';
-import { Volume2, MapPin, BookOpen, Info, Sparkles } from 'lucide-react';
+import { 
+  Volume2, 
+  MapPin, 
+  BookOpen, 
+  Info, 
+  Sparkles, 
+  Utensils, 
+  MessageSquare, 
+  Filter, 
+  Compass, 
+  CheckCircle2 
+} from 'lucide-react';
 import { speakKannada } from '../utils/audioHelper';
 import { UI_STRINGS } from '../data/translations';
 
 export default function KarnatakaMap({ currentRegion, setCurrentRegion, lang = 'kn' }) {
   const [hoveredRegion, setHoveredRegion] = useState(null);
+  const [selectedCategory, setSelectedCategory] = useState('all');
+  const [selectedDistrict, setSelectedDistrict] = useState('all');
   const [playingPhraseIdx, setPlayingPhraseIdx] = useState(null);
   const [isPlayingGreeting, setIsPlayingGreeting] = useState(false);
   
@@ -62,6 +75,15 @@ export default function KarnatakaMap({ currentRegion, setCurrentRegion, lang = '
     }
   ];
 
+  const categories = [
+    { id: 'all', labelEn: 'All Expressions', labelKn: 'ಎಲ್ಲ ನುಡಿಗಳು' },
+    { id: 'greetings', labelEn: 'Greetings', labelKn: 'ಕುಶಲೋಪರಿ' },
+    { id: 'food', labelEn: 'Food & Dining', labelKn: 'ಊಟ & ಉಪಹಾರ' },
+    { id: 'slang', labelEn: 'Everyday Slang', labelKn: 'ಆಡುಮಾತು & ಸ್ಲ್ಯಾಂಗ್' },
+    { id: 'travel', labelEn: 'Travel & Transit', labelKn: 'ಪ್ರಯಾಣ & ವ್ಯವಹಾರ' },
+    { id: 'proverb', labelEn: 'Proverbs', labelKn: 'ಗಾದೆ & ಜಾಣ್ಮೆ' },
+  ];
+
   const handlePlayGreeting = () => {
     setIsPlayingGreeting(true);
     speakKannada(regionData.greeting.kannada, () => {
@@ -76,19 +98,27 @@ export default function KarnatakaMap({ currentRegion, setCurrentRegion, lang = '
     });
   };
 
+  // Filter phrases based on category and district
+  const filteredPhrases = (regionData.samplePhrases || []).filter((phrase) => {
+    const matchesCategory = selectedCategory === 'all' || phrase.category === selectedCategory;
+    const matchesDistrict = selectedDistrict === 'all' || 
+      (phrase.district && phrase.district.toLowerCase().includes(selectedDistrict.toLowerCase()));
+    return matchesCategory && matchesDistrict;
+  });
+
   return (
     <section 
       id="map" 
       aria-labelledby="map-section-heading"
-      className="py-14 sm:py-18 bg-[#14110E] relative border-b border-[#2E2620]"
+      className="py-10 sm:py-16 bg-[#14110E] relative border-b border-[#2E2620]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
-        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
+        <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F3C067]/15 text-[#F3C067] text-xs font-semibold mb-3 border border-[#F3C067]/40 shadow-sm">
-            <MapPin className="w-3.5 h-3.5" />
-            <span>{isKn ? 'ಪ್ರಾದೇಶಿಕ ನಕ್ಷೆ ಅನ್ವೇಷಕ' : 'Interactive Regional Geo-Explorer'}</span>
+            <Compass className="w-3.5 h-3.5" />
+            <span>{isKn ? 'ಕರ್ನಾಟಕದ ೩೧ ಜಿಲ್ಲೆಗಳ ನುಡಿ ನಕ್ಷೆ' : 'Karnataka 31-District Dialect Atlas'}</span>
           </div>
           <h2 id="map-section-heading" className="text-2xl sm:text-4xl font-extrabold text-[#F3EFEA] tracking-tight font-serif">
             {t.mapTitle}
@@ -98,7 +128,7 @@ export default function KarnatakaMap({ currentRegion, setCurrentRegion, lang = '
           </p>
         </div>
 
-        {/* Region Quick Selector Pills */}
+        {/* Region Quick Selector Tabs */}
         <div className="flex flex-wrap justify-center gap-2 mb-8 sm:mb-10" role="tablist" aria-label="Select Region">
           {Object.values(REGIONS).map((reg) => {
             const isSelected = currentRegion === reg.id;
@@ -107,7 +137,11 @@ export default function KarnatakaMap({ currentRegion, setCurrentRegion, lang = '
                 key={reg.id}
                 role="tab"
                 aria-selected={isSelected}
-                onClick={() => setCurrentRegion(reg.id)}
+                onClick={() => {
+                  setCurrentRegion(reg.id);
+                  setSelectedCategory('all');
+                  setSelectedDistrict('all');
+                }}
                 className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all border ${
                   isSelected
                     ? 'bg-[#F3C067] text-[#14110E] border-[#F3C067] shadow-lg scale-102 font-bold'
@@ -115,23 +149,23 @@ export default function KarnatakaMap({ currentRegion, setCurrentRegion, lang = '
                 }`}
               >
                 <span className="w-2.5 h-2.5 rounded-full shrink-0" style={{ backgroundColor: isSelected ? '#14110E' : reg.color }} />
-                <span>{isKn ? reg.kannadaName : reg.name.split(' (')[0]}</span>
+                <span>{isKn ? reg.kannadaName.split(' (')[0] : reg.name.split(' (')[0]}</span>
               </button>
             );
           })}
         </div>
 
-        {/* Main Grid: Interactive Map Visualizer + Detailed Linguistic Card */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+        {/* Main Grid: Interactive Map Visualizer + Region Overview */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start mb-10">
           
           {/* Map Visualizer Column */}
-          <div className="lg:col-span-5 bg-[#1E1915] border border-[#2E2620] rounded-2xl p-5 sm:p-6 shadow-xl relative">
+          <div className="lg:col-span-5 bg-[#1E1915] border border-[#2E2620] rounded-3xl p-5 sm:p-6 shadow-xl relative">
             <div className="flex items-center justify-between mb-4 pb-3 border-b border-[#2E2620] text-xs text-[#C8BFB5]">
               <span className="flex items-center gap-1.5 font-medium text-[#F3C067]">
-                <MapPin className="w-4 h-4" /> {isKn ? 'ನಕ್ಷೆಯ ಮೇಲೆ ಕ್ಲಿಕ್ ಮಾಡಿ' : 'Click any zone to explore'}
+                <MapPin className="w-4 h-4" /> {isKn ? 'ನಕ್ಷೆಯಲ್ಲಿ ವಲಯ ಕ್ಲಿಕ್ ಮಾಡಿ' : 'Click any zone to explore'}
               </span>
-              <span className="text-[11px] bg-[#14110E] px-2.5 py-0.5 rounded text-[#F3EFEA] border border-[#2E2620]">
-                {t.activeZone}: {isKn ? regionData.kannadaName : regionData.name.split(' (')[0]}
+              <span className="text-[11px] bg-[#14110E] px-2.5 py-0.5 rounded-lg text-[#F3EFEA] border border-[#2E2620]">
+                {t.activeZone}: {isKn ? regionData.kannadaName.split(' (')[0] : regionData.name.split(' (')[0]}
               </span>
             </div>
 
@@ -157,9 +191,15 @@ export default function KarnatakaMap({ currentRegion, setCurrentRegion, lang = '
                       onKeyDown={(e) => {
                         if (e.key === 'Enter' || e.key === ' ') {
                           setCurrentRegion(r.id);
+                          setSelectedCategory('all');
+                          setSelectedDistrict('all');
                         }
                       }}
-                      onClick={() => setCurrentRegion(r.id)}
+                      onClick={() => {
+                        setCurrentRegion(r.id);
+                        setSelectedCategory('all');
+                        setSelectedDistrict('all');
+                      }}
                       onMouseEnter={() => setHoveredRegion(r.id)}
                       onMouseLeave={() => setHoveredRegion(null)}
                     >
@@ -206,8 +246,12 @@ export default function KarnatakaMap({ currentRegion, setCurrentRegion, lang = '
                 <button
                   key={r.id}
                   type="button"
-                  onClick={() => setCurrentRegion(r.id)}
-                  className={`flex items-center gap-2 p-1.5 rounded-lg text-left transition-all ${
+                  onClick={() => {
+                    setCurrentRegion(r.id);
+                    setSelectedCategory('all');
+                    setSelectedDistrict('all');
+                  }}
+                  className={`flex items-center gap-2 p-2 rounded-xl text-left transition-all ${
                     currentRegion === r.id ? 'bg-[#14110E] text-[#F3C067] font-bold border border-[#F3C067]/40' : 'text-[#C8BFB5] hover:text-[#F3EFEA]'
                   }`}
                 >
@@ -219,7 +263,7 @@ export default function KarnatakaMap({ currentRegion, setCurrentRegion, lang = '
           </div>
 
           {/* Region Details Pane Column */}
-          <div className="lg:col-span-7 bg-[#1E1915] border border-[#2E2620] rounded-2xl p-5 sm:p-7 shadow-xl relative">
+          <div className="lg:col-span-7 bg-[#1E1915] border border-[#2E2620] rounded-3xl p-5 sm:p-7 shadow-xl relative">
             
             {/* Header with Title and Speech Trigger */}
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-5 border-b border-[#2E2620]">
@@ -242,14 +286,14 @@ export default function KarnatakaMap({ currentRegion, setCurrentRegion, lang = '
                 type="button"
                 onClick={handlePlayGreeting}
                 aria-label="Listen to dialect regional accent greeting"
-                className={`flex items-center gap-2 px-4 py-2 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-md shrink-0 ${
+                className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-md shrink-0 ${
                   isPlayingGreeting
                     ? 'bg-[#D96B43] text-white animate-pulse'
                     : 'bg-[#F3C067] text-[#14110E] hover:brightness-110 active:scale-95'
                 }`}
               >
                 <Volume2 className="w-4 h-4" />
-                <span>{isKn ? 'ಧ್ವನಿ ಆಲಿಸಿ' : 'Hear Accent'}</span>
+                <span>{isKn ? 'ದೈನಂದಿನ ನುಡಿ ಆಲಿಸಿ' : 'Hear Native Greeting'}</span>
               </button>
             </div>
 
@@ -282,7 +326,7 @@ export default function KarnatakaMap({ currentRegion, setCurrentRegion, lang = '
                   <Volume2 className="w-3.5 h-3.5" /> {isKn ? 'ಆಲಿಸಿ' : 'Speak'}
                 </button>
               </div>
-              <p className="text-base sm:text-lg font-bold text-[#F3EFEA] font-serif">
+              <p className="text-base sm:text-xl font-bold text-[#F3EFEA] font-serif">
                 “{regionData.greeting.kannada}”
               </p>
               <p className="text-xs text-[#F3C067]/90 italic mt-0.5">
@@ -293,51 +337,8 @@ export default function KarnatakaMap({ currentRegion, setCurrentRegion, lang = '
               </p>
             </div>
 
-            {/* Sample Phrases Grid */}
-            <div className="mb-5">
-              <h4 className="text-xs font-bold uppercase tracking-wider text-[#C8BFB5] mb-3 flex items-center gap-2">
-                <BookOpen className="w-4 h-4 text-[#F3C067]" />
-                {t.popularPhrases}
-              </h4>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                {regionData.samplePhrases.map((phrase, idx) => {
-                  const isPlaying = playingPhraseIdx === idx;
-                  return (
-                    <div
-                      key={idx}
-                      className={`p-3 rounded-xl border transition-all ${
-                        isPlaying
-                          ? 'bg-[#F3C067]/15 border-[#F3C067] shadow-md ring-1 ring-[#F3C067]/40'
-                          : 'bg-[#14110E] border-[#2E2620] hover:border-[#F3C067]/40'
-                      }`}
-                    >
-                      <div className="flex items-start justify-between gap-2">
-                        <p className="text-sm font-bold text-[#F3EFEA] font-serif">
-                          {phrase.kannada}
-                        </p>
-                        <button
-                          type="button"
-                          onClick={() => handlePlayPhrase(idx, phrase.kannada)}
-                          aria-label={`Listen to ${phrase.kannada}`}
-                          className={`p-1.5 rounded-lg transition-all ${
-                            isPlaying
-                              ? 'bg-[#D96B43] text-white scale-110 shadow-md animate-pulse'
-                              : 'text-[#F3C067] hover:bg-[#2E2620]'
-                          }`}
-                        >
-                          <Volume2 className="w-4 h-4" />
-                        </button>
-                      </div>
-                      <p className="text-[11px] text-[#F3C067]/80 italic mt-0.5">{phrase.transliteration}</p>
-                      <p className="text-xs text-[#D4CDC5] mt-1">{phrase.meaning}</p>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Districts & Famous Proverb Footer */}
-            <div className="pt-4 border-t border-[#2E2620] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            {/* Districts List & Famous Proverb Footer */}
+            <div className="pt-3 border-t border-[#2E2620] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
               <div>
                 <span className="text-[#C8BFB5]">{t.districtsLabel} </span>
                 <span className="text-[#F3EFEA] font-medium">{regionData.districts.join(', ')}</span>
@@ -349,6 +350,240 @@ export default function KarnatakaMap({ currentRegion, setCurrentRegion, lang = '
             </div>
 
           </div>
+
+        </div>
+
+        {/* 2. District Deep-Dive Spotlight Cards */}
+        {regionData.districtProfiles && regionData.districtProfiles.length > 0 && (
+          <div className="mb-10">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-4">
+              <div>
+                <h3 className="text-lg sm:text-xl font-bold text-[#F3EFEA] font-serif flex items-center gap-2">
+                  <MapPin className="w-5 h-5 text-[#F3C067]" />
+                  <span>{isKn ? 'ಜಿಲ್ಲಾವಾರು ವಿಶಿಷ್ಟ ಆಡುಭಾಷೆ & ಸಂಸ್ಕೃತಿ' : 'District-Wise Local Slang & Cultural Specialties'}</span>
+                </h3>
+                <p className="text-xs text-[#C8BFB5] mt-0.5">
+                  {isKn ? 'ಯಾವುದೇ ಜಿಲ್ಲೆಯ ಮೇಲೆ ಕ್ಲಿಕ್ ಮಾಡಿ ಆ ನಿರ್ದಿಷ್ಟ ಜಿಲ್ಲೆಯ ನುಡಿಗಟ್ಟುಗಳನ್ನು ವೀಕ್ಷಿಸಿ.' : 'Click on any district card below to filter its authentic local idioms and expressions.'}
+                </p>
+              </div>
+
+              {selectedDistrict !== 'all' && (
+                <button
+                  type="button"
+                  onClick={() => setSelectedDistrict('all')}
+                  className="text-xs text-[#F3C067] hover:underline font-semibold"
+                >
+                  {isKn ? 'ಎಲ್ಲ ಜಿಲ್ಲೆಗಳನ್ನು ತೋರಿಸಿ' : 'Show All Districts'}
+                </button>
+              )}
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {regionData.districtProfiles.map((dist) => {
+                const isSelected = selectedDistrict.toLowerCase() === dist.name.split(' (')[0].toLowerCase();
+
+                return (
+                  <div
+                    key={dist.id}
+                    onClick={() => {
+                      const districtKeyword = dist.name.split(' (')[0];
+                      setSelectedDistrict(isSelected ? 'all' : districtKeyword);
+                    }}
+                    className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
+                      isSelected
+                        ? 'bg-[#1E1915] border-[#F3C067] shadow-lg ring-1 ring-[#F3C067]/40 scale-[1.02]'
+                        : 'bg-[#181310] border-[#2E2620] hover:border-[#F3C067]/40 hover:bg-[#1E1915]'
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-2">
+                        <span className="text-xs font-bold text-[#F3C067] font-serif">
+                          {dist.name}
+                        </span>
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            speakKannada(dist.slang);
+                          }}
+                          className="p-1 rounded-lg text-[#C8BFB5] hover:text-[#F3C067]"
+                          title="Listen to district slang"
+                        >
+                          <Volume2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+
+                      <p className="text-sm font-bold text-[#F3EFEA] font-serif mb-2 leading-relaxed">
+                        “{dist.slang}”
+                      </p>
+
+                      <p className="text-xs text-[#D4CDC5] mb-3">
+                        {dist.specialty}
+                      </p>
+                    </div>
+
+                    <div className="pt-2 border-t border-[#2E2620] flex items-center justify-between text-[11px] text-[#C8BFB5]">
+                      <span className="flex items-center gap-1">
+                        <Utensils className="w-3 h-3 text-[#D96B43]" />
+                        <span className="truncate">{dist.food}</span>
+                      </span>
+                      {isSelected && (
+                        <span className="text-[#F3C067] font-bold">✓ Active</span>
+                      )}
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+
+        {/* 3. Comprehensive Dialect Phrase Treasury with Categories */}
+        <div className="bg-[#1E1915] border border-[#2E2620] rounded-3xl p-5 sm:p-8 shadow-xl">
+          
+          {/* Header & Filter Controls */}
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 border-b border-[#2E2620]">
+            <div>
+              <h3 className="text-xl sm:text-2xl font-bold text-[#F3EFEA] font-serif flex items-center gap-2">
+                <BookOpen className="w-5 h-5 text-[#F3C067]" />
+                <span>{isKn ? 'ಪ್ರಾದೇಶಿಕ ನುಡಿಗಳ ಭಂಡಾರ' : 'Regional Expression Treasury'}</span>
+              </h3>
+              <p className="text-xs text-[#C8BFB5] mt-0.5">
+                {isKn ? 'ವಿವಿಧ ಸನ್ನಿವೇಶಗಳಲ್ಲಿ ಬಳಸಲಾಗುವ ಅಧಿಕೃತ ಪ್ರಾದೇಶಿಕ ನುಡಿಗಳನ್ನು ಆಲಿಸಿ ಮತ್ತು ಕಲಿಯಿರಿ.' : 'Listen and discover authentic regional idioms across daily conversations, culinary habits, and markets.'}
+              </p>
+            </div>
+
+            {/* Category Filter Pills */}
+            <div className="flex flex-wrap items-center gap-1.5">
+              {categories.map((cat) => {
+                const isActive = selectedCategory === cat.id;
+                return (
+                  <button
+                    key={cat.id}
+                    type="button"
+                    onClick={() => setSelectedCategory(cat.id)}
+                    className={`text-xs px-3 py-1.5 rounded-xl font-semibold transition-all border ${
+                      isActive
+                        ? 'bg-[#F3C067] text-[#14110E] border-[#F3C067] font-bold shadow-sm'
+                        : 'bg-[#14110E] border-[#2E2620] text-[#C8BFB5] hover:text-[#F3EFEA]'
+                    }`}
+                  >
+                    {isKn ? cat.labelKn : cat.labelEn}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
+          {/* Filter Status Badge */}
+          <div className="py-4 flex items-center justify-between text-xs text-[#C8BFB5]">
+            <span>
+              {isKn ? 'ತೋರಿಸಲಾಗುತ್ತಿರುವ ನುಡಿಗಳು:' : 'Showing Expressions:'}{' '}
+              <strong className="text-[#F3C067]">{filteredPhrases.length}</strong>
+              {selectedDistrict !== 'all' && ` • ${selectedDistrict}`}
+            </span>
+
+            {(selectedCategory !== 'all' || selectedDistrict !== 'all') && (
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedCategory('all');
+                  setSelectedDistrict('all');
+                }}
+                className="text-xs text-[#F3C067] hover:underline"
+              >
+                {isKn ? 'ಎಲ್ಲ ಫಿಲ್ಟರ್ ಮರುಹೊಂದಿಸಿ' : 'Clear Filters'}
+              </button>
+            )}
+          </div>
+
+          {/* Phrases Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            {filteredPhrases.map((phrase, idx) => {
+              const isPlaying = playingPhraseIdx === idx;
+
+              return (
+                <div
+                  key={idx}
+                  className={`p-4 sm:p-5 rounded-2xl border transition-all flex flex-col justify-between ${
+                    isPlaying
+                      ? 'bg-[#F3C067]/15 border-[#F3C067] shadow-lg ring-1 ring-[#F3C067]/40'
+                      : 'bg-[#14110E] border-[#2E2620] hover:border-[#F3C067]/40'
+                  }`}
+                >
+                  <div>
+                    {/* Top tags */}
+                    <div className="flex items-center justify-between gap-2 mb-2">
+                      <span className="text-[10px] font-bold text-[#F3C067] bg-[#F3C067]/10 px-2 py-0.5 rounded-full border border-[#F3C067]/20">
+                        📍 {phrase.district || regionData.name.split(' (')[0]}
+                      </span>
+                      <span className="text-[10px] uppercase font-bold text-[#C8BFB5] bg-[#1E1915] px-2 py-0.5 rounded border border-[#2E2620]">
+                        {phrase.category}
+                      </span>
+                    </div>
+
+                    {/* Kannada Expression */}
+                    <h4 className="text-base sm:text-lg font-bold text-[#F3EFEA] font-serif leading-relaxed mb-1">
+                      “{phrase.kannada}”
+                    </h4>
+
+                    {/* Transliteration */}
+                    <p className="text-xs text-[#F3C067]/90 italic mb-2">
+                      /{phrase.transliteration}/
+                    </p>
+
+                    {/* Meaning */}
+                    <p className="text-xs sm:text-sm text-[#D4CDC5] leading-normal mb-3">
+                      {phrase.meaning}
+                    </p>
+
+                    {/* Cultural Nuance Note */}
+                    {phrase.culturalNuance && (
+                      <div className="text-[11px] text-[#C8BFB5] bg-[#1E1915] p-2.5 rounded-xl border border-[#2E2620] mb-3">
+                        <strong className="text-[#F3C067]">{isKn ? 'ಸಾಂಸ್ಕೃತಿಕ ಹಿನ್ನೆಲೆ: ' : 'Cultural Nuance: '}</strong>
+                        {phrase.culturalNuance}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Audio Speak Button */}
+                  <div className="pt-2 border-t border-[#2E2620] flex items-center justify-end">
+                    <button
+                      type="button"
+                      onClick={() => handlePlayPhrase(idx, phrase.kannada)}
+                      aria-label={`Pronounce ${phrase.kannada}`}
+                      className={`inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition-all ${
+                        isPlaying
+                          ? 'bg-[#D96B43] text-white animate-pulse shadow-md'
+                          : 'bg-[#1E1915] text-[#F3C067] hover:bg-[#F3C067] hover:text-[#14110E] border border-[#2E2620]'
+                      }`}
+                    >
+                      <Volume2 className={`w-3.5 h-3.5 ${isPlaying ? 'animate-bounce' : ''}`} />
+                      <span>{isKn ? (isPlaying ? 'ಆಲಿಸಲಾಗುತ್ತಿದೆ...' : 'ಧ್ವನಿ ಆಲಿಸಿ') : (isPlaying ? 'Playing...' : 'Hear Accent')}</span>
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          {filteredPhrases.length === 0 && (
+            <div className="text-center py-10 bg-[#14110E] rounded-2xl border border-dashed border-[#2E2620]">
+              <p className="text-sm text-[#D4CDC5]">
+                {isKn ? 'ಈ ವರ್ಗ ಅಥವಾ ಜಿಲ್ಲೆಗೆ ಸದ್ಯಕ್ಕೆ ನುಡಿಗಳು ಸಿಕ್ಕಿಲ್ಲ.' : 'No phrases match the selected category or district filter.'}
+              </p>
+              <button
+                type="button"
+                onClick={() => {
+                  setSelectedCategory('all');
+                  setSelectedDistrict('all');
+                }}
+                className="mt-3 px-4 py-1.5 rounded-xl bg-[#F3C067] text-[#14110E] text-xs font-bold"
+              >
+                {isKn ? 'ಫಿಲ್ಟರ್ ಮರುಹೊಂದಿಸಿ' : 'Reset Filters'}
+              </button>
+            </div>
+          )}
 
         </div>
 

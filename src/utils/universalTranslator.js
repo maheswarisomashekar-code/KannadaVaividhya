@@ -151,46 +151,57 @@ export function generatePhoneticTransliteration(kannadaText) {
   return 'Phonetic: Listen to the authentic audio with the speaker button.';
 }
 
-// Morphological Transformation Engine: Transforms any arbitrary sentence into 5 Regional Dialects
+// Morphological Transformation Engine: Transforms any arbitrary sentence into 5 Regional Dialects cleanly without extra tail sentences
 export function transformToRegionalDialects(inputSentence, baseKannada = null) {
-  const sentence = (baseKannada || inputSentence).trim();
+  let sentence = (baseKannada || inputSentence).trim();
+  const isQuestion = sentence.endsWith('?') || /ಎಲ್ಲಿ|ಹೇಗೆ|ಏನು|ಯಾವಾಗ|ಎಷ್ಟು|ಆಯ್ತಾ|ಹೇಗಿದ್ದೀರಾ|ಮಾಡಬಹುದು|ಕಂಡುಹಿಡಿಯಬಹುದು/i.test(sentence);
+  
+  // Clean off trailing punctuation for natural inflection
+  const cleanBase = sentence.replace(/[.?!]+$/, '').trim();
+
+  // Natural regional dialect markers without tacking on random dummy sentences
+  const mysuruText = isQuestion ? `${cleanBase} ಸ್ವಾಮಿ?` : `${cleanBase} ಬಿಡಿ ಸ್ವಾಮಿ.`;
+  const northText = isQuestion ? `ಏನ್ರೀ, ${cleanBase} ನೋಡ್ರಿ?` : `ಏನ್ರೀ, ${cleanBase} ನೋಡ್ರಿಪಾ.`;
+  const karavaliText = isQuestion ? `ಮಾರಾಯ, ${cleanBase}?` : `ಮಾರಾಯ, ${cleanBase}.`;
+  const kalyanaText = isQuestion ? `ದೋಸ್ತ, ${cleanBase} ಹೇಳ್ರಿ?` : `ದೋಸ್ತ, ${cleanBase} ಬರಾಬರ್ ಐತಿ.`;
+  const blrText = isQuestion ? `ಗುರು, ${cleanBase}?` : `ಗುರು, ${cleanBase} ಸಾರ್ಟೆಡ್.`;
 
   // Dialect Morphing Rules
   return {
     mysuru: {
       regionName: 'Old Mysuru (ಮೈಸೂರು-ಮಂಡ್ಯ)',
-      text: `${sentence} ಅಲ್ವೇನ್ರೀ? ದಯವಿಟ್ಟು ತಾಳ್ಮೆಯಿಂದ ವಿಚಾರಿಸಿ.`,
-      phonetic: `${sentence} alveenree? Dayavittu thaalmeyinda vichaarisi.`,
-      tone: 'Courteous courtly tone, polite honorific endings like "-alveeree".',
+      text: mysuruText,
+      phonetic: mysuruText,
+      tone: 'Courteous courtly tone with polite honorific "ಸ್ವಾಮಿ".',
       etiquetteTip: 'Always address with respectful plural forms like "Taavu" or "Neevu" in Mysuru and Mandya.'
     },
     north_karnataka: {
       regionName: 'North Karnataka (ಧಾರವಾಡ-ಬೆಳಗಾವಿ)',
-      text: `ಏನ್ರೀ, ${sentence} ನೋಡ್ರಿ! ನಾವೂ ಒಟ್ಟಿಗೆ ಬರತೇವಿಪಾ!`,
-      phonetic: `Eenree, ${sentence} nodree! Naavoo ottige baratheevipaa!`,
-      tone: 'Energetic rhythm using "Eenree", "-nodree" and familial warmth with "-paa".',
-      etiquetteTip: 'Do not mistake the rapid, loud pitch for anger—it signifies hospitality and genuine affection.'
+      text: northText,
+      phonetic: northText,
+      tone: 'Energetic rhythm using "Eenree" and respectful "-nodree".',
+      etiquetteTip: 'Direct, hearty cadence signifying genuine warmth and closeness.'
     },
     karavali: {
       regionName: 'Coastal Karavali (ಕುಂದಾಪ್ರ-ಮಂಗಳೂರು)',
-      text: `ಮಾರಾಯ, ${sentence} ಹೌದಾ? ತಡಿ ಬಪ್ಪ, ಬಿಸಿ ಕೂಡು ತಿನ್ನೂಣ!`,
-      phonetic: `Maaraya, ${sentence} houdaa? Thadi bappa, bisi koodu thinoona!`,
-      tone: 'Melodic coastal sing-song cadence with "Maaraya" and "Thadi bappa".',
-      etiquetteTip: 'Refusing an invitation for hot rice (Koodu) or tea in a coastal house is considered impolite!'
+      text: karavaliText,
+      phonetic: karavaliText,
+      tone: 'Melodic coastal sing-song cadence with iconic "Maaraya".',
+      etiquetteTip: 'Coastal friendly address creating an immediate affectionate rapport.'
     },
     kalyana_karnataka: {
       regionName: 'Kalyana Karnataka (ಕಲಬುರಗಿ-ಬೀದರ್)',
-      text: `ದೋಸ್ತ, ${sentence} ಬರಾಬರ್ ಅದ ನೋಡಪ್ಪ! ಖರೇ ಮಾತೇ ಹೇಳಕತ್ತೀನಿ.`,
-      phonetic: `Dosta, ${sentence} baraabar ada nodappa! Kharee maathee helakattheeni.`,
-      tone: 'Deccani-Sharana blend featuring "Baraabar" (accurate) and "Dosta" (friend).',
-      etiquetteTip: 'Deeply honors Basaveshwara equality principles—everyone is greeted as an equal companion ("Dostha").'
+      text: kalyanaText,
+      phonetic: kalyanaText,
+      tone: 'Deccani-Sharana blend featuring "Dosta" (companion).',
+      etiquetteTip: 'Deeply honors Basaveshwara equality principles—everyone is greeted as an equal companion.'
     },
     bengaluru: {
       regionName: 'Bengaluru Urban Slang (ನಮ್ಮ ಬೆಂಗಳೂರು)',
-      text: `ಗುರು, ${sentence} ಸೀನ್ ಇಲ್ಲ ಮಗಾ, ಚಿಂದಿ ಮಾಡೋಣ ಲೋಡ್ ತಗೋಬೇಡ!`,
-      phonetic: `Guru, ${sentence} scene illa maga, chindi maadona load thagobeda!`,
-      tone: 'High-speed cosmopolitan youth and auto lingo with "Maga", "Guru", and "Chindi".',
-      etiquetteTip: 'Keep conversations quick, punchy, and friendly. Adding "Boss" or "Guru" builds instant rapport.'
+      text: blrText,
+      phonetic: blrText,
+      tone: 'High-speed cosmopolitan youth and street lingo with "Guru".',
+      etiquetteTip: 'Keep conversations quick, punchy, and casual.'
     }
   };
 }

@@ -109,14 +109,14 @@ export const DOMAIN_RULES = [
         trait: 'Courteous courtly tone, polite honorific suffixes.'
       },
       north_karnataka: {
-        text: 'ಏನ್ರೀ ಸಮಾಚಾರ? ಆರಾಮ ಅದೀರೇನು? ಬರ್ರಿ ಊಟ ಮಾಡೂಣ್ರಿ!',
-        phonetic: 'Eenree samachara? Aaraam adeereenu? Barri oota maadoonri!',
-        trait: 'Warm rhythmic cadence with "-adeereenu" and respectful "Barri".'
+        text: 'ಏನ್ರೀ ಸಮಾಚಾರ? ಆರಾಮ ಅದೀರೇನು?',
+        phonetic: 'Eenree samachara? Aaraam adeereenu?',
+        trait: 'Warm rhythmic cadence with "-adeereenu" and respectful address.'
       },
       karavali: {
-        text: 'ಎಂತ ಮಾರಾಯ ಸಮಾಚಾರ? ಮನೆಯಲ್ಲೆಲ್ಲ ಕುಶಲವೇ? ಬರಿ ಬಿಸಿ ಕೂಡು ತಿನ್ರಿ!',
-        phonetic: 'Entha maaraya samachara? Maneyallella kushalave? Bari bisi koodu thinri!',
-        trait: 'Musical coastal cadence with "Maaraya" and hospitality.'
+        text: 'ಎಂತ ಮಾರಾಯ ಸಮಾಚಾರ? ಮನೆಯಲ್ಲೆಲ್ಲ ಕುಶಲವೇ?',
+        phonetic: 'Entha maaraya samachara? Maneyallella kushalave?',
+        trait: 'Musical coastal cadence with iconic "Maaraya".'
       },
       kalyana_karnataka: {
         text: 'ಆರಾಮ ಅದೀರೇನು ದೋಸ್ತ? ಮನೆಯಾಗ ಎಲ್ಲಾ ಬರಾಬರ್ ಅದಾರ?',
@@ -417,35 +417,45 @@ export function parseAndMorphDialect(rawInput) {
     };
   }
 
-  // 6. Natural Language Heuristic Fallback for ANY Arbitrary Input
+  // 6. Natural Language Heuristic Fallback for ANY Arbitrary Input (Clean, zero dummy tail sentences)
   const clean = rawInput.trim();
+  const cleanBase = clean.replace(/[.?!]+$/, '').trim();
+  const isQuestion = clean.endsWith('?') || /ಎಲ್ಲಿ|ಹೇಗೆ|ಏನು|ಯಾವಾಗ|ಎಷ್ಟು|ಆಯ್ತಾ|ಮಾಡಬಹುದು|ಕಂಡುಹಿಡಿಯಬಹುದು/i.test(clean);
+
+  const mysuruText = isQuestion ? `${cleanBase} ಸ್ವಾಮಿ?` : `${cleanBase} ಬಿಡಿ ಸ್ವಾಮಿ.`;
+  const northText = isQuestion ? `ಏನ್ರೀ, ${cleanBase} ನೋಡ್ರಿ?` : `ಏನ್ರೀ, ${cleanBase} ನೋಡ್ರಿಪಾ.`;
+  const karavaliText = isQuestion ? `ಮಾರಾಯ, ${cleanBase}?` : `ಮಾರಾಯ, ${cleanBase}.`;
+  const kalyanaText = isQuestion ? `ದೋಸ್ತ, ${cleanBase} ಹೇಳ್ರಿ?` : `ದೋಸ್ತ, ${cleanBase} ಬರಾಬರ್ ಐತಿ.`;
+  const blrText = isQuestion ? `ಗುರು, ${cleanBase}?` : `ಗುರು, ${cleanBase} ಸಾರ್ಟೆಡ್.`;
+
   return {
     type: 'general_morph',
     keyword: clean,
+    isRecognized: true,
     variants: {
       mysuru: {
-        text: `${clean} ಅಲ್ವೇನ್ರೀ? ಸ್ವಲ್ಪ ತಾಳ್ಮೆಯಿಂದ ವಿಚಾರ ಮಾಡಿ ಬನ್ನಿ.`,
-        phonetic: `${clean} alveenree? Swalpa thaalmeyinda vichaara maadi banni.`,
+        text: mysuruText,
+        phonetic: mysuruText,
         trait: 'Polite honorific tone with respectful Mysore courtly cadence'
       },
       north_karnataka: {
-        text: `ಏನ್ರೀ, ${clean} ನೋಡ್ರಿ! ನಾವೂ ಒಟ್ಟಿಗೆ ಬರತೇವಿಪಾ!`,
-        phonetic: `Eenree, ${clean} nodree! Naavoo ottige baratheevipaa!`,
+        text: northText,
+        phonetic: northText,
         trait: 'Rhythmic Dharwad warmth with "-nodree" and energetic markers'
       },
       karavali: {
-        text: `ಮಾರಾಯ, ${clean} ಹೌದಾ? ತಡಿ ಬಪ್ಪ, ಒಟ್ಟಿಗೆ ಪೋಪ!`,
-        phonetic: `Maaraya, ${clean} houdaa? Thadi bappa, ottige popa!`,
-        trait: 'Coastal Kundapura melody with "Maaraya" and "Thadi bappa"'
+        text: karavaliText,
+        phonetic: karavaliText,
+        trait: 'Coastal Kundapura melody with "Maaraya"'
       },
       kalyana_karnataka: {
-        text: `ದೋಸ್ತ, ${clean} ಬರಾಬರ್ ಅದ ನೋಡಪ್ಪ! ಖರೇ ಮಾತೇ ಹೇಳಕತ್ತೀನಿ.`,
-        phonetic: `Dosta, ${clean} baraabar ada nodappa! Kharee maathee helakattheeni.`,
-        trait: 'Kalaburagi expression with "Baraabar" and "Dosta"'
+        text: kalyanaText,
+        phonetic: kalyanaText,
+        trait: 'Kalaburagi expression with "Dosta"'
       },
       bengaluru: {
-        text: `ಗುರು, ${clean} ಸೀನ್ ಇಲ್ಲ ಮಗಾ, ಚಿಂದಿ ಮಾಡೋಣ ಲೋಡ್ ತಗೋಬೇಡ!`,
-        phonetic: `Guru, ${clean} scene illa maga, chindi maadona load thagobeda!`,
+        text: blrText,
+        phonetic: blrText,
         trait: 'Bengaluru cosmopolitan youth and street lingo'
       }
     }

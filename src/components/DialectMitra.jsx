@@ -60,18 +60,28 @@ export default function DialectMitra({ lang = 'kn' }) {
         }
       }
 
-      const morphedResult = parseAndMorphDialect(text);
+      // Attempt intelligent parsing on original text or Kannada translated text
+      let morphedResult = parseAndMorphDialect(text);
+      if (!morphedResult || morphedResult.type === 'general_morph') {
+        const knMorph = parseAndMorphDialect(standardKn);
+        if (knMorph && knMorph.type !== 'general_morph') {
+          morphedResult = knMorph;
+        }
+      }
+
       let regionalBreakdown = {};
 
-      if (morphedResult && morphedResult.isRecognized) {
+      if (morphedResult && morphedResult.variants && morphedResult.type !== 'general_morph') {
         Object.keys(REGIONS).forEach((regKey) => {
           const m = morphedResult.variants[regKey];
-          regionalBreakdown[regKey] = {
-            text: m.text,
-            phonetic: m.phonetic,
-            tone: m.trait,
-            etiquetteTip: m.culturalNuance || m.trait
-          };
+          if (m) {
+            regionalBreakdown[regKey] = {
+              text: m.text,
+              phonetic: m.phonetic,
+              tone: m.trait || m.tone,
+              etiquetteTip: m.culturalNuance || m.trait || ''
+            };
+          }
         });
       } else {
         regionalBreakdown = transformToRegionalDialects(standardKn);
