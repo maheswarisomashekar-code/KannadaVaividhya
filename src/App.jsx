@@ -49,8 +49,13 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-[#14110E] text-[#F3EFEA] flex flex-col md:flex-row font-sans selection:bg-[#F3C067] selection:text-[#14110E]">
+    <div className="min-h-screen bg-royal-canvas text-[#F8FAFC] flex flex-col md:flex-row font-sans selection:bg-[#F59E0B] selection:text-[#0F0B17] relative overflow-hidden">
       
+      {/* Dynamic Glowing Ambient Light Nodes */}
+      <div className="fixed top-[-15%] left-[-10%] w-[500px] h-[500px] bg-[#F59E0B]/15 rounded-full blur-[140px] pointer-events-none -z-10 animate-pulse" />
+      <div className="fixed top-[20%] right-[-12%] w-[550px] h-[550px] bg-[#E11D48]/15 rounded-full blur-[150px] pointer-events-none -z-10" />
+      <div className="fixed bottom-[-10%] left-[30%] w-[600px] h-[600px] bg-[#7C3AED]/12 rounded-full blur-[160px] pointer-events-none -z-10" />
+
       {/* 1. Left Vertical Sidebar Navigation */}
       <Sidebar
         activePage={activePage}
