@@ -4,67 +4,109 @@
   html {
     scroll-behavior: smooth;
     font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    background-color: #14110e;
-    color: #f3efea;
+    background-color: #0b0908;
+    color: #f7f4ed;
   }
 }
 
 /* Kannada script typography with zero subscript/matra clipping */
 .font-kannada {
-  font-family: 'Noto Sans Kannada', 'Nirmala UI', 'Tunga', 'Kedage', 'Mallige', system-ui, sans-serif;
+  font-family: 'Noto Serif Kannada', 'Noto Sans Kannada', 'Nirmala UI', 'Tunga', 'Kedage', serif;
   line-height: 1.75 !important;
   letter-spacing: 0.015em;
 }
 
 h1.font-kannada, h2.font-kannada, h3.font-kannada {
-  line-height: 1.4 !important;
+  line-height: 1.35 !important;
 }
 
-/* Hoysala stone & Mysore Silk cultural design tokens */
-.bg-hoysala-950 { background-color: #120f0d; }
-.bg-hoysala-900 { background-color: #1a1613; }
-.bg-hoysala-800 { background-color: #241f1b; }
-.bg-hoysala-card { background-color: #1e1915; }
-.border-hoysala { border-color: #382f28; }
-.border-hoysala-light { border-color: #4a3e35; }
+/* Royal Mysore Silk & Hoysala Stone Custom Font Families */
+.font-royal {
+  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
+  letter-spacing: 0.04em;
+}
 
-.text-zari { color: #f3c067; }
-.text-zari-muted { color: #e5a93c; }
-.text-terracotta { color: #e07a5f; }
-.text-kumkuma { color: #b83a4b; }
-.text-stone-warm { color: #d7d2cc; }
-.text-stone-muted { color: #a8a096; }
+.font-serif-kn {
+  font-family: 'Noto Serif Kannada', Georgia, serif;
+}
 
-/* Silk Gold Gradient */
-.gold-gradient-text {
-  background: linear-gradient(135deg, #fae29c 0%, #f3c067 50%, #d89624 100%);
+/* Subtle Royal Background Pattern */
+.bg-heritage-mesh {
+  background-color: #0b0908;
+  background-image: 
+    radial-gradient(at 15% 15%, rgba(243, 192, 103, 0.07) 0px, transparent 50%),
+    radial-gradient(at 85% 85%, rgba(139, 38, 53, 0.08) 0px, transparent 50%),
+    radial-gradient(at 50% 50%, rgba(217, 107, 67, 0.04) 0px, transparent 60%);
+}
+
+/* Glassmorphic Luxury Surface */
+.glass-panel {
+  background: rgba(22, 18, 15, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(243, 192, 103, 0.18);
+  box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+.glass-panel-hover {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.glass-panel-hover:hover {
+  border-color: rgba(243, 192, 103, 0.45);
+  transform: translateY(-3px);
+  box-shadow: 0 25px 50px -12px rgba(243, 192, 103, 0.15), inset 0 1px 0 rgba(243, 192, 103, 0.2);
+}
+
+/* Mysore Gold Metallic Shimmer Text */
+.gold-shimmer-text {
+  background: linear-gradient(135deg, #fff2cc 0%, #f3c067 40%, #e5a93c 70%, #d89624 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+  display: inline-block;
 }
 
-.gold-gradient-bg {
-  background: linear-gradient(135deg, #f5c067 0%, #e5a93c 60%, #b87d1b 100%);
+/* Glowing Accent Border */
+.gold-glow {
+  box-shadow: 0 0 25px rgba(243, 192, 103, 0.25);
 }
 
-.kumkuma-gradient-bg {
-  background: linear-gradient(135deg, #9b2839 0%, #801e2c 100%);
+.crimson-glow {
+  box-shadow: 0 0 25px rgba(139, 38, 53, 0.3);
+}
+
+/* Luxury Zari Button */
+.btn-zari {
+  background: linear-gradient(135deg, #f7d189 0%, #f3c067 40%, #e09f30 100%);
+  color: #120d09;
+  font-weight: 700;
+  box-shadow: 0 8px 20px -4px rgba(243, 192, 103, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.4);
+  transition: all 0.25s ease;
+}
+.btn-zari:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
+  box-shadow: 0 12px 25px -4px rgba(243, 192, 103, 0.55);
+}
+.btn-zari:active {
+  transform: translateY(1px);
 }
 
 /* Custom scrollbar with warm Mysore zari theme */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #14110e;
+  background: #0b0908;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #382f28;
-  border-radius: 4px;
+  background: #2b221a;
+  border-radius: 9999px;
+  border: 1px solid rgba(243, 192, 103, 0.1);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #e5a93c;
+  background: #f3c067;
 }
