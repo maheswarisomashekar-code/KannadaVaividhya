@@ -52,7 +52,7 @@ export default function App() {
     <div className="min-h-screen bg-classic-canvas text-[#F1F3F5] flex flex-col md:flex-row font-sans selection:bg-[#D4AF37] selection:text-[#0C0D0E] relative overflow-hidden">
       
       {/* Subtle Classic Vignette Backdrop */}
-      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#D4AF37]/5 via-transparent to-transparent pointer-events-none -z-10" />
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-blue-500/5 via-transparent to-transparent pointer-events-none -z-10" />
 
       {/* 1. Left Vertical Sidebar Navigation */}
       <Sidebar

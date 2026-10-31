@@ -122,7 +122,7 @@ export default function AudioLab({ lang = 'kn' }) {
       audioEnergyRef.current.sum += frameAvg;
       audioEnergyRef.current.count += 1;
 
-      ctx.fillStyle = '#14110E';
+      ctx.fillStyle = '#0b0f17';
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
       const barWidth = (canvas.width / bufferLength) * 2.5;
@@ -196,34 +196,34 @@ export default function AudioLab({ lang = 'kn' }) {
     <section 
       id="audiolab" 
       aria-labelledby="voice-lab-heading"
-      className="py-14 sm:py-18 bg-[#14110E] relative border-b border-[#2E2620]"
+      className="py-14 sm:py-18 bg-[#0b0f17] relative border-b border-[#1e293b]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F3C067]/15 text-[#F3C067] text-xs font-semibold mb-3 border border-[#F3C067]/40 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#d4af37]/15 text-[#d4af37] text-xs font-semibold mb-3 border border-[#d4af37]/40 shadow-sm">
             <Activity className="w-3.5 h-3.5" />
             <span>{isKn ? 'ನೈಜ ಸಮಯದ ಧ್ವನಿ ವಿಶ್ಲೇಷಣೆ' : 'Real-Time Web Audio Frequency Lab'}</span>
           </div>
-          <h2 id="voice-lab-heading" className="text-2xl sm:text-4xl font-extrabold text-[#F3EFEA] tracking-tight font-serif">
+          <h2 id="voice-lab-heading" className="text-2xl sm:text-4xl font-extrabold text-[#f8fafc] tracking-tight font-serif">
             {t.voiceLabTitle}
           </h2>
-          <p className="mt-2 text-xs sm:text-base text-[#D4CDC5]">
+          <p className="mt-2 text-xs sm:text-base text-[#cbd5e1]">
             {t.voiceLabSubtitle}
           </p>
         </div>
 
         {/* Main Interface Card */}
-        <div className="max-w-4xl mx-auto bg-[#1E1915] border border-[#2E2620] rounded-3xl p-5 sm:p-8 shadow-xl">
+        <div className="max-w-4xl mx-auto bg-[#111726] border border-[#1e293b] rounded-3xl p-5 sm:p-8 shadow-xl">
           
           {/* Dialect Selector Bar */}
-          <div className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-[#2E2620]">
+          <div className="flex flex-wrap items-center justify-between gap-4 pb-5 border-b border-[#1e293b]">
             <div>
-              <span className="text-xs font-bold text-[#C8BFB5] uppercase tracking-wider block">
+              <span className="text-xs font-bold text-[#94a3b8] uppercase tracking-wider block">
                 {isKn ? 'ಗುರಿ ಪ್ರಾದೇಶಿಕ ಉಪಭಾಷೆ:' : 'Target Regional Dialect'}
               </span>
-              <h3 className="text-lg font-bold text-[#F3EFEA] font-serif">
+              <h3 className="text-lg font-bold text-[#f8fafc] font-serif">
                 {isKn ? REGIONS[selectedRegion]?.kannadaName : REGIONS[selectedRegion]?.name}
               </h3>
             </div>
@@ -240,8 +240,8 @@ export default function AudioLab({ lang = 'kn' }) {
                   }}
                   className={`px-3 py-1.5 rounded-lg text-xs font-bold transition-all border ${
                     selectedRegion === key
-                      ? 'bg-[#F3C067] text-[#14110E] border-[#F3C067] shadow-md'
-                      : 'bg-[#14110E] border-[#2E2620] text-[#C8BFB5] hover:text-[#F3EFEA]'
+                      ? 'bg-[#d4af37] text-[#0b0f17] border-[#d4af37] shadow-md'
+                      : 'bg-[#0b0f17] border-[#1e293b] text-[#94a3b8] hover:text-[#f8fafc]'
                   }`}
                 >
                   {isKn ? REGIONS[key]?.kannadaName : REGIONS[key]?.name.split(' (')[0]}
@@ -251,14 +251,14 @@ export default function AudioLab({ lang = 'kn' }) {
           </div>
 
           {/* Practice Phrase Box */}
-          <div className="my-6 p-5 sm:p-6 rounded-2xl bg-[#14110E] border border-[#F3C067]/30 text-center relative">
-            <span className="text-[11px] font-bold uppercase tracking-widest text-[#F3C067] block mb-2">
+          <div className="my-6 p-5 sm:p-6 rounded-2xl bg-[#0b0f17] border border-[#d4af37]/30 text-center relative">
+            <span className="text-[11px] font-bold uppercase tracking-widest text-[#d4af37] block mb-2">
               {t.targetSentence}
             </span>
-            <p className="text-xl sm:text-3xl font-extrabold text-[#F3EFEA] font-serif mb-2 leading-relaxed">
+            <p className="text-xl sm:text-3xl font-extrabold text-[#f8fafc] font-serif mb-2 leading-relaxed">
               “{currentPractice.text}”
             </p>
-            <p className="text-xs sm:text-sm text-[#F3C067]/90 italic mb-4">
+            <p className="text-xs sm:text-sm text-[#d4af37]/90 italic mb-4">
               /{currentPractice.phonetic}/
             </p>
 
@@ -266,18 +266,18 @@ export default function AudioLab({ lang = 'kn' }) {
             <button
               type="button"
               onClick={() => speakKannada(currentPractice.text, selectedRegion)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#1E1915] hover:bg-[#28211B] border border-[#F3C067]/50 text-[#F3C067] text-xs sm:text-sm font-semibold transition-all hover:scale-102 shadow-md"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-[#111726] hover:bg-[#161f30] border border-[#d4af37]/50 text-[#d4af37] text-xs sm:text-sm font-semibold transition-all hover:scale-102 shadow-md"
             >
-              <Volume2 className="w-4 h-4 text-[#F3C067]" />
+              <Volume2 className="w-4 h-4 text-[#d4af37]" />
               <span>{t.listenTarget}</span>
             </button>
           </div>
 
           {/* Interactive Mic & Live Frequency Canvas */}
-          <div className="bg-[#14110E] rounded-2xl p-5 border border-[#2E2620] mb-6">
+          <div className="bg-[#0b0f17] rounded-2xl p-5 border border-[#1e293b] mb-6">
             <div className="flex items-center justify-between mb-3 text-xs">
-              <span className="font-bold text-[#C8BFB5] flex items-center gap-2">
-                <Activity className="w-4 h-4 text-[#F3C067]" />
+              <span className="font-bold text-[#94a3b8] flex items-center gap-2">
+                <Activity className="w-4 h-4 text-[#d4af37]" />
                 {isKn ? 'ನೈಜ ಧ್ವನಿ ತರಂಗ ದೃಶ್ಯೀಕರಣ' : 'Live Audio Waveform Visualizer'}
               </span>
               <span>
@@ -286,13 +286,13 @@ export default function AudioLab({ lang = 'kn' }) {
                     <span className="w-2 h-2 rounded-full bg-[#D96B43]" /> {isKn ? 'ನಿಮ್ಮ ಧ್ವನಿಯನ್ನು ಆಲಿಸಲಾಗುತ್ತಿದೆ...' : 'Listening to your speech...'}
                   </span>
                 ) : (
-                  <span className="text-[#C8BFB5]">{isKn ? 'ಪರೀಕ್ಷೆಗೆ ಸಿದ್ಧ' : 'Ready to evaluate'}</span>
+                  <span className="text-[#94a3b8]">{isKn ? 'ಪರೀಕ್ಷೆಗೆ ಸಿದ್ಧ' : 'Ready to evaluate'}</span>
                 )}
               </span>
             </div>
 
             {/* Canvas Visualizer */}
-            <div className="relative rounded-xl overflow-hidden border border-[#2E2620] h-28 bg-[#0D0B0A] flex items-center justify-center">
+            <div className="relative rounded-xl overflow-hidden border border-[#1e293b] h-28 bg-[#0D0B0A] flex items-center justify-center">
               <canvas
                 ref={canvasRef}
                 width={700}
@@ -300,7 +300,7 @@ export default function AudioLab({ lang = 'kn' }) {
                 className="w-full h-full block"
               />
               {!isRecording && !score && (
-                <div className="absolute text-xs text-[#C8BFB5]/70 pointer-events-none">
+                <div className="absolute text-xs text-[#94a3b8]/70 pointer-events-none">
                   {isKn ? 'ಧ್ವನಿ ಪರೀಕ್ಷಿಸಲು ಕೆಳಗಿನ ಮೈಕ್ ಬಟನ್ ಒತ್ತಿ' : 'Press the microphone button below to record your voice'}
                 </div>
               )}
@@ -312,9 +312,9 @@ export default function AudioLab({ lang = 'kn' }) {
                 <button
                   type="button"
                   onClick={startRecording}
-                  className="flex items-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-[#F3C067] to-[#E5A93C] text-[#14110E] font-bold text-xs sm:text-sm shadow-lg shadow-[#F3C067]/20 hover:brightness-110 active:scale-95 transition-all"
+                  className="flex items-center gap-2.5 px-6 py-3 rounded-xl bg-gradient-to-r from-[#d4af37] to-[#E5A93C] text-[#0b0f17] font-bold text-xs sm:text-sm shadow-lg shadow-[#d4af37]/20 hover:brightness-110 active:scale-95 transition-all"
                 >
-                  <Mic className="w-4 sm:w-5 h-4 sm:h-5 text-[#14110E]" />
+                  <Mic className="w-4 sm:w-5 h-4 sm:h-5 text-[#0b0f17]" />
                   <span>{t.recordBtn}</span>
                 </button>
               ) : (
@@ -337,7 +337,7 @@ export default function AudioLab({ lang = 'kn' }) {
                 ? 'bg-[#8B2635]/15 border-[#8B2635]/40'
                 : score >= 80
                 ? 'bg-emerald-950/20 border-emerald-500/40'
-                : 'bg-[#F3C067]/15 border-[#F3C067]/40'
+                : 'bg-[#d4af37]/15 border-[#d4af37]/40'
             }`}>
               <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <div className="flex items-center gap-4">
@@ -346,12 +346,12 @@ export default function AudioLab({ lang = 'kn' }) {
                       ? 'bg-[#8B2635]/30 border-[#8B2635] text-[#D96B43]'
                       : score >= 80
                       ? 'bg-emerald-500/20 border-emerald-500 text-emerald-400'
-                      : 'bg-[#F3C067]/20 border-[#F3C067] text-[#F3C067]'
+                      : 'bg-[#d4af37]/20 border-[#d4af37] text-[#d4af37]'
                   }`}>
                     {score}%
                   </div>
                   <div>
-                    <h4 className="text-sm font-bold text-[#F3EFEA] flex items-center gap-2">
+                    <h4 className="text-sm font-bold text-[#f8fafc] flex items-center gap-2">
                       {score === 0 ? (
                         <>
                           <AlertCircle className="w-4 h-4 text-[#D96B43]" />
@@ -364,12 +364,12 @@ export default function AudioLab({ lang = 'kn' }) {
                         </>
                       ) : (
                         <>
-                          <AlertCircle className="w-4 h-4 text-[#F3C067]" />
+                          <AlertCircle className="w-4 h-4 text-[#d4af37]" />
                           <span>{isKn ? 'ಇನ್ನಷ್ಟು ಸ್ಪಷ್ಟತೆ ಅಗತ್ಯ' : 'Needs Clearer Pronunciation'}</span>
                         </>
                       )}
                     </h4>
-                    <p className="text-xs text-[#D4CDC5] mt-1">
+                    <p className="text-xs text-[#cbd5e1] mt-1">
                       {feedback}
                     </p>
                   </div>
@@ -378,7 +378,7 @@ export default function AudioLab({ lang = 'kn' }) {
                 <button
                   type="button"
                   onClick={startRecording}
-                  className="px-3.5 py-1.5 rounded-xl bg-[#14110E] hover:bg-[#2E2620] text-[#D4CDC5] text-xs font-semibold flex items-center gap-1.5 border border-[#2E2620] transition-all shrink-0"
+                  className="px-3.5 py-1.5 rounded-xl bg-[#0b0f17] hover:bg-[#1e293b] text-[#cbd5e1] text-xs font-semibold flex items-center gap-1.5 border border-[#1e293b] transition-all shrink-0"
                 >
                   <RefreshCw className="w-3.5 h-3.5" /> {isKn ? 'ಮತ್ತೆ ಪ್ರಯತ್ನಿಸಿ' : 'Try Again'}
                 </button>
@@ -386,10 +386,10 @@ export default function AudioLab({ lang = 'kn' }) {
 
               {/* Accent Tip */}
               {score > 0 && (
-                <div className="mt-3 pt-3 border-t border-[#2E2620] text-xs text-[#C8BFB5] flex items-start gap-2">
-                  <Sparkles className="w-4 h-4 text-[#F3C067] shrink-0 mt-0.5" />
+                <div className="mt-3 pt-3 border-t border-[#1e293b] text-xs text-[#94a3b8] flex items-start gap-2">
+                  <Sparkles className="w-4 h-4 text-[#d4af37] shrink-0 mt-0.5" />
                   <span>
-                    <strong className="text-[#F3C067]">{isKn ? 'ಪ್ರಾದೇಶಿಕ ಲಯದ ಸಲಹೆ: ' : 'Regional Accent Tip: '}</strong>
+                    <strong className="text-[#d4af37]">{isKn ? 'ಪ್ರಾದೇಶಿಕ ಲಯದ ಸಲಹೆ: ' : 'Regional Accent Tip: '}</strong>
                     {currentPractice.tip}
                   </span>
                 </div>

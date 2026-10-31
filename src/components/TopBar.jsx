@@ -30,11 +30,11 @@ export default function TopBar({
   };
 
   return (
-    <header className="sticky top-0 z-30 bg-[#0e1013]/90 backdrop-blur-md border-b border-[#1f2227]">
+    <header className="sticky top-0 z-30 bg-[#0b0f17]/90 backdrop-blur-md border-b border-[#1e293b]">
       {/* Subtle top banner */}
-      <div className="bg-[#14161a] border-b border-[#1f2227] text-gray-400 text-[11px] py-1 px-3 text-center tracking-wide flex items-center justify-center gap-2 flex-wrap">
+      <div className="bg-[#0f172a] border-b border-[#1e293b] text-slate-400 text-[11px] py-1 px-3 text-center tracking-wide flex items-center justify-center gap-2 flex-wrap">
         <span>🏆 {t.hackathonBanner.split('•')[0]}</span>
-        <span className="hidden sm:inline text-gray-500">• NIE Mysuru & HackerRank Campus Crew</span>
+        <span className="hidden sm:inline text-slate-500">• NIE Mysuru & HackerRank Campus Crew</span>
         <span className="text-[#d4af37] font-medium uppercase text-[10px] ml-1">
           {t.challengeTag}
         </span>
@@ -45,13 +45,13 @@ export default function TopBar({
           <button
             type="button"
             onClick={onOpenMobileMenu}
-            className="md:hidden p-2 rounded-lg bg-[#14161a] border border-[#24282f] text-gray-400 hover:text-white"
+            className="md:hidden p-2 rounded-lg bg-[#111726] border border-[#1e293b] text-slate-400 hover:text-white"
             aria-label="Toggle Navigation Menu"
           >
             <Menu className="w-4 h-4" />
           </button>
 
-          <h1 className="text-sm sm:text-base font-semibold text-gray-200 font-serif-kn">
+          <h1 className="text-sm sm:text-base font-semibold text-slate-200 font-serif-kn">
             {pageTitles[activePage] || pageTitles.home}
           </h1>
         </div>
@@ -60,7 +60,7 @@ export default function TopBar({
           <button
             type="button"
             onClick={toggleLanguage}
-            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#14161a] border border-[#24282f] hover:border-[#383f49] text-gray-300 text-xs font-medium transition-colors"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-[#111726] border border-[#1e293b] hover:border-[#334155] text-slate-300 text-xs font-medium transition-colors"
             aria-label="Switch Language"
           >
             <Languages className="w-3.5 h-3.5 text-[#d4af37]" />
@@ -71,9 +71,9 @@ export default function TopBar({
             <button
               type="button"
               onClick={onOpenAuth}
-              className="flex items-center gap-2 px-3 py-1 rounded-lg bg-[#14161a] border border-[#24282f] hover:border-[#383f49] text-xs text-gray-200 transition-colors"
+              className="flex items-center gap-2 px-3 py-1 rounded-lg bg-[#111726] border border-[#1e293b] hover:border-[#334155] text-xs text-slate-200 transition-colors"
             >
-              <div className="w-6 h-6 rounded-md bg-[#22262d] flex items-center justify-center font-bold text-[#d4af37] text-[10px] font-serif-kn">
+              <div className="w-6 h-6 rounded-md bg-[#1e293b] flex items-center justify-center font-bold text-[#d4af37] text-[10px] font-serif-kn">
                 {user.avatarInitial || 'ಕ'}
               </div>
               <span className="hidden sm:inline font-medium">{user.name.split(' ')[0]}</span>

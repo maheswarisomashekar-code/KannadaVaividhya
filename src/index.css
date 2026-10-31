@@ -29,25 +29,25 @@ h1.font-kannada, h2.font-kannada, h3.font-kannada {
   letter-spacing: -0.01em;
 }
 
-/* Classic Architectural Canvas - Minimal, clean, restrained */
+/* Classic Architectural Canvas - Minimal, clean, restrained midnight slate */
 .bg-classic-canvas {
-  background-color: #0c0d0e;
+  background-color: #0a0e17;
   background-image: 
-    radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.05) 0%, transparent 60%),
-    linear-gradient(to bottom, #0c0d0e 0%, #101114 100%);
+    radial-gradient(circle at 50% 0%, rgba(56, 189, 248, 0.06) 0%, transparent 60%),
+    linear-gradient(to bottom, #0a0e17 0%, #0e1422 100%);
 }
 
-/* Premium Classic Matte Card */
+/* Premium Classic Matte Slate Card */
 .classic-card {
-  background-color: #141619;
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  background-color: #111726;
+  border: 1px solid #1e293b;
   box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
   transition: all 0.25s ease;
 }
 
 .classic-card:hover {
-  background-color: #17191d;
-  border-color: rgba(212, 175, 55, 0.35);
+  background-color: #141c2e;
+  border-color: #334155;
   box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.65);
 }
 

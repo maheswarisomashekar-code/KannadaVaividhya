@@ -35,34 +35,34 @@ export default function DialectMorph({ lang = 'kn' }) {
     <section 
       id="morph" 
       aria-labelledby="morph-section-heading"
-      className="py-14 sm:py-18 bg-[#14110E] relative border-b border-[#2E2620]"
+      className="py-14 sm:py-18 bg-[#0b0f17] relative border-b border-[#1e293b]"
     >
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto mb-8 sm:mb-10">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#F3C067]/15 text-[#F3C067] text-xs font-semibold mb-3 border border-[#F3C067]/40 shadow-sm">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#d4af37]/15 text-[#d4af37] text-xs font-semibold mb-3 border border-[#d4af37]/40 shadow-sm">
             <Sparkles className="w-3.5 h-3.5" />
             <span>{isKn ? 'ನುಡಿ ರೂಪಾಂತರ ತಂತ್ರಜ್ಞಾನ' : 'Cross-Dialect Morphing Engine'}</span>
           </div>
-          <h2 id="morph-section-heading" className="text-2xl sm:text-4xl font-extrabold text-[#F3EFEA] tracking-tight font-serif">
+          <h2 id="morph-section-heading" className="text-2xl sm:text-4xl font-extrabold text-[#f8fafc] tracking-tight font-serif">
             {t.morphTitle}
           </h2>
-          <p className="mt-2 text-xs sm:text-base text-[#D4CDC5]">
+          <p className="mt-2 text-xs sm:text-base text-[#cbd5e1]">
             {t.morphSubtitle}
           </p>
         </div>
 
         {/* Tab Toggle: Presets vs Custom Simulator */}
         <div className="flex justify-center mb-6 sm:mb-8">
-          <div className="inline-flex p-1 bg-[#1E1915] border border-[#2E2620] rounded-xl">
+          <div className="inline-flex p-1 bg-[#111726] border border-[#1e293b] rounded-xl">
             <button
               type="button"
               onClick={() => setActiveTab('preset')}
               className={`px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
                 activeTab === 'preset'
-                  ? 'bg-[#F3C067] text-[#14110E] shadow-md font-bold'
-                  : 'text-[#D4CDC5] hover:text-[#F3EFEA]'
+                  ? 'bg-[#d4af37] text-[#0b0f17] shadow-md font-bold'
+                  : 'text-[#cbd5e1] hover:text-[#f8fafc]'
               }`}
             >
               {t.presetTab}
@@ -72,8 +72,8 @@ export default function DialectMorph({ lang = 'kn' }) {
               onClick={() => setActiveTab('custom')}
               className={`px-4 sm:px-5 py-2 rounded-lg text-xs sm:text-sm font-semibold transition-all ${
                 activeTab === 'custom'
-                  ? 'bg-[#F3C067] text-[#14110E] shadow-md font-bold'
-                  : 'text-[#D4CDC5] hover:text-[#F3EFEA]'
+                  ? 'bg-[#d4af37] text-[#0b0f17] shadow-md font-bold'
+                  : 'text-[#cbd5e1] hover:text-[#f8fafc]'
               }`}
             >
               {t.customTab}
@@ -95,8 +95,8 @@ export default function DialectMorph({ lang = 'kn' }) {
                   }}
                   className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all border ${
                     selectedCategory === cat.id
-                      ? 'bg-[#F3C067]/20 text-[#F3C067] border-[#F3C067]/50 shadow'
-                      : 'bg-[#1E1915] border-[#2E2620] text-[#C8BFB5] hover:text-[#F3EFEA]'
+                      ? 'bg-[#d4af37]/20 text-[#d4af37] border-[#d4af37]/50 shadow'
+                      : 'bg-[#111726] border-[#1e293b] text-[#94a3b8] hover:text-[#f8fafc]'
                   }`}
                 >
                   {isKn ? cat.kannadaLabel : cat.label}
@@ -105,18 +105,18 @@ export default function DialectMorph({ lang = 'kn' }) {
             </div>
 
             {/* Selected Scenario Spotlight Box */}
-            <div className="bg-[#1E1915] border border-[#F3C067]/30 rounded-2xl p-5 sm:p-6 mb-8 shadow-xl">
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#2E2620]">
+            <div className="bg-[#111726] border border-[#d4af37]/30 rounded-2xl p-5 sm:p-6 mb-8 shadow-xl">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-[#1e293b]">
                 <div>
-                  <span className="text-[11px] sm:text-xs uppercase font-bold text-[#F3C067] tracking-wider">
+                  <span className="text-[11px] sm:text-xs uppercase font-bold text-[#d4af37] tracking-wider">
                     {t.standardLabel}
                   </span>
-                  <h3 className="text-base sm:text-xl font-bold text-[#F3EFEA] mt-1 font-serif">
+                  <h3 className="text-base sm:text-xl font-bold text-[#f8fafc] mt-1 font-serif">
                     "{currentPhrase.standardEnglish}"
                   </h3>
-                  <p className="text-xs sm:text-sm text-[#D4CDC5] mt-1">
+                  <p className="text-xs sm:text-sm text-[#cbd5e1] mt-1">
                     {isKn ? 'ಪ್ರಮಾಣಿತ ಕನ್ನಡ: ' : 'Standard Kannada: '}
-                    <span className="text-[#F3C067] font-semibold">{currentPhrase.standardKannada}</span>
+                    <span className="text-[#d4af37] font-semibold">{currentPhrase.standardKannada}</span>
                   </p>
                 </div>
 
@@ -130,8 +130,8 @@ export default function DialectMorph({ lang = 'kn' }) {
                       aria-label={`View scenario ${i + 1}`}
                       className={`w-7 h-7 sm:w-8 sm:h-8 rounded-lg text-xs font-bold transition-all ${
                         activePhraseIndex === i
-                          ? 'bg-[#F3C067] text-[#14110E] font-black scale-105 shadow'
-                          : 'bg-[#14110E] text-[#C8BFB5] hover:text-[#F3EFEA] border border-[#2E2620]'
+                          ? 'bg-[#d4af37] text-[#0b0f17] font-black scale-105 shadow'
+                          : 'bg-[#0b0f17] text-[#94a3b8] hover:text-[#f8fafc] border border-[#1e293b]'
                       }`}
                     >
                       {i + 1}
@@ -150,7 +150,7 @@ export default function DialectMorph({ lang = 'kn' }) {
                   return (
                     <div
                       key={regionKey}
-                      className="bg-[#14110E] border border-[#2E2620] rounded-xl p-4 sm:p-5 hover:border-[#F3C067]/40 transition-all flex flex-col justify-between group shadow-md"
+                      className="bg-[#0b0f17] border border-[#1e293b] rounded-xl p-4 sm:p-5 hover:border-[#d4af37]/40 transition-all flex flex-col justify-between group shadow-md"
                     >
                       <div>
                         {/* Card Header with Region Badge */}
@@ -158,9 +158,9 @@ export default function DialectMorph({ lang = 'kn' }) {
                           <span
                             className="text-xs font-bold px-2.5 py-0.5 rounded-md border"
                             style={{
-                              backgroundColor: `${reg.color || '#F3C067'}15`,
-                              color: reg.color || '#F3C067',
-                              borderColor: `${reg.color || '#F3C067'}40`
+                              backgroundColor: `${reg.color || '#d4af37'}15`,
+                              color: reg.color || '#d4af37',
+                              borderColor: `${reg.color || '#d4af37'}40`
                             }}
                           >
                             {isKn ? (reg.kannadaName || regionKey) : (reg.name?.split(' (')[0] || regionKey)}
@@ -170,7 +170,7 @@ export default function DialectMorph({ lang = 'kn' }) {
                             <button
                               type="button"
                               onClick={() => speakKannada(variant.text)}
-                              className="p-1.5 rounded-lg bg-[#1E1915] hover:bg-[#F3C067] hover:text-[#14110E] text-[#F3C067] transition-all border border-[#2E2620]"
+                              className="p-1.5 rounded-lg bg-[#111726] hover:bg-[#d4af37] hover:text-[#0b0f17] text-[#d4af37] transition-all border border-[#1e293b]"
                               aria-label={`Listen to ${variant.text}`}
                             >
                               <Volume2 className="w-4 h-4" />
@@ -178,7 +178,7 @@ export default function DialectMorph({ lang = 'kn' }) {
                             <button
                               type="button"
                               onClick={() => handleCopy(variant.text, copyId)}
-                              className="p-1.5 rounded-lg bg-[#1E1915] hover:bg-[#2E2620] text-[#C8BFB5] hover:text-[#F3EFEA] transition-all border border-[#2E2620]"
+                              className="p-1.5 rounded-lg bg-[#111726] hover:bg-[#1e293b] text-[#94a3b8] hover:text-[#f8fafc] transition-all border border-[#1e293b]"
                               aria-label="Copy dialect text"
                             >
                               {isCopied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -187,17 +187,17 @@ export default function DialectMorph({ lang = 'kn' }) {
                         </div>
 
                         {/* Dialect Text */}
-                        <p className="text-base font-bold text-[#F3EFEA] font-serif leading-relaxed mb-1.5">
+                        <p className="text-base font-bold text-[#f8fafc] font-serif leading-relaxed mb-1.5">
                           “{variant.text}”
                         </p>
-                        <p className="text-xs text-[#F3C067]/90 italic mb-3">
+                        <p className="text-xs text-[#d4af37]/90 italic mb-3">
                           /{variant.phonetic}/
                         </p>
                       </div>
 
                       {/* Linguistic Note Footer */}
-                      <div className="pt-2.5 border-t border-[#2E2620] text-[11px] text-[#C8BFB5]">
-                        <strong className="text-[#F3EFEA] font-medium">{isKn ? 'ವಿಶೇಷತೆ: ' : 'Nuance: '}</strong>
+                      <div className="pt-2.5 border-t border-[#1e293b] text-[11px] text-[#94a3b8]">
+                        <strong className="text-[#f8fafc] font-medium">{isKn ? 'ವಿಶೇಷತೆ: ' : 'Nuance: '}</strong>
                         {variant.note}
                       </div>
                     </div>
@@ -208,12 +208,12 @@ export default function DialectMorph({ lang = 'kn' }) {
           </div>
         ) : (
           /* Custom Synthesizer Tab */
-          <div className="bg-[#1E1915] border border-[#2E2620] rounded-2xl p-5 sm:p-7 max-w-4xl mx-auto shadow-xl">
-            <h3 className="text-base sm:text-lg font-bold text-[#F3EFEA] mb-2 flex items-center gap-2 font-serif">
-              <MessageSquare className="w-5 h-5 text-[#F3C067]" />
+          <div className="bg-[#111726] border border-[#1e293b] rounded-2xl p-5 sm:p-7 max-w-4xl mx-auto shadow-xl">
+            <h3 className="text-base sm:text-lg font-bold text-[#f8fafc] mb-2 flex items-center gap-2 font-serif">
+              <MessageSquare className="w-5 h-5 text-[#d4af37]" />
               {isKn ? 'ಯಾವುದೇ ವಾಕ್ಯವನ್ನು ನಮೂದಿಸಿ - 5 ಪ್ರಾಂತ್ಯಗಳಿಗೆ ರೂಪಾಂತರಿಸಿ' : 'Enter Any Expression to Morph into Regional Dialects'}
             </h3>
-            <p className="text-xs sm:text-sm text-[#D4CDC5] mb-4">
+            <p className="text-xs sm:text-sm text-[#cbd5e1] mb-4">
               {isKn 
                 ? 'ಕನ್ನಡ ಅಥವಾ ಇಂಗ್ಲಿಷ್‌ನಲ್ಲಿ ಯಾವುದೇ ವಾಕ್ಯ ಟೈಪ್ ಮಾಡಿ; ಶೀರಾ/ಕೇಸರಿಬಾತ್‌ನಂತಹ ಪ್ರಾದೇಶಿಕ ಶಬ್ದಗಳು ಮತ್ತು ಪ್ರತ್ಯಯಗಳು ನೈಜವಾಗಿ ರೂಪಾಂತರಗೊಳ್ಳುತ್ತವೆ.' 
                 : 'Type an everyday statement in English or Kannada to see how North Karnataka, Karavali, Mysuru, Kalyana, and Bengaluru express it.'}
@@ -225,13 +225,13 @@ export default function DialectMorph({ lang = 'kn' }) {
                 value={customInput}
                 onChange={(e) => setCustomInput(e.target.value)}
                 placeholder={t.customPlaceholder}
-                className="flex-1 bg-[#14110E] border border-[#2E2620] rounded-xl px-4 py-2.5 text-xs sm:text-sm text-[#F3EFEA] placeholder-[#C8BFB5]/50 focus:outline-none focus:border-[#F3C067]"
+                className="flex-1 bg-[#0b0f17] border border-[#1e293b] rounded-xl px-4 py-2.5 text-xs sm:text-sm text-[#f8fafc] placeholder-[#94a3b8]/50 focus:outline-none focus:border-[#d4af37]"
                 aria-label="Custom dialect sentence"
               />
               <button
                 type="button"
                 onClick={() => setCustomInput('kesaribath thinbeku')}
-                className="px-3.5 py-2 bg-[#F3C067]/15 hover:bg-[#F3C067]/25 border border-[#F3C067]/40 text-[#F3C067] rounded-xl text-xs font-semibold transition-all shrink-0 flex items-center justify-center gap-1.5"
+                className="px-3.5 py-2 bg-[#d4af37]/15 hover:bg-[#d4af37]/25 border border-[#d4af37]/40 text-[#d4af37] rounded-xl text-xs font-semibold transition-all shrink-0 flex items-center justify-center gap-1.5"
               >
                 <Sparkles className="w-3.5 h-3.5" />
                 <span>{t.tryCustomBtn}</span>
@@ -240,8 +240,8 @@ export default function DialectMorph({ lang = 'kn' }) {
 
             {/* Quick Test Samples */}
             <div className="flex flex-wrap items-center gap-1.5 mb-5">
-              <span className="text-[11px] text-[#C8BFB5] flex items-center gap-1">
-                <Lightbulb className="w-3.5 h-3.5 text-[#F3C067]" /> {isKn ? 'ಮಾದರಿಗಳು:' : 'Quick Tests:'}
+              <span className="text-[11px] text-[#94a3b8] flex items-center gap-1">
+                <Lightbulb className="w-3.5 h-3.5 text-[#d4af37]" /> {isKn ? 'ಮಾದರಿಗಳು:' : 'Quick Tests:'}
               </span>
               {[
                 'kesaribath thinbeku',
@@ -254,7 +254,7 @@ export default function DialectMorph({ lang = 'kn' }) {
                   key={sample}
                   type="button"
                   onClick={() => setCustomInput(sample)}
-                  className="text-[11px] bg-[#14110E] hover:bg-[#2E2620] text-[#D4CDC5] hover:text-[#F3C067] px-2.5 py-1 rounded-lg border border-[#2E2620] transition-all font-medium"
+                  className="text-[11px] bg-[#0b0f17] hover:bg-[#1e293b] text-[#cbd5e1] hover:text-[#d4af37] px-2.5 py-1 rounded-lg border border-[#1e293b] transition-all font-medium"
                 >
                   {sample}
                 </button>
@@ -263,12 +263,12 @@ export default function DialectMorph({ lang = 'kn' }) {
 
             {parsedCustomResult ? (
               <div className="space-y-4">
-                <div className="p-3 bg-[#F3C067]/10 border border-[#F3C067]/30 rounded-xl text-xs text-[#F3C067] flex items-center justify-between">
+                <div className="p-3 bg-[#d4af37]/10 border border-[#d4af37]/30 rounded-xl text-xs text-[#d4af37] flex items-center justify-between">
                   <span>
                     💡 <strong>{isKn ? 'ನೈಜ-ಸಮಯದ ಲೆಕ್ಸಿಕನ್ ಇಂಜಿನ್: ' : 'Semantic Lexicon Engine: '}</strong> 
                     {isKn ? `"${customInput}" ವಾಕ್ಯವು 5 ಪ್ರಾಂತಗಳಿಗೆ ಹೊಂದಾಣಿಕೆಯಾಗಿದೆ!` : `Adapted "${customInput}" across 5 regional vocabularies!`}
                   </span>
-                  <span className="text-[10px] bg-[#F3C067]/20 px-2 py-0.5 rounded text-[#F3C067] uppercase font-bold">
+                  <span className="text-[10px] bg-[#d4af37]/20 px-2 py-0.5 rounded text-[#d4af37] uppercase font-bold">
                     {isKn ? '5 ಪ್ರಾಂತ್ಯಗಳು ಸಕ್ರಿಯ' : '5 Regions Active'}
                   </span>
                 </div>
@@ -283,16 +283,16 @@ export default function DialectMorph({ lang = 'kn' }) {
                     return (
                       <div
                         key={regKey}
-                        className="bg-[#14110E] p-4 sm:p-5 rounded-xl border border-[#2E2620] hover:border-[#F3C067]/40 transition-all flex flex-col justify-between shadow-md"
+                        className="bg-[#0b0f17] p-4 sm:p-5 rounded-xl border border-[#1e293b] hover:border-[#d4af37]/40 transition-all flex flex-col justify-between shadow-md"
                       >
                         <div>
                           <div className="flex items-center justify-between mb-2">
                             <span
                               className="text-xs font-bold px-2.5 py-0.5 rounded-md border"
                               style={{
-                                backgroundColor: `${reg.color || '#F3C067'}15`,
-                                color: reg.color || '#F3C067',
-                                borderColor: `${reg.color || '#F3C067'}40`
+                                backgroundColor: `${reg.color || '#d4af37'}15`,
+                                color: reg.color || '#d4af37',
+                                borderColor: `${reg.color || '#d4af37'}40`
                               }}
                             >
                               {isKn ? reg.kannadaName : reg.name?.split(' (')[0]}
@@ -302,7 +302,7 @@ export default function DialectMorph({ lang = 'kn' }) {
                               <button
                                 type="button"
                                 onClick={() => speakKannada(result.text)}
-                                className="p-1.5 rounded-lg bg-[#1E1915] hover:bg-[#F3C067] hover:text-[#14110E] text-[#F3C067] transition-all border border-[#2E2620]"
+                                className="p-1.5 rounded-lg bg-[#111726] hover:bg-[#d4af37] hover:text-[#0b0f17] text-[#d4af37] transition-all border border-[#1e293b]"
                                 aria-label={`Listen to ${result.text}`}
                               >
                                 <Volume2 className="w-4 h-4" />
@@ -310,7 +310,7 @@ export default function DialectMorph({ lang = 'kn' }) {
                               <button
                                 type="button"
                                 onClick={() => handleCopy(result.text, copyId)}
-                                className="p-1.5 rounded-lg bg-[#1E1915] hover:bg-[#2E2620] text-[#C8BFB5] hover:text-[#F3EFEA] transition-all border border-[#2E2620]"
+                                className="p-1.5 rounded-lg bg-[#111726] hover:bg-[#1e293b] text-[#94a3b8] hover:text-[#f8fafc] transition-all border border-[#1e293b]"
                                 aria-label="Copy"
                               >
                                 {isCopied ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
@@ -318,16 +318,16 @@ export default function DialectMorph({ lang = 'kn' }) {
                             </div>
                           </div>
 
-                          <p className="text-base font-bold text-[#F3EFEA] font-serif leading-relaxed mb-1.5">
+                          <p className="text-base font-bold text-[#f8fafc] font-serif leading-relaxed mb-1.5">
                             “{result.text}”
                           </p>
-                          <p className="text-xs text-[#F3C067]/90 italic mb-2.5">
+                          <p className="text-xs text-[#d4af37]/90 italic mb-2.5">
                             /{result.phonetic}/
                           </p>
                         </div>
 
-                        <div className="pt-2 border-t border-[#2E2620] text-[11px] text-[#C8BFB5]">
-                          <strong className="text-[#F3EFEA] font-medium">{isKn ? 'ವಿಶೇಷತೆ: ' : 'Nuance: '}</strong>
+                        <div className="pt-2 border-t border-[#1e293b] text-[11px] text-[#94a3b8]">
+                          <strong className="text-[#f8fafc] font-medium">{isKn ? 'ವಿಶೇಷತೆ: ' : 'Nuance: '}</strong>
                           {result.trait}
                         </div>
                       </div>
@@ -336,7 +336,7 @@ export default function DialectMorph({ lang = 'kn' }) {
                 </div>
               </div>
             ) : (
-              <div className="text-center py-6 text-[#C8BFB5] text-xs">
+              <div className="text-center py-6 text-[#94a3b8] text-xs">
                 {isKn 
                   ? 'ಮೇಲಿನ ಬಾಕ್ಸ್‌ನಲ್ಲಿ ಟೈಪ್ ಮಾಡಿ ಅಥವಾ ಮಾದರಿ ಬಟನ್‌ಗಳನ್ನು ಕ್ಲಿಕ್ ಮಾಡಿ 5 ಪ್ರಾಂತ್ಯಗಳ ರೂಪಾಂತರವನ್ನು ನೋಡಿ!' 
                   : 'Type above or click any sample prompt to see how North Karnataka, Karavali, Mysuru, Kalyana, and Bengaluru express it differently!'}
