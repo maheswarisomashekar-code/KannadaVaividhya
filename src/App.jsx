@@ -49,12 +49,10 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-royal-canvas text-[#F8FAFC] flex flex-col md:flex-row font-sans selection:bg-[#F59E0B] selection:text-[#0F0B17] relative overflow-hidden">
+    <div className="min-h-screen bg-classic-canvas text-[#F1F3F5] flex flex-col md:flex-row font-sans selection:bg-[#D4AF37] selection:text-[#0C0D0E] relative overflow-hidden">
       
-      {/* Dynamic Glowing Ambient Light Nodes */}
-      <div className="fixed top-[-15%] left-[-10%] w-[500px] h-[500px] bg-[#F59E0B]/15 rounded-full blur-[140px] pointer-events-none -z-10 animate-pulse" />
-      <div className="fixed top-[20%] right-[-12%] w-[550px] h-[550px] bg-[#E11D48]/15 rounded-full blur-[150px] pointer-events-none -z-10" />
-      <div className="fixed bottom-[-10%] left-[30%] w-[600px] h-[600px] bg-[#7C3AED]/12 rounded-full blur-[160px] pointer-events-none -z-10" />
+      {/* Subtle Classic Vignette Backdrop */}
+      <div className="fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-7xl h-96 bg-[radial-gradient(ellipse_at_top,_var(--tw-gradient-stops))] from-[#D4AF37]/5 via-transparent to-transparent pointer-events-none -z-10" />
 
       {/* 1. Left Vertical Sidebar Navigation */}
       <Sidebar

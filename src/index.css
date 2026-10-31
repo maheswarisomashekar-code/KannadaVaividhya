@@ -3,144 +3,105 @@
 @layer base {
   html {
     scroll-behavior: smooth;
-    font-family: 'Plus Jakarta Sans', system-ui, -apple-system, sans-serif;
-    background-color: #07050d;
-    color: #f8fafc;
+    font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    background-color: #0c0d0e;
+    color: #f1f3f5;
   }
 }
 
-/* Kannada script typography with zero subscript/matra clipping */
+/* Kannada Script Typography - Clean, legible, zero clipping */
 .font-kannada {
-  font-family: 'Noto Serif Kannada', 'Noto Sans Kannada', 'Nirmala UI', 'Tunga', serif;
+  font-family: 'Noto Sans Kannada', 'Noto Serif Kannada', 'Nirmala UI', sans-serif;
   line-height: 1.75 !important;
-  letter-spacing: 0.015em;
+  letter-spacing: 0.01em;
 }
 
 h1.font-kannada, h2.font-kannada, h3.font-kannada {
   line-height: 1.35 !important;
 }
 
-.font-royal {
-  font-family: 'Cinzel', 'Playfair Display', Georgia, serif;
-  letter-spacing: 0.05em;
-}
-
 .font-serif-kn {
   font-family: 'Noto Serif Kannada', Georgia, serif;
 }
 
-/* Deep Vivid Royal Ambient Canvas Background */
-.bg-royal-canvas {
-  background-color: #08060f;
+.font-editorial {
+  font-family: 'Playfair Display', Georgia, serif;
+  letter-spacing: -0.01em;
+}
+
+/* Classic Architectural Canvas - Minimal, clean, restrained */
+.bg-classic-canvas {
+  background-color: #0c0d0e;
   background-image: 
-    radial-gradient(circle at 10% 10%, rgba(245, 158, 11, 0.18) 0px, transparent 45%),
-    radial-gradient(circle at 90% 15%, rgba(225, 29, 72, 0.20) 0px, transparent 50%),
-    radial-gradient(circle at 50% 60%, rgba(124, 58, 237, 0.15) 0px, transparent 55%),
-    radial-gradient(circle at 85% 90%, rgba(245, 158, 11, 0.14) 0px, transparent 50%),
-    radial-gradient(circle at 15% 85%, rgba(6, 182, 212, 0.12) 0px, transparent 45%);
+    radial-gradient(circle at 50% 0%, rgba(212, 175, 55, 0.05) 0%, transparent 60%),
+    linear-gradient(to bottom, #0c0d0e 0%, #101114 100%);
 }
 
-/* Vivid Glassmorphic Glowing Surfaces */
-.glass-vivid {
-  background: linear-gradient(135deg, rgba(26, 18, 42, 0.72) 0%, rgba(18, 13, 30, 0.85) 100%);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(245, 158, 11, 0.32);
-  box-shadow: 0 16px 40px -10px rgba(0, 0, 0, 0.7), 0 0 25px -5px rgba(245, 158, 11, 0.18), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+/* Premium Classic Matte Card */
+.classic-card {
+  background-color: #141619;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
+  transition: all 0.25s ease;
 }
 
-.glass-vivid-card {
-  background: linear-gradient(145deg, rgba(28, 20, 48, 0.6) 0%, rgba(17, 12, 32, 0.85) 100%);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(245, 158, 11, 0.22);
-  box-shadow: 0 12px 30px -8px rgba(0, 0, 0, 0.6), inset 0 1px 0 rgba(255, 255, 255, 0.08);
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+.classic-card:hover {
+  background-color: #17191d;
+  border-color: rgba(212, 175, 55, 0.35);
+  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.65);
 }
 
-.glass-vivid-card:hover {
-  border-color: rgba(245, 158, 11, 0.65);
-  transform: translateY(-4px) scale(1.01);
-  box-shadow: 0 20px 45px -8px rgba(245, 158, 11, 0.32), 0 0 30px rgba(225, 29, 72, 0.22), inset 0 1px 2px rgba(255, 255, 255, 0.25);
-}
-
-/* Radiant Gold Text */
-.gold-shimmer-text {
-  background: linear-gradient(120deg, #fffbeb 0%, #fbbf24 30%, #f59e0b 60%, #ea580c 100%);
+/* Understated Muted Gold Text */
+.gold-classic-text {
+  background: linear-gradient(135deg, #f5e6b8 0%, #d4af37 60%, #b8972e 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
-  filter: drop-shadow(0 2px 14px rgba(245, 158, 11, 0.45));
 }
 
-.crimson-gold-text {
-  background: linear-gradient(120deg, #fef08a 0%, #f59e0b 40%, #e11d48 80%, #be123c 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  display: inline-block;
-  filter: drop-shadow(0 2px 14px rgba(225, 29, 72, 0.45));
+/* Refined Classic Button */
+.btn-classic-gold {
+  background-color: #d4af37;
+  color: #0c0d0e;
+  font-weight: 600;
+  transition: all 0.2s ease;
+}
+.btn-classic-gold:hover {
+  background-color: #dfbd4b;
+  transform: translateY(-1px);
+}
+.btn-classic-gold:active {
+  transform: translateY(0);
 }
 
-/* Glowing Neon Borders */
-.glow-gold-border {
-  border-color: #f59e0b;
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.4), inset 0 0 15px rgba(245, 158, 11, 0.15);
+.btn-classic-secondary {
+  background-color: #1a1d21;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #e2e5e9;
+  font-weight: 500;
+  transition: all 0.2s ease;
 }
-
-.glow-crimson-border {
-  border-color: #e11d48;
-  box-shadow: 0 0 20px rgba(225, 29, 72, 0.4), inset 0 0 15px rgba(225, 29, 72, 0.15);
-}
-
-/* High-Contrast Luminous Gold Button */
-.btn-zari {
-  background: linear-gradient(135deg, #fef08a 0%, #f59e0b 50%, #d97706 100%);
-  color: #0f0b17;
-  font-weight: 800;
-  box-shadow: 0 6px 25px -2px rgba(245, 158, 11, 0.55), 0 0 15px rgba(245, 158, 11, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.7);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.btn-zari:hover {
-  filter: brightness(1.15);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 32px -2px rgba(245, 158, 11, 0.75), 0 0 25px rgba(245, 158, 11, 0.5);
-}
-
-.btn-zari:active {
-  transform: translateY(1px);
-}
-
-.btn-crimson {
-  background: linear-gradient(135deg, #fb7185 0%, #e11d48 50%, #9f1239 100%);
+.btn-classic-secondary:hover {
+  background-color: #22262c;
+  border-color: rgba(212, 175, 55, 0.3);
   color: #ffffff;
-  font-weight: 800;
-  box-shadow: 0 6px 25px -2px rgba(225, 29, 72, 0.55), 0 0 15px rgba(225, 29, 72, 0.35);
-  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.btn-crimson:hover {
-  filter: brightness(1.15);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 32px -2px rgba(225, 29, 72, 0.75);
-}
-
-/* Custom Scrollbar */
+/* Minimalist Scrollbar */
 ::-webkit-scrollbar {
-  width: 7px;
-  height: 7px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
-  background: #08060f;
+  background: #0c0d0e;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(180deg, #f59e0b 0%, #e11d48 100%);
+  background: #23272d;
   border-radius: 9999px;
-  box-shadow: 0 0 10px rgba(245, 158, 11, 0.5);
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #fbbf24;
+  background: #d4af37;
 }
