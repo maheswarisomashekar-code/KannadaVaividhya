@@ -20,32 +20,25 @@ export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isAuthOpen, setIsAuthOpen] = useState(false);
 
-  // User authentication session state with localStorage persistence
-  const [user, setUser] = useState(() => {
+  // Default to guest session so every new visitor/judge starts clean with Log In / Sign Up
+  const [user, setUser] = useState(null);
+
+  // Clear any old persisted test session on load
+  useEffect(() => {
     try {
-      const savedUser = localStorage.getItem('kannada_user_session');
-      return savedUser ? JSON.parse(savedUser) : null;
-    } catch {
-      return null;
-    }
-  });
+      localStorage.removeItem('kannada_user_session');
+    } catch {}
+  }, []);
 
   const handleLogin = (userData) => {
     setUser(userData);
-    try {
-      localStorage.setItem('kannada_user_session', JSON.stringify(userData));
-    } catch (e) {
-      console.warn('LocalStorage error:', e);
-    }
   };
 
   const handleLogout = () => {
     setUser(null);
     try {
       localStorage.removeItem('kannada_user_session');
-    } catch (e) {
-      console.warn('LocalStorage error:', e);
-    }
+    } catch {}
   };
 
   return (
@@ -64,6 +57,7 @@ export default function App() {
         setLang={setLang}
         user={user}
         onOpenAuth={() => setIsAuthOpen(true)}
+        onLogout={handleLogout}
         isMobileOpen={isMobileMenuOpen}
         setIsMobileOpen={setIsMobileMenuOpen}
       />
@@ -77,6 +71,7 @@ export default function App() {
           onOpenMobileMenu={() => setIsMobileMenuOpen(true)}
           user={user}
           onOpenAuth={() => setIsAuthOpen(true)}
+          onLogout={handleLogout}
           lang={lang}
           setLang={setLang}
         />

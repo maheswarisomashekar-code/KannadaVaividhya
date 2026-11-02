@@ -10,6 +10,7 @@ import {
   Search, 
   Languages, 
   LogIn, 
+  LogOut,
   X, 
   Award
 } from 'lucide-react';
@@ -25,6 +26,7 @@ export default function Sidebar({
   setLang,
   user,
   onOpenAuth,
+  onLogout,
   isMobileOpen,
   setIsMobileOpen
 }) {
@@ -92,12 +94,13 @@ export default function Sidebar({
       {/* User Status / Login Pill */}
       <div className="px-4 py-3 border-b border-[#1e293b] bg-[#090d15]">
         {user ? (
-          <button
-            type="button"
-            onClick={onOpenAuth}
-            className="w-full flex items-center justify-between p-2.5 rounded-xl bg-[#111726] border border-[#1e293b] hover:border-[#334155] transition-all text-left group"
-          >
-            <div className="flex items-center gap-2.5 min-w-0">
+          <div className="w-full flex items-center justify-between p-2.5 rounded-xl bg-[#111726] border border-[#1e293b]">
+            <div 
+              onClick={onOpenAuth}
+              className="flex items-center gap-2.5 min-w-0 cursor-pointer flex-1"
+              role="button"
+              tabIndex={0}
+            >
               <div className="w-8 h-8 rounded-lg bg-[#1e293b] flex items-center justify-center font-bold text-[#d4af37] text-xs font-serif-kn shrink-0">
                 {user.avatarInitial || 'ಕ'}
               </div>
@@ -111,13 +114,23 @@ export default function Sidebar({
                 </p>
               </div>
             </div>
-            <Award className="w-4 h-4 text-[#d4af37] shrink-0 opacity-70" />
-          </button>
+            
+            <div className="flex items-center gap-1 shrink-0 ml-1">
+              <button
+                type="button"
+                onClick={onLogout}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-red-400 hover:bg-[#1e293b] transition-colors"
+                title={isKn ? "ಲಾಗ್ ಔಟ್" : "Log Out"}
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          </div>
         ) : (
           <button
             type="button"
             onClick={onOpenAuth}
-            className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl btn-classic-gold text-xs"
+            className="w-full flex items-center justify-center gap-2 py-2 px-3 rounded-xl btn-classic-gold text-xs font-semibold transition-all shadow-sm"
           >
             <LogIn className="w-3.5 h-3.5" />
             <span>{isKn ? 'ಲಾಗಿನ್ / ಸೈನ್ ಅಪ್' : 'Log In / Sign Up'}</span>
