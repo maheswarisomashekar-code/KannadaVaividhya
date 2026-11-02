@@ -248,6 +248,18 @@ export const BADGES = [
   { threshold: 5, title: 'ಕವಿರಾಜಮಾರ್ಗ ವಿದ್ವಾಂಸ (Kavirajamarga Master)', icon: '👑', desc: 'Flawless! You carry the linguistic soul of Karnataka!' }
 ];
 
+// Interactive Matchmaker Game Data
+export const MATCH_PAIRS = [
+  { id: 'm1', word: 'ಗಿರ್ಮಿಟ್ (Girmit)', region: 'ಧಾರವಾಡ / ಉತ್ತರ ಕರ್ನಾಟಕ', note: 'Famous spicy street food' },
+  { id: 'm2', word: 'ಮಾರಾಯ (Maaraya)', region: 'ಕುಂದಾಪ್ರ / ಕರಾವಳಿ', note: 'Affectionate coastal friend' },
+  { id: 'm3', word: 'ಮೈಲಾರಿ ಮಸಾಲೆ ದೋಸೆ', region: 'ಹಳೆ ಮೈಸೂರು', note: 'Iconic royal butter dosa' },
+  { id: 'm4', word: 'ಬರಾಬರ್ (Baraabar)', region: 'ಕಲಬುರಗಿ / ಕಲ್ಯಾಣ ಕರ್ನಾಟಕ', note: 'Deccani for perfect/proper' },
+  { id: 'm5', word: 'ಸೀನ್ ಸಾರ್ಟೆಡ್ (Scene Sorted)', region: 'ಬೆಂಗಳೂರು ನಗರಿ', note: 'Metro slang for all good' },
+  { id: 'm6', word: 'ಬಿಸಿ ಕೂಡು (Bisi Koodu)', region: 'ಕುಂದಾಪ್ರ / ಕರಾವಳಿ', note: 'Coastal boiled red rice' },
+  { id: 'm7', word: 'ಜೋಳದ ರೊಟ್ಟಿ & ಎಣ್ಣೆಗಾಯಿ', region: 'ಧಾರವಾಡ / ಉತ್ತರ ಕರ್ನಾಟಕ', note: 'Paper-thin jowar feast' },
+  { id: 'm8', word: 'ರಾಗಿ ಮುದ್ದೆ & ಬಸ್ಸಾರು', region: 'ಹಳೆ ಮೈಸೂರು', note: 'Mandya & Mysuru staple' }
+];
+
 // Helper: Shuffle array in place (Fisher-Yates)
 function shuffleArray(arr) {
   const result = [...arr];

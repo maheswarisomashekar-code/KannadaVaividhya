@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { CATEGORIES, PHRASES } from '../data/phrases';
 import { REGIONS } from '../data/regions';
-import { Sparkles, Volume2, Copy, Check, MessageSquare, Lightbulb } from 'lucide-react';
-import { speakKannada } from '../utils/audioHelper';
+import { Sparkles, Volume2, Copy, Check, MessageSquare, Lightbulb, Mic, MicOff } from 'lucide-react';
+import { speakKannada, soundEffects } from '../utils/audioHelper';
 import { parseAndMorphDialect } from '../utils/regionalLexiconEngine';
 import { UI_STRINGS } from '../data/translations';
 
@@ -13,9 +13,55 @@ export default function DialectMorph({ lang = 'kn' }) {
   const [customInput, setCustomInput] = useState('');
   const [activeTab, setActiveTab] = useState('preset'); // 'preset' | 'custom'
   const [mobileActiveRegion, setMobileActiveRegion] = useState('mysuru');
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef(null);
 
   const t = UI_STRINGS[lang] || UI_STRINGS.kn;
   const isKn = lang === 'kn';
+
+  const toggleVoiceInput = () => {
+    if (isListening) {
+      if (recognitionRef.current) recognitionRef.current.stop();
+      setIsListening(false);
+      return;
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert(isKn ? 'ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಧ್ವನಿ ಗ್ರಹಿಕೆ ಲಭ್ಯವಿಲ್ಲ.' : 'Voice recognition not supported in this browser.');
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'kn-IN';
+      recognition.interimResults = false;
+
+      recognition.onstart = () => {
+        setIsListening(true);
+        soundEffects.playClick();
+      };
+      recognition.onresult = (e) => {
+        const text = e.results[0][0].transcript;
+        if (text) setCustomInput(text);
+      };
+      recognition.onerror = () => setIsListening(false);
+      recognition.onend = () => setIsListening(false);
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch {
+      setIsListening(false);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (recognitionRef.current) {
+        try { recognitionRef.current.abort(); } catch {}
+      }
+    };
+  }, []);
 
   const filteredPhrases = selectedCategory === 'all'
     ? PHRASES
@@ -219,15 +265,28 @@ export default function DialectMorph({ lang = 'kn' }) {
                 : 'Type an everyday statement in English or Kannada to see how North Karnataka, Karavali, Mysuru, Kalyana, and Bengaluru express it.'}
             </p>
 
-            <div className="flex flex-col sm:flex-row gap-2.5 mb-5">
-              <input
-                type="text"
-                value={customInput}
-                onChange={(e) => setCustomInput(e.target.value)}
-                placeholder={t.customPlaceholder}
-                className="flex-1 bg-[#0b0f17] border border-[#1e293b] rounded-xl px-4 py-2.5 text-xs sm:text-sm text-[#f8fafc] placeholder-[#94a3b8]/50 focus:outline-none focus:border-[#d4af37]"
-                aria-label="Custom dialect sentence"
-              />
+            <div className="flex flex-col sm:flex-row gap-2.5 mb-3">
+              <div className="relative flex-1">
+                <input
+                  type="text"
+                  value={customInput}
+                  onChange={(e) => setCustomInput(e.target.value)}
+                  placeholder={isKn ? "ವಾಕ್ಯ ಟೈಪ್ ಮಾಡಿ ಅಥವಾ ಮೈಕ್ ಮೂಲಕ ಮಾತನಾಡಿ..." : "Type or speak any phrase..."}
+                  className="w-full bg-[#0b0f17] border border-[#1e293b] rounded-xl px-4 py-2.5 pr-12 text-xs sm:text-sm text-[#f8fafc] placeholder-[#94a3b8]/50 focus:outline-none focus:border-[#d4af37]"
+                  aria-label="Custom dialect sentence"
+                />
+                <button
+                  type="button"
+                  onClick={toggleVoiceInput}
+                  title={isKn ? "ಮೈಕ್ ಮೂಲಕ ಮಾತನಾಡಿ" : "Speak to morph"}
+                  className={`absolute right-1.5 top-1.5 bottom-1.5 px-2.5 rounded-lg flex items-center justify-center transition-all ${
+                    isListening ? 'bg-red-500 text-white animate-pulse' : 'bg-[#1e293b] hover:bg-[#283548] text-[#d4af37]'
+                  }`}
+                >
+                  {isListening ? <MicOff className="w-3.5 h-3.5" /> : <Mic className="w-3.5 h-3.5" />}
+                </button>
+              </div>
+
               <button
                 type="button"
                 onClick={() => setCustomInput('kesaribath thinbeku')}
@@ -237,6 +296,13 @@ export default function DialectMorph({ lang = 'kn' }) {
                 <span>{t.tryCustomBtn}</span>
               </button>
             </div>
+
+            {isListening && (
+              <div className="mb-4 px-3 py-1.5 rounded-lg bg-red-950/40 border border-red-500/40 text-red-200 text-xs flex items-center gap-2 animate-pulse">
+                <span className="w-2 h-2 rounded-full bg-red-500 animate-ping inline-block" />
+                <span>{isKn ? '🎙️ ನಿಮ್ಮ ಧ್ವನಿ ಆಲಿಸಲಾಗುತ್ತಿದೆ... ಕನ್ನಡದಲ್ಲಿ ಮಾತನಾಡಿ' : '🎙️ Listening... speak in Kannada/English'}</span>
+              </div>
+            )}
 
             {/* Quick Test Samples */}
             <div className="flex flex-wrap items-center gap-1.5 mb-5">

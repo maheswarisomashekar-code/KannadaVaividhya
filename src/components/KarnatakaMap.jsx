@@ -337,16 +337,10 @@ export default function KarnatakaMap({ currentRegion, setCurrentRegion, lang = '
               </p>
             </div>
 
-            {/* Districts List & Famous Proverb Footer */}
-            <div className="pt-3 border-t border-[#1e293b] flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
-              <div>
-                <span className="text-[#94a3b8]">{t.districtsLabel} </span>
-                <span className="text-[#f8fafc] font-medium">{regionData.districts.join(', ')}</span>
-              </div>
-              <div className="p-2 rounded-lg bg-[#0b0f17] border border-[#d4af37]/30 text-[#d4af37]">
-                <span className="font-bold">{t.proverbLabel} </span>
-                <span className="font-serif font-semibold text-[#f8fafc]">{regionData.famousProverb.kannada}</span>
-              </div>
+            {/* Districts List Footer */}
+            <div className="pt-3 border-t border-[#1e293b] text-xs">
+              <span className="text-[#94a3b8]">{t.districtsLabel} </span>
+              <span className="text-[#f8fafc] font-medium leading-relaxed">{regionData.districts.join(', ')}</span>
             </div>
 
           </div>

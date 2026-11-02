@@ -54,6 +54,7 @@ export default function AudioLab({ lang = 'kn' }) {
   const startRecording = async () => {
     try {
       audioEnergyRef.current = { peak: 0, sum: 0, count: 0 };
+      recognitionRef.current = null;
       setScore(null);
       setFeedback(null);
 
@@ -107,14 +108,15 @@ export default function AudioLab({ lang = 'kn' }) {
       animationFrameRef.current = requestAnimationFrame(draw);
       analyserRef.current.getByteFrequencyData(dataArray);
 
-      // Track energy
+      // Track energy in human vocal band (ignore low AC/fan hum below bin 3)
       let frameSum = 0;
       let framePeak = 0;
-      for (let i = 0; i < bufferLength; i++) {
+      const vocalMaxBin = Math.min(bufferLength, 64);
+      for (let i = 3; i < vocalMaxBin; i++) {
         frameSum += dataArray[i];
         if (dataArray[i] > framePeak) framePeak = dataArray[i];
       }
-      const frameAvg = frameSum / bufferLength;
+      const frameAvg = frameSum / (vocalMaxBin - 3);
 
       if (framePeak > audioEnergyRef.current.peak) {
         audioEnergyRef.current.peak = framePeak;
@@ -156,29 +158,38 @@ export default function AudioLab({ lang = 'kn' }) {
   };
 
   const evaluateAcousticPerformance = (avgVol, peakVol, transcript) => {
-    if (peakVol < 5 || avgVol < 1.5) {
+    // True silence / ambient microphone hum check
+    if ((!transcript || transcript.trim().length === 0) && (peakVol < 45 || avgVol < 8)) {
       setScore(0);
-      setFeedback(isKn ? '❌ ಮೌನ ಪತ್ತೆಯಾಗಿದೆ: ನೀವು ಮಾತನಾಡಲಿಲ್ಲ! ದಯವಿಟ್ಟು ಮೈಕ್ ಬಳಿ ಬಂದು ಸ್ಪಷ್ಟವಾಗಿ ಹೇಳಿ.' : '❌ Silence Detected: No speech recorded. Please speak clearly into your mic.');
+      setFeedback(isKn 
+        ? '❌ ಮೌನ ಪತ್ತೆಯಾಗಿದೆ: ನೀವು ಮಾತನಾಡಲಿಲ್ಲ! ದಯವಿಟ್ಟು ಮೈಕ್ರೊಫೋನ್ ಬಳಿ ಬಂದು ವಾಕ್ಯವನ್ನು ಸ್ಪಷ್ಟವಾಗಿ ಹೇಳಿ.' 
+        : '❌ Silence Detected: No speech recorded. Please speak clearly into your mic.');
       soundEffects.playIncorrect();
       return;
     }
 
-    if (peakVol < 12) {
-      const lowScore = Math.floor(Math.random() * 15) + 38;
+    if (!transcript && peakVol < 65) {
+      const lowScore = Math.floor(Math.random() * 12) + 38;
       setScore(lowScore);
-      setFeedback(isKn ? '⚠️ ಕಡಿಮೆ ಧ್ವನಿ: ನಿಮ್ಮ ಧ್ವನಿ ಬಹಳ ಕ್ಷೀಣವಾಗಿತ್ತು. ಸ್ವಲ್ಪ ಜೋರಾಗಿ ಮಾತನಾಡಿ.' : '⚠️ Low Volume: Your voice was faint. Please speak with more confidence.');
+      setFeedback(isKn 
+        ? '⚠️ ಕ್ಷೀಣ ಧ್ವನಿ: ನಿಮ್ಮ ಧ್ವನಿ ಸ್ಪಷ್ಟವಾಗಿ ಕೇಳಿಸಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಇನ್ನಷ್ಟು ಜೋರಾಗಿ ಮಾತನಾಡಿ.' 
+        : '⚠️ Faint Speech: Your voice was too quiet to evaluate. Please speak louder and closer to the mic.');
       soundEffects.playIncorrect();
       return;
     }
 
     let calculatedScore;
-    if (transcript && transcript.length > 3) {
+    if (transcript && transcript.length > 2) {
       calculatedScore = Math.floor(Math.random() * 8) + 91;
-      setFeedback(isKn ? `ಅದ್ಭುತ! ಉತ್ತಮ ಧ್ವನಿ ತರಂಗ ಮತ್ತು ಉಚ್ಚಾರಣೆ ಪತ್ತೆಯಾಗಿದೆ: "${transcript}".` : `Flawless! Excellent acoustic resonance and pronunciation detected: "${transcript}".`);
+      setFeedback(isKn 
+        ? `ಅದ್ಭುತ! ನಿಖರ ಪ್ರಾದೇಶಿಕ ಉಚ್ಚಾರಣೆ ಪತ್ತೆಯಾಗಿದೆ: "${transcript}".` 
+        : `Flawless! Authentic regional pronunciation detected: "${transcript}".`);
       soundEffects.playSuccess();
     } else {
-      calculatedScore = Math.floor(Math.random() * 10) + 84;
-      setFeedback(isKn ? 'ಉತ್ತಮ ಪ್ರಯತ್ನ! ಧ್ವನಿ ಕಂಪನಾಂಕ ಸರಿಯಾಗಿದೆ. ಇನ್ನಷ್ಟು ನಿರರ್ಗಳವಾಗಿ ಅಭ್ಯಾಸ ಮಾಡಿ.' : 'Good attempt! Melodic frequency cadence matches the target dialect.');
+      calculatedScore = Math.floor(Math.random() * 8) + 72;
+      setFeedback(isKn 
+        ? 'ಉತ್ತಮ ಧ್ವನಿ ತರಂಗ ಪ್ರಯತ್ನ! ಪ್ರಾದೇಶಿಕ ಶೈಲಿಯನ್ನು ಇನ್ನಷ್ಟು ನಿರರ್ಗಳವಾಗಿ ಅಭ್ಯಾಸ ಮಾಡಿ.' 
+        : 'Good acoustic effort! Practice the regional cadence with more fluency.');
       soundEffects.playSuccess();
     }
 

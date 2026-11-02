@@ -100,7 +100,7 @@ export const REGIONAL_LEXICON_RULES = [
 export const DOMAIN_RULES = [
   // A. Greetings, Well-being & Enquiries
   {
-    patterns: ['how are you', 'hegiddira', 'hello', 'hi', 'namaskara', 'kushala', 'doing well', 'aaram', 'fine', 'good morning'],
+    patterns: ['how are you', 'hegiddira', 'hegideera', 'hello', 'namaskara', 'kushala', 'doing well', 'aaram', 'fine', 'good morning'],
     domain: 'greetings',
     variants: {
       mysuru: {
@@ -328,32 +328,29 @@ export const ACTION_PATTERNS = [
   }
 ];
 
+// Helper: Safe token matcher respecting word boundaries for short words
+function matchesPattern(text, pat) {
+  if (!text || !pat) return false;
+  // If pattern is short (<= 4 chars) and alphanumeric, match as whole word
+  if (pat.length <= 4 && /^[a-z0-9]+$/i.test(pat)) {
+    const regex = new RegExp(`\\b${pat}\\b`, 'i');
+    return regex.test(text);
+  }
+  return text.includes(pat);
+}
+
 // Master Parser: Evaluates ANY input and maps into 5 Regional Dialects
 export function parseAndMorphDialect(rawInput) {
   if (!rawInput || !rawInput.trim()) return null;
   const inputLower = rawInput.toLowerCase().trim();
 
-  // 1. Check Broad Domain Heuristics (Greetings, Travel, Bargaining, Weather, Help)
-  for (const domainRule of DOMAIN_RULES) {
-    for (const pat of domainRule.patterns) {
-      if (inputLower.includes(pat)) {
-        return {
-          type: 'domain_match',
-          domain: domainRule.domain,
-          keyword: pat,
-          variants: domainRule.variants
-        };
-      }
-    }
-  }
-
-  // 2. Detect if any regional food/noun token is mentioned
+  // 1. Detect if any regional food/noun token is mentioned (HIGHEST PRIORITY)
   let detectedFoodRule = null;
   let matchedKeyword = '';
 
   for (const rule of REGIONAL_LEXICON_RULES) {
     for (const pat of rule.patterns) {
-      if (inputLower.includes(pat)) {
+      if (matchesPattern(inputLower, pat)) {
         detectedFoodRule = rule;
         matchedKeyword = pat;
         break;
@@ -362,11 +359,11 @@ export function parseAndMorphDialect(rawInput) {
     if (detectedFoodRule) break;
   }
 
-  // 3. Detect if any action/verb token is mentioned
+  // 2. Detect if any action/verb token is mentioned
   let detectedActionRule = null;
   for (const act of ACTION_PATTERNS) {
     for (const pat of act.patterns) {
-      if (inputLower.includes(pat)) {
+      if (matchesPattern(inputLower, pat)) {
         detectedActionRule = act;
         break;
       }
@@ -374,7 +371,7 @@ export function parseAndMorphDialect(rawInput) {
     if (detectedActionRule) break;
   }
 
-  // 4. If food is detected and action is detected (e.g. "keasribath thinbeku")
+  // 3. If food is detected and action is detected (e.g. "kesaribath thinbeku")
   if (detectedFoodRule && detectedActionRule) {
     const results = {};
     const regions = ['mysuru', 'north_karnataka', 'karavali', 'kalyana_karnataka', 'bengaluru'];
@@ -396,7 +393,7 @@ export function parseAndMorphDialect(rawInput) {
     };
   }
 
-  // 5. If food alone is detected (e.g. "kesaribath", "sheera")
+  // 4. If food alone is detected (e.g. "kesaribath", "sheera", "girmit")
   if (detectedFoodRule) {
     const results = {};
     const regions = ['mysuru', 'north_karnataka', 'karavali', 'kalyana_karnataka', 'bengaluru'];
@@ -415,6 +412,20 @@ export function parseAndMorphDialect(rawInput) {
       keyword: matchedKeyword,
       variants: results
     };
+  }
+
+  // 5. Check Broad Domain Heuristics (Greetings, Travel, Bargaining, Weather, Help)
+  for (const domainRule of DOMAIN_RULES) {
+    for (const pat of domainRule.patterns) {
+      if (matchesPattern(inputLower, pat)) {
+        return {
+          type: 'domain_match',
+          domain: domainRule.domain,
+          keyword: pat,
+          variants: domainRule.variants
+        };
+      }
+    }
   }
 
   // 6. Natural Language Heuristic Fallback for ANY Arbitrary Input (Clean, zero dummy tail sentences)

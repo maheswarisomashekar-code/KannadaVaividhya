@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   VOCABULARY_LEXICON,
   fetchOnlineKannadaTranslation,
@@ -16,18 +16,82 @@ import {
   BookOpen,
   ArrowRight,
   Lightbulb,
-  Loader2
+  Loader2,
+  Mic,
+  MicOff
 } from 'lucide-react';
 import { UI_STRINGS } from '../data/translations';
 
 export default function DialectMitra({ lang = 'kn' }) {
   const [inputText, setInputText] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
   const [activeResult, setActiveResult] = useState(null);
   const [copiedId, setCopiedId] = useState(null);
   const [searchFilter, setSearchFilter] = useState('');
+  const recognitionRef = useRef(null);
 
   const isKn = lang === 'kn';
+
+  // Setup Voice Input Speech Recognition
+  const toggleVoiceInput = () => {
+    if (isListening) {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+      setIsListening(false);
+      return;
+    }
+
+    const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+    if (!SpeechRecognition) {
+      alert(isKn ? 'ನಿಮ್ಮ ಬ್ರೌಸರ್‌ನಲ್ಲಿ ಧ್ವನಿ ಗ್ರಹಿಕೆ ಲಭ್ಯವಿಲ್ಲ. Chrome ಅಥವಾ Edge ಬಳಸಿ.' : 'Voice recognition is not supported in this browser. Please use Chrome or Edge.');
+      return;
+    }
+
+    try {
+      const recognition = new SpeechRecognition();
+      recognition.lang = 'kn-IN';
+      recognition.interimResults = false;
+      recognition.maxAlternatives = 1;
+
+      recognition.onstart = () => {
+        setIsListening(true);
+        soundEffects.playClick();
+      };
+
+      recognition.onresult = (event) => {
+        const spokenText = event.results[0][0].transcript;
+        if (spokenText) {
+          setInputText(spokenText);
+          handleTranslate(spokenText);
+        }
+      };
+
+      recognition.onerror = (event) => {
+        console.warn('Speech recognition error:', event.error);
+        setIsListening(false);
+      };
+
+      recognition.onend = () => {
+        setIsListening(false);
+      };
+
+      recognitionRef.current = recognition;
+      recognition.start();
+    } catch (err) {
+      console.error('Speech recognition start failed:', err);
+      setIsListening(false);
+    }
+  };
+
+  useEffect(() => {
+    return () => {
+      if (recognitionRef.current) {
+        try { recognitionRef.current.abort(); } catch {}
+      }
+    };
+  }, []);
 
   const samplePrompts = [
     'I am getting late for college, please drive fast!',
@@ -137,7 +201,7 @@ export default function DialectMitra({ lang = 'kn' }) {
           </p>
         </div>
 
-        {/* Live Input & Search Bar */}
+        {/* Live Input & Search Bar with Voice-to-Dialect */}
         <div className="max-w-4xl mx-auto bg-[#111726] border border-[#1e293b] rounded-3xl p-5 sm:p-8 shadow-xl mb-10">
           
           <div className="relative mb-3">
@@ -146,30 +210,70 @@ export default function DialectMitra({ lang = 'kn' }) {
               value={inputText}
               onChange={(e) => setInputText(e.target.value)}
               onKeyDown={(e) => e.key === 'Enter' && handleTranslate()}
-              placeholder={isKn ? "ಯಾವುದೇ ವಾಕ್ಯ ಟೈಪ್ ಮಾಡಿ (ಉದಾ: 'ಆಟೋ ಮೀಟರ್ ಹಾಕಿ', 'ಇಲ್ಲಿ ಶೀರಾ ಸಿಗುತ್ತಾ?')..." : "Type any word or sentence (e.g. 'Driver, please turn on the meter' or 'How much is this?')..."}
-              className="w-full bg-[#0b0f17] border border-[#1e293b] hover:border-[#d4af37]/60 focus:border-[#d4af37] rounded-2xl px-4 py-3 sm:py-3.5 text-xs sm:text-sm text-[#f8fafc] placeholder-[#94a3b8]/50 focus:outline-none transition-all pr-32 sm:pr-36"
+              placeholder={isKn ? "ಯಾವುದೇ ವಾಕ್ಯ ಟೈಪ್ ಮಾಡಿ ಅಥವಾ ಮೈಕ್ ಕ್ಲಿಕ್ ಮಾಡಿ ಕನ್ನಡದಲ್ಲಿ ಮಾತನಾಡಿ..." : "Type any sentence or click mic to speak in Kannada/English..."}
+              className="w-full bg-[#0b0f17] border border-[#1e293b] hover:border-[#d4af37]/60 focus:border-[#d4af37] rounded-2xl px-4 py-3 sm:py-3.5 text-xs sm:text-sm text-[#f8fafc] placeholder-[#94a3b8]/50 focus:outline-none transition-all pr-44 sm:pr-48"
               aria-label="Input sentence to dialect morph"
             />
             
-            <button
-              type="button"
-              onClick={() => handleTranslate()}
-              disabled={isLoading || !inputText.trim()}
-              className="absolute right-1.5 top-1.5 bottom-1.5 px-4 sm:px-5 bg-gradient-to-r from-[#d4af37] to-[#E5A93C] text-[#0b0f17] font-bold rounded-xl text-xs sm:text-sm flex items-center gap-1.5 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-md"
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0b0f17]" />
-                  <span>{isKn ? 'ಅನುವಾದ...' : 'Translating...'}</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-3.5 h-3.5 text-[#0b0f17]" />
-                  <span>{isKn ? 'ರೂಪಾಂತರ' : 'Morph'}</span>
-                </>
-              )}
-            </button>
+            <div className="absolute right-1.5 top-1.5 bottom-1.5 flex items-center gap-1.5">
+              {/* Mic Speak Button */}
+              <button
+                type="button"
+                onClick={toggleVoiceInput}
+                title={isKn ? "ಮೈಕ್ ಮೂಲಕ ಮಾತನಾಡಿ" : "Speak to morph"}
+                className={`h-full px-3 rounded-xl flex items-center justify-center transition-all ${
+                  isListening
+                    ? 'bg-red-500 text-white animate-pulse shadow-lg shadow-red-500/50'
+                    : 'bg-[#1e293b] hover:bg-[#283548] text-[#d4af37] border border-[#d4af37]/40'
+                }`}
+                aria-label={isListening ? "Stop listening" : "Start voice input"}
+              >
+                {isListening ? (
+                  <MicOff className="w-4 h-4 text-white" />
+                ) : (
+                  <Mic className="w-4 h-4 text-[#d4af37]" />
+                )}
+              </button>
+
+              {/* Morph Action Button */}
+              <button
+                type="button"
+                onClick={() => handleTranslate()}
+                disabled={isLoading || !inputText.trim()}
+                className="h-full px-4 sm:px-5 bg-gradient-to-r from-[#d4af37] to-[#E5A93C] text-[#0b0f17] font-bold rounded-xl text-xs sm:text-sm flex items-center gap-1.5 transition-all disabled:opacity-40 disabled:cursor-not-allowed shadow-md"
+              >
+                {isLoading ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin text-[#0b0f17]" />
+                    <span>{isKn ? 'ಅನುವಾದ...' : 'Translating...'}</span>
+                  </>
+                ) : (
+                  <>
+                    <Sparkles className="w-3.5 h-3.5 text-[#0b0f17]" />
+                    <span>{isKn ? 'ರೂಪಾಂತರ' : 'Morph'}</span>
+                  </>
+                )}
+              </button>
+            </div>
           </div>
+
+          {/* Voice Listening Active Indicator Banner */}
+          {isListening && (
+            <div className="mb-3 px-3.5 py-2 rounded-xl bg-red-950/40 border border-red-500/40 text-red-200 text-xs flex items-center justify-between animate-pulse">
+              <span className="flex items-center gap-2">
+                <span className="w-2.5 h-2.5 rounded-full bg-red-500 animate-ping inline-block" />
+                <strong>{isKn ? '🎙️ ನಿಮ್ಮ ಧ್ವನಿ ಆಲಿಸಲಾಗುತ್ತಿದೆ...' : '🎙️ Listening to your voice...'}</strong>
+                <span>{isKn ? 'ಕನ್ನಡದಲ್ಲಿ ಮಾತನಾಡಿ (ಉದಾ: "ಊಟ ಆಯ್ತಾ", "ಮೀಟರ್ ಹಾಕಿ")' : 'Speak now in Kannada or English!'}</span>
+              </span>
+              <button
+                type="button"
+                onClick={toggleVoiceInput}
+                className="text-[11px] underline text-red-300 hover:text-white"
+              >
+                {isKn ? 'ನಿಲ್ಲಿಸಿ' : 'Stop'}
+              </button>
+            </div>
+          )}
 
           {/* Quick Idea Prompts */}
           <div className="flex flex-wrap items-center gap-1.5 pt-1">
