@@ -1,8 +1,8 @@
 // UI Localization Strings (Kannada / English Toggle)
 export const UI_STRINGS = {
   en: {
-    hackathonBanner: '🏆 Kannada Digital Innovation Hackathon 2026 • NIE Mysuru & HackerRank Campus Crew',
-    challengeTag: 'PS 04: Regional Language Explorer',
+    hackathonBanner: '🌟 KannadaVaividhya • Living Dialect & Cultural Heritage Explorer',
+    challengeTag: 'Regional Language Explorer',
     brandSubtitle: 'Living Dialect & Cultural Heritage Explorer',
     
     // Sidebar & Navigation
@@ -123,8 +123,8 @@ export const UI_STRINGS = {
     btnSubmit: 'Save & Publish'
   },
   kn: {
-    hackathonBanner: '🏆 ಕನ್ನಡ ಡಿಜಿಟಲ್ ಇನ್ನೋವೇಶನ್ ಹ್ಯಾಕಥಾನ್ 2026 • ಎನ್.ಐ.ಇ ಮೈಸೂರು & ಹ್ಯಾಕರ್‌ರ್ಯಾಂಕ್ ಕ್ಯಾಂಪಸ್ ಕ್ರೂ',
-    challengeTag: 'ಸಮಸ್ಯೆ ಹೇಳಿಕೆ 04: ಪ್ರಾದೇಶಿಕ ಭಾಷಾ ಅನ್ವೇಷಕ',
+    hackathonBanner: '🌟 ಕನ್ನಡ ವೈವಿಧ್ಯ • ಕರ್ನಾಟಕದ ಜೀವಂತ ಉಪಭಾಷೆಗಳು & ಸಾಂಸ್ಕೃತಿಕ ಪರಂಪರೆ',
+    challengeTag: 'ಪ್ರಾದೇಶಿಕ ಭಾಷಾ ಅನ್ವೇಷಕ',
     brandSubtitle: 'ಕರ್ನಾಟಕದ ಜೀವಂತ ಉಪಭಾಷೆಗಳು ಮತ್ತು ಸಾಂಸ್ಕೃತಿಕ ಪರಂಪರೆ',
 
     // Sidebar & Navigation

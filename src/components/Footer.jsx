@@ -33,19 +33,21 @@ export default function Footer({ lang = 'kn' }) {
             </div>
           </div>
 
-          {/* Hackathon Alignment */}
+          {/* Project Mission & Vision */}
           <div className="md:col-span-4 space-y-2">
             <h4 className="text-xs font-bold uppercase tracking-wider text-[#f8fafc]">
-              {isKn ? 'ಹ್ಯಾಕಥಾನ್ ವಿವರಗಳು' : 'Hackathon Details'}
+              {isKn ? 'ಯೋಜನೆಯ ಧ್ಯೇಯ' : 'Project Mission'}
             </h4>
             <p className="text-xs text-[#d4af37] font-semibold">
-              Kannada Digital Innovation Hackathon 2026
+              {isKn ? 'ಕನ್ನಡ ಪ್ರಾದೇಶಿಕ ಉಪಭಾಷಾ ಸಂರಕ್ಷಣೆ' : 'Regional Kannada Dialect Preservation'}
             </p>
-            <p className="text-xs text-[#cbd5e1]">
-              Organized by <strong>HackerRank Campus Crew</strong> & <strong>The National Institute of Engineering (NIE), Mysuru</strong>.
+            <p className="text-xs text-[#cbd5e1] leading-relaxed">
+              {isKn
+                ? 'ಕರ್ನಾಟಕದ ಪ್ರತಿಯೊಂದು ಪ್ರಾಂತ್ಯದ ವಿಶಿಷ್ಟ ನುಡಿಗಟ್ಟುಗಳು, ಧ್ವನಿ ಮಾದರಿಗಳು ಮತ್ತು ಜಾನಪದ ಸಾಹಿತ್ಯವನ್ನು ಡಿಜಿಟಲ್ ರೂಪದಲ್ಲಿ ಸಂರಕ್ಷಿಸುವ ನವೀನ ಪ್ರಯತ್ನ.'
+                : 'Documenting and celebrating the living oral traditions, distinct accents, and folk idioms of Karnataka across all 31 districts.'}
             </p>
             <p className="text-xs text-[#d4af37]/90 font-medium">
-              Problem Statement 04: Namma Kannada — Regional Language Explorer
+              {isKn ? 'ನಮ್ಮ ಕನ್ನಡ — ಜೀವಂತ ಪ್ರಾದೇಶಿಕ ಭಾಷಾ ಅನ್ವೇಷಕ' : 'Namma Kannada — Regional Language Explorer'}
             </p>
           </div>
 
@@ -70,7 +72,7 @@ export default function Footer({ lang = 'kn' }) {
         <div className="pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-[#94a3b8]/70">
           <p>© 2026 KannadaVaividhya • ಕನ್ನಡ ವೈವಿಧ್ಯ. Built with pride for Karnataka.</p>
           <p className="flex items-center gap-1">
-            Crafted for <span className="text-[#d4af37] font-semibold">NIE Mysuru Hackathon</span>
+            <span className="text-[#d4af37] font-medium">{isKn ? 'ಸಿರಿಗನ್ನಡಂ ಗೆಲ್ಗೆ, ಸಿರಿಗನ್ನಡಂ ಬಾಳ್ಗೆ!' : 'Celebrating Karnataka’s Living Heritage'}</span>
           </p>
         </div>
 

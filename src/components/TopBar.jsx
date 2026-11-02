@@ -32,10 +32,10 @@ export default function TopBar({
   return (
     <header className="sticky top-0 z-30 bg-[#0b0f17]/90 backdrop-blur-md border-b border-[#1e293b]">
       {/* Subtle top banner */}
-      <div className="bg-[#0f172a] border-b border-[#1e293b] text-slate-400 text-[11px] py-1 px-3 text-center tracking-wide flex items-center justify-center gap-2 flex-wrap">
-        <span>🏆 {t.hackathonBanner.split('•')[0]}</span>
-        <span className="hidden sm:inline text-slate-500">• NIE Mysuru & HackerRank Campus Crew</span>
-        <span className="text-[#d4af37] font-medium uppercase text-[10px] ml-1">
+      <div className="bg-[#0f172a] border-b border-[#1e293b] text-slate-300 text-[11px] py-1.5 px-3 text-center tracking-wide flex items-center justify-center gap-2 flex-wrap">
+        <span>{t.hackathonBanner}</span>
+        <span className="text-slate-500">•</span>
+        <span className="text-[#d4af37] font-medium uppercase text-[10px]">
           {t.challengeTag}
         </span>
       </div>

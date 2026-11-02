@@ -195,7 +195,7 @@ export default function Sidebar({
 
         <div className="pt-0.5 text-center">
           <span className="text-[10px] text-slate-500 font-normal">
-            NIE Mysuru • PS 04 Explorer
+            {isKn ? 'ಕರ್ನಾಟಕ ಪ್ರಾದೇಶಿಕ ನುಡಿ ವೇದಿಕೆ' : 'Karnataka Regional Dialect Explorer'}
           </span>
         </div>
       </div>

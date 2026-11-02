@@ -40,9 +40,8 @@ export default function Navbar({
   return (
     <header className="sticky top-0 z-50 backdrop-blur-md bg-[#0b0f17]/90 border-b border-[#1e293b] shadow-md transition-all">
       {/* Top Banner Indicator - Responsive */}
-      <div className="bg-gradient-to-r from-[#8B2635] via-[#D96B43] to-[#8B2635] text-[#f8fafc] text-[11px] sm:text-xs font-semibold py-1 px-3 text-center tracking-wide flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap">
-        <span>🏆 {t.hackathonBanner.split('•')[0]}</span>
-        <span className="hidden md:inline">• NIE Mysuru & HackerRank Campus Crew</span>
+      <div className="bg-[#0f172a] text-[#f8fafc] text-[11px] sm:text-xs font-semibold py-1 px-3 text-center tracking-wide flex items-center justify-center gap-1.5 sm:gap-2 flex-wrap border-b border-[#1e293b]">
+        <span>{t.hackathonBanner}</span>
         <span className="bg-[#d4af37] text-[#0b0f17] px-2 py-0.5 rounded text-[10px] font-extrabold uppercase tracking-tight">
           {t.challengeTag}
         </span>
