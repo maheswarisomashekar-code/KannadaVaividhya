@@ -37,18 +37,35 @@ h1.font-kannada, h2.font-kannada, h3.font-kannada {
     linear-gradient(to bottom, #0a0e17 0%, #0e1422 100%);
 }
 
-/* Premium Classic Matte Slate Card */
+/* Premium Classic Matte Slate Card with Luminous Gold Glow on Hover */
 .classic-card {
   background-color: #111726;
   border: 1px solid #1e293b;
   box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.5);
-  transition: all 0.25s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .classic-card:hover {
-  background-color: #141c2e;
-  border-color: #334155;
-  box-shadow: 0 8px 30px -4px rgba(0, 0, 0, 0.65);
+  background-color: #131c30;
+  border-color: rgba(212, 175, 55, 0.45);
+  box-shadow: 
+    0 12px 35px -5px rgba(0, 0, 0, 0.75),
+    0 0 24px rgba(212, 175, 55, 0.2),
+    inset 0 0 15px rgba(212, 175, 55, 0.05);
+  transform: translateY(-3px);
+}
+
+/* Card Glow Hover Utility */
+.glow-card-hover {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.glow-card-hover:hover {
+  border-color: rgba(212, 175, 55, 0.5) !important;
+  box-shadow: 
+    0 12px 30px -5px rgba(0, 0, 0, 0.7),
+    0 0 20px rgba(212, 175, 55, 0.18) !important;
+  transform: translateY(-3px);
 }
 
 /* Understated Muted Gold Text */

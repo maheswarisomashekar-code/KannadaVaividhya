@@ -196,7 +196,7 @@ export default function DialectMorph({ lang = 'kn' }) {
                   return (
                     <div
                       key={regionKey}
-                      className="bg-[#0b0f17] border border-[#1e293b] rounded-xl p-4 sm:p-5 hover:border-[#d4af37]/40 transition-all flex flex-col justify-between group shadow-md"
+                      className="bg-[#0b0f17] border border-[#1e293b] rounded-xl p-4 sm:p-5 glow-card-hover transition-all flex flex-col justify-between group shadow-md"
                     >
                       <div>
                         {/* Card Header with Region Badge */}
@@ -349,7 +349,7 @@ export default function DialectMorph({ lang = 'kn' }) {
                     return (
                       <div
                         key={regKey}
-                        className="bg-[#0b0f17] p-4 sm:p-5 rounded-xl border border-[#1e293b] hover:border-[#d4af37]/40 transition-all flex flex-col justify-between shadow-md"
+                        className="bg-[#0b0f17] p-4 sm:p-5 rounded-xl border border-[#1e293b] glow-card-hover transition-all flex flex-col justify-between shadow-md"
                       >
                         <div>
                           <div className="flex items-center justify-between mb-2">

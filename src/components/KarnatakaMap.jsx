@@ -386,7 +386,7 @@ export default function KarnatakaMap({ currentRegion, setCurrentRegion, lang = '
                     className={`p-4 rounded-2xl border transition-all cursor-pointer flex flex-col justify-between ${
                       isSelected
                         ? 'bg-[#111726] border-[#d4af37] shadow-lg ring-1 ring-[#d4af37]/40 scale-[1.02]'
-                        : 'bg-[#0e1422] border-[#1e293b] hover:border-[#d4af37]/40 hover:bg-[#111726]'
+                        : 'bg-[#0e1422] border-[#1e293b] glow-card-hover'
                     }`}
                   >
                     <div>
