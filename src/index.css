@@ -82,6 +82,93 @@ h1.font-kannada, h2.font-kannada, h3.font-kannada {
   background: linear-gradient(90deg, #DC2626 0%, #DC2626 50%, #FBBF24 50%, #FBBF24 100%);
 }
 
+/* Stunning Ambient Aura & Animations for Grand Opening Experience */
+@keyframes ambientAura {
+  0% {
+    transform: translate(0px, 0px) scale(1);
+    opacity: 0.45;
+  }
+  33% {
+    transform: translate(30px, -20px) scale(1.08);
+    opacity: 0.65;
+  }
+  66% {
+    transform: translate(-25px, 20px) scale(0.95);
+    opacity: 0.5;
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+    opacity: 0.45;
+  }
+}
+
+.animate-ambient-aura {
+  animation: ambientAura 12s infinite ease-in-out;
+}
+
+@keyframes gentleFloat {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.animate-gentle-float {
+  animation: gentleFloat 4s infinite ease-in-out;
+}
+
+@keyframes soundWaveBar {
+  0%, 100% {
+    height: 6px;
+  }
+  50% {
+    height: 22px;
+  }
+}
+
+.animate-soundwave-1 {
+  animation: soundWaveBar 0.8s infinite ease-in-out;
+}
+.animate-soundwave-2 {
+  animation: soundWaveBar 0.8s infinite ease-in-out 0.2s;
+}
+.animate-soundwave-3 {
+  animation: soundWaveBar 0.8s infinite ease-in-out 0.4s;
+}
+
+@keyframes borderShimmer {
+  0% {
+    border-color: rgba(212, 175, 55, 0.25);
+  }
+  50% {
+    border-color: rgba(212, 175, 55, 0.85);
+    box-shadow: 0 0 25px rgba(212, 175, 55, 0.35);
+  }
+  100% {
+    border-color: rgba(212, 175, 55, 0.25);
+  }
+}
+
+.animate-border-shimmer {
+  animation: borderShimmer 4s infinite ease-in-out;
+}
+
+/* Glass Regal Dark Card */
+.glass-regal {
+  background: rgba(17, 23, 38, 0.82);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border: 1px solid rgba(212, 175, 55, 0.28);
+}
+
+.glass-regal:hover {
+  background: rgba(21, 30, 50, 0.92);
+  border-color: rgba(212, 175, 55, 0.6);
+  box-shadow: 0 12px 35px -5px rgba(0, 0, 0, 0.8), 0 0 30px rgba(212, 175, 55, 0.22);
+}
+
 /* Pulsing Golden Glow for Featured Badges & Highlights */
 @keyframes goldPulse {
   0%, 100% {

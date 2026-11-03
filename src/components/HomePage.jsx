@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { 
   MapPin, 
   Sparkles, 
@@ -12,7 +12,10 @@ import {
   Globe2,
   Crown,
   Compass,
-  Gamepad2
+  Gamepad2,
+  Flame,
+  Award,
+  Play
 } from 'lucide-react';
 import { speakKannada } from '../utils/audioHelper';
 import { UI_STRINGS } from '../data/translations';
@@ -26,6 +29,15 @@ export default function HomePage({
 }) {
   const t = UI_STRINGS[lang] || UI_STRINGS.kn;
   const isKn = lang === 'kn';
+  const [playingId, setPlayingId] = useState(null);
+
+  const handlePlaySound = (id, text) => {
+    setPlayingId(id);
+    speakKannada(text, id);
+    setTimeout(() => {
+      setPlayingId(null);
+    }, 3200);
+  };
 
   const regionalHighlights = [
     {
@@ -92,6 +104,15 @@ export default function HomePage({
 
   const portalCards = [
     {
+      id: 'arcade',
+      title: isKn ? 'ನುಡಿ ಕ್ರೀಡಾಂಗಣ (Arcade)' : 'Dialect Arcade',
+      kannada: 'ಒಗಟುಗಳು, ತಿಂಡಿ ಮ್ಯಾಚ್ & ಪಾಸ್‌ಪೋರ್ಟ್',
+      desc: isKn ? 'ಹಳ್ಳಿಯ ಜಾನಪದ ಒಗಟು ಬಿಡಿಸಿ, ಜಿಲ್ಲೆಯ ಖಾದ್ಯ ಮ್ಯಾಚ್ ಮಾಡಿ, ಪ್ರಾದೇಶಿಕ RPG ಸಂಭಾಷಣೆ ಆಡಿ ಹಾಗೂ ನಿಮ್ಮ ಡಿಜಿಟಲ್ ರಾಯಭಾರಿ ಪಾಸ್‌ಪೋರ್ಟ್ ಪಡೆಯಿರಿ!' : 'Solve authentic folk riddles, match iconic dishes to districts, roleplay in dialects, and generate your Kannada Rayabhari Passport!',
+      icon: Gamepad2,
+      badge: '★ NEW ARCADE',
+      highlight: true
+    },
+    {
       id: 'map',
       title: isKn ? 'ಪ್ರಾದೇಶಿಕ ನಕ್ಷೆ' : 'Interactive Regional Map',
       kannada: '೩೧ ಜಿಲ್ಲೆಗಳ ನುಡಿ ನಕ್ಷೆ',
@@ -132,14 +153,6 @@ export default function HomePage({
       badge: 'Gamified Trivia'
     },
     {
-      id: 'arcade',
-      title: isKn ? 'ನುಡಿ ಕ್ರೀಡಾಂಗಣ (Arcade)' : 'Dialect Arcade',
-      kannada: 'ಒಗಟು, ಫುಡ್ ಮ್ಯಾಚ್ & ರೋಲ್‌ಪ್ಲೇ',
-      desc: isKn ? 'ಹಳ್ಳಿಯ ಒಗಟು ಬಿಡಿಸಿ, ಸ್ಥಳೀಯ ತಿಂಡಿ ಮ್ಯಾಚ್ ಮಾಡಿ, ಪ್ರಾದೇಶಿಕ ಭಾಷೆಯಲ್ಲಿ ಆಟೋ ಡ್ರೈವರ್ ಅಥವಾ ಹೋಟೆಲ್ ಭಟ್ರೊಂದಿಗೆ ಚರ್ಚಿಸಿ!' : 'Play village folk riddles, match iconic dishes to districts, and roleplay in authentic regional dialects!',
-      icon: Gamepad2,
-      badge: 'Interactive Games'
-    },
-    {
       id: 'vault',
       title: isKn ? 'ಜನಪದ ಕೋಶ' : 'Janapada Folk Vault',
       kannada: 'ಮುಕ್ತ ಸಮುದಾಯ ಗಾದೆ ಭಂಡಾರ',
@@ -154,52 +167,46 @@ export default function HomePage({
       desc: isKn ? 'ಯಕ್ಷಗಾನ, ವಚನ ಸಾಹಿತ್ಯ, ಜೋಳದ ರೊಟ್ಟಿ ಮತ್ತು ನಾಡ ಹಬ್ಬಗಳ ಸಾಂಸ್ಕೃತಿಕ ಪರಂಪರೆಯನ್ನು ತಿಳಿಯಿರಿ.' : 'Discover Yakshagana, Vachana literature, regional cuisines, and age-old folk celebrations.',
       icon: Users,
       badge: 'Living Heritage'
-    },
-    {
-      id: 'search',
-      title: isKn ? 'ಸಾರ್ವತ್ರಿಕ ಹುಡುಕಾಟ' : 'Universal Search',
-      kannada: '೫೦+ ನುಡಿಗಳ ತ್ವರಿತ ಶೋಧನೆ',
-      desc: isKn ? 'ಕನ್ನಡ ಲಿಪಿ, ಇಂಗ್ಲಿಷ್ ಅಕ್ಷರ ಅಥವಾ ಅರ್ಥದ ಮೂಲಕ ಯಾವುದೇ ನುಡಿಯನ್ನು ತ್ವರಿತವಾಗಿ ಹುಡುಕಿ.' : 'Instant full-text query matching across Kannada script, English transliteration, and categories.',
-      icon: Search,
-      badge: 'Instant Index'
     }
   ];
 
   return (
-    <div className="space-y-10 animate-fade-in">
+    <div className="space-y-10 animate-fade-in relative">
       
-      {/* 1. Classic Royal Karnataka Hero Banner */}
-      <section className="relative overflow-hidden rounded-3xl classic-card p-6 sm:p-10 lg:p-12 border-t-4 border-t-[#D4AF37] shadow-2xl">
-        {/* Karnataka Flag Dual-Tone Ambient Glow (Turmeric Yellow + Crimson Red) */}
-        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-amber-500/15 via-red-600/10 to-transparent pointer-events-none -z-0" />
+      {/* 1. Grand Royal Karnataka Hero Banner */}
+      <section className="relative overflow-hidden rounded-3xl glass-regal p-6 sm:p-10 lg:p-12 border-t-4 border-t-[#D4AF37] shadow-2xl">
+        
+        {/* Animated Multi-Hue Ambient Glow Orbs */}
+        <div className="absolute -top-32 -right-32 w-96 h-96 rounded-full bg-gradient-to-br from-red-600/25 via-amber-500/20 to-transparent blur-3xl pointer-events-none animate-ambient-aura -z-0" />
+        <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full bg-gradient-to-tr from-yellow-500/20 via-orange-500/15 to-transparent blur-3xl pointer-events-none animate-ambient-aura -z-0" style={{ animationDelay: '4s' }} />
         
         <div className="relative z-10 max-w-4xl">
           {/* Karnataka Flag & Hackathon Badge */}
           <div className="flex flex-wrap items-center gap-2 mb-4">
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1A1D21] border border-[#D4AF37]/40 text-[#D4AF37] text-xs font-semibold shadow-inner">
-              <span className="flex h-2 w-2 rounded-full bg-red-500 inline-block animate-pulse" />
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#111726]/90 border border-[#D4AF37]/50 text-[#D4AF37] text-xs font-semibold shadow-inner">
+              <span className="flex h-2.5 w-2.5 rounded-full bg-red-500 inline-block animate-ping" />
               <Crown className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span className="tracking-wide">
+              <span className="tracking-wide font-bold">
                 {isKn ? 'ಕನ್ನಡ ಡಿಜಿಟಲ್ ನಾವೀನ್ಯತೆ ೨೦೨೬ • ಸಂಭ್ರಮ' : 'Kannada Digital Innovation 2026 • Grand Stage'}
               </span>
             </div>
-            <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-gradient-to-r from-red-600/30 to-yellow-500/30 border border-yellow-500/30 text-yellow-300">
+            <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-gradient-to-r from-red-600/30 to-yellow-500/30 border border-yellow-500/40 text-yellow-300 shadow-sm">
               🚩 ಹೆಸರಾಯಿತು ಕರ್ನಾಟಕ • ಉಸಿರಾಗಲಿ ಕನ್ನಡ
             </span>
           </div>
 
-          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-[#F1F3F5] tracking-tight font-serif-kn mb-4 leading-[1.25]">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-[#F1F3F5] tracking-tight font-serif-kn mb-4 leading-[1.2]">
             {isKn ? (
               <>
                 ಕರ್ನಾಟಕದ ೫ ಪ್ರಾಂತ್ಯಗಳ <br />
-                <span className="gold-classic-text">
+                <span className="gold-classic-text drop-shadow-[0_4px_16px_rgba(212,175,55,0.4)]">
                   ಗಂಡುಮೆಟ್ಟಿನ ನುಡಿ ಸಿರಿ
                 </span>
               </>
             ) : (
               <>
                 The Living Soul of <br />
-                <span className="gold-classic-text">
+                <span className="gold-classic-text drop-shadow-[0_4px_16px_rgba(212,175,55,0.4)]">
                   Karnataka’s Regional Dialects
                 </span>
               </>
@@ -208,20 +215,28 @@ export default function HomePage({
 
           <p className="text-sm sm:text-base text-[#cbd5e1] leading-relaxed mb-6 max-w-2xl font-medium">
             {isKn 
-              ? 'ಹಳೆ ಮೈಸೂರಿನ ಮರ್ಯಾದೆ, ಉತ್ತರ ಕರ್ನಾಟಕದ ಗತ್ತು, ಕರಾವಳಿಯ ನಾದ, ಕಲ್ಯಾಣದ ಶರಣ ಸಮಾನತೆ ಮತ್ತು ಬೆಂಗಳೂರಿನ ಯುವ ಸಂಭಾಷಣೆಯ ಜೀವಂತ ಪ್ರಾದೇಶಿಕ ಭಾಷಾ ತಾಣ!'
+              ? 'ಹಳೆ ಮೈಸೂರಿನ ಗಾಂಭೀರ್ಯ, ಉತ್ತರ ಕರ್ನಾಟಕದ ಠಸ್ಸಾ, ಕರಾವಳಿಯ ಲಯ, ಕಲ್ಯಾಣದ ಶರಣ ಸಮಾನತೆ ಮತ್ತು ಬೆಂಗಳೂರಿನ ಯುವ ಸಂಭಾಷಣೆಯ ಜೀವಂತ ನುಡಿ ರತ್ನಗಳು!'
               : 'Celebrate the royal courtliness of Old Mysuru, hearty rhythm of North Karnataka, coastal music of Karavali, brotherhood of Kalyana, and vibrant slang of Bengaluru!'}
           </p>
 
           {/* Interactive Kuvempu State Motto Audio Capsule */}
-          <div className="inline-flex items-center gap-4 bg-[#0a0e17]/90 border border-[#D4AF37]/35 rounded-2xl p-3 sm:p-4 mb-7 shadow-xl hover:border-[#D4AF37]/60 transition-all">
+          <div className="inline-flex items-center gap-4 bg-[#0a0e17]/90 border border-[#D4AF37]/45 rounded-2xl p-3 sm:p-4 mb-7 shadow-xl hover:border-[#D4AF37]/80 transition-all">
             <button
               type="button"
-              onClick={() => speakKannada('ಎಲ್ಲಾದರೂ ಇರು, ಎಂತಾದರೂ ಇರು, ಎಂದೆಂದಿಗೂ ನೀ ಕನ್ನಡವಾಗಿರು! ಸಿರಿಗನ್ನಡಂ ಗೆಲ್ಗೆ, ಸಿರಿಗನ್ನಡಂ ಬಾಳ್ಗೆ!')}
+              onClick={() => handlePlaySound('motto', 'ಎಲ್ಲಾದರೂ ಇರು, ಎಂತಾದರೂ ಇರು, ಎಂದೆಂದಿಗೂ ನೀ ಕನ್ನಡವಾಗಿರು! ಸಿರಿಗನ್ನಡಂ ಗೆಲ್ಗೆ, ಸಿರಿಗನ್ನಡಂ ಬಾಳ್ಗೆ!')}
               className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#D4AF37] to-[#e6be44] text-[#0C0D0E] flex items-center justify-center shrink-0 shadow-lg hover:scale-105 active:scale-95 transition-transform"
               title={isKn ? "ಕುವೆಂಪು ನುಡಿ ಆಲಿಸಿ" : "Listen to Kuvempu's state motto"}
               aria-label="Listen to audio motto"
             >
-              <Volume2 className="w-5 h-5 text-[#0C0D0E]" />
+              {playingId === 'motto' ? (
+                <div className="flex items-center gap-0.5">
+                  <span className="w-1 bg-[#0C0D0E] rounded-full animate-soundwave-1" />
+                  <span className="w-1 bg-[#0C0D0E] rounded-full animate-soundwave-2" />
+                  <span className="w-1 bg-[#0C0D0E] rounded-full animate-soundwave-3" />
+                </div>
+              ) : (
+                <Volume2 className="w-5 h-5 text-[#0C0D0E]" />
+              )}
             </button>
             <div className="text-left pr-2">
               <p className="text-[#D4AF37] font-bold text-sm sm:text-base font-serif-kn tracking-wide">
@@ -235,48 +250,133 @@ export default function HomePage({
             </div>
           </div>
 
+          {/* Quick Interactive Dialect Soundboard Strip (Live Tap & Hear) */}
+          <div className="mb-8 p-3 sm:p-4 rounded-2xl bg-[#0b101c]/80 border border-[#D4AF37]/25 backdrop-blur-md">
+            <div className="flex items-center justify-between mb-2.5">
+              <span className="text-xs font-bold text-[#D4AF37] flex items-center gap-1.5">
+                <Flame className="w-3.5 h-3.5 text-amber-400" />
+                {isKn ? 'ತ್ವರಿತ ನುಡಿ ಸೌಂಡ್‌ಬೋರ್ಡ್ (ಒಂದು ಕ್ಲಿಕ್‌ನಲ್ಲಿ ೫ ಶೈಲಿಯ ಧ್ವನಿ ಕೇಳಿ)' : 'Instant Dialect Soundboard (1-Click Spoken Audio)'}
+              </span>
+              <span className="text-[10px] text-gray-400">
+                {isKn ? 'ಕ್ಲಿಕ್ ಮಾಡಿ ಆಲಿಸಿ 🎧' : 'Tap any dialect 🎧'}
+              </span>
+            </div>
+            <div className="grid grid-cols-2 sm:grid-cols-5 gap-2">
+              {regionalHighlights.map((r) => {
+                const isPlaying = playingId === r.id;
+                return (
+                  <button
+                    key={r.id}
+                    type="button"
+                    onClick={() => handlePlaySound(r.id, r.audioText)}
+                    className={`px-3 py-2 rounded-xl text-left border text-xs font-medium transition-all flex items-center justify-between gap-1.5 ${
+                      isPlaying
+                        ? 'bg-[#D4AF37] text-[#0b0f17] border-[#D4AF37] font-bold shadow-lg scale-105'
+                        : 'bg-[#131b2e]/90 text-gray-200 border-white/10 hover:border-[#D4AF37]/50 hover:bg-[#1a2540]'
+                    }`}
+                  >
+                    <div className="flex items-center gap-1.5 truncate">
+                      <span>{r.icon}</span>
+                      <span className="truncate">{r.name}</span>
+                    </div>
+                    {isPlaying ? (
+                      <div className="flex items-center gap-0.5 shrink-0">
+                        <span className="w-1 bg-[#0b0f17] rounded-full animate-soundwave-1" />
+                        <span className="w-1 bg-[#0b0f17] rounded-full animate-soundwave-2" />
+                        <span className="w-1 bg-[#0b0f17] rounded-full animate-soundwave-3" />
+                      </div>
+                    ) : (
+                      <Volume2 className="w-3.5 h-3.5 text-amber-400 shrink-0 opacity-70" />
+                    )}
+                  </button>
+                );
+              })}
+            </div>
+          </div>
+
           {/* Quick Action Navigation Buttons */}
           <div className="flex flex-wrap items-center gap-3">
+            {/* Primary Gold CTA: Dialect Arcade */}
+            <button
+              type="button"
+              onClick={() => onNavigate('arcade')}
+              className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-xl bg-gradient-to-r from-amber-400 via-[#D4AF37] to-amber-500 text-[#0C0D0E] text-xs sm:text-sm font-extrabold shadow-xl hover:brightness-110 active:scale-95 transition-all animate-border-shimmer border border-amber-300"
+            >
+              <Gamepad2 className="w-4 h-4 text-[#0C0D0E]" />
+              <span>{isKn ? '🎮 ನುಡಿ ಕ್ರೀಡಾಂಗಣ (Arcade & Games)' : '🎮 Play Dialect Arcade'}</span>
+            </button>
+
             <button
               type="button"
               onClick={() => onNavigate('map')}
-              className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#e6be44] text-[#0C0D0E] text-xs sm:text-sm font-bold shadow-lg hover:brightness-110 active:scale-95 transition-all"
+              className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-xl bg-[#131c30] hover:bg-[#1a2642] border border-[#D4AF37]/50 text-[#D4AF37] text-xs sm:text-sm font-bold shadow-md active:scale-95 transition-all"
             >
-              <Compass className="w-4 h-4 text-[#0C0D0E]" />
-              <span>{isKn ? '೩೧ ಜಿಲ್ಲೆಗಳ ನಕ್ಷೆ' : 'Explore 31 Districts'}</span>
+              <Compass className="w-4 h-4 text-[#D4AF37]" />
+              <span>{isKn ? '೩೧ ಜಿಲ್ಲೆಗಳ ನಕ್ಷೆ' : '31 Districts Map'}</span>
             </button>
 
             <button
               type="button"
               onClick={() => onNavigate('morph')}
-              className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-xl bg-[#131c30] hover:bg-[#1a2642] border border-[#D4AF37]/50 text-[#D4AF37] text-xs sm:text-sm font-bold shadow-md active:scale-95 transition-all"
+              className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-xl bg-[#131c30] hover:bg-[#1a2642] border border-white/15 text-[#cbd5e1] text-xs sm:text-sm font-semibold shadow-md active:scale-95 transition-all"
             >
               <Sparkles className="w-4 h-4 text-[#D4AF37]" />
-              <span>{isKn ? 'ನುಡಿ ರೂಪಾಂತರ ಮ್ಯಾಟ್ರಿಕ್ಸ್' : 'Dialect Morph Matrix'}</span>
+              <span>{isKn ? 'ನುಡಿ ರೂಪಾಂತರ ಮ್ಯಾಟ್ರಿಕ್ಸ್' : 'Dialect Morph'}</span>
             </button>
 
             <button
               type="button"
               onClick={() => onNavigate('mitra')}
-              className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-xl bg-[#131c30] hover:bg-[#1a2642] border border-white/15 text-[#cbd5e1] text-xs sm:text-sm font-semibold shadow-md active:scale-95 transition-all"
-            >
-              <Globe2 className="w-4 h-4 text-[#cbd5e1]" />
-              <span>{isKn ? 'ನುಡಿ ಮಿತ್ರ (ಎಐ)' : 'AI Dialect Mitra'}</span>
-            </button>
-
-            <button
-              type="button"
-              onClick={() => onNavigate('quiz')}
               className="inline-flex items-center gap-2 px-4 sm:px-5 py-3 rounded-xl bg-[#131c30] hover:bg-[#1a2642] border border-white/15 text-[#cbd5e1] text-xs sm:text-sm font-semibold active:scale-95 transition-all"
             >
-              <HelpCircle className="w-4 h-4 text-[#cbd5e1]" />
-              <span>{isKn ? 'ರಸಪ್ರಶ್ನೆ ಆಡಿ' : 'Detective Quiz'}</span>
+              <Globe2 className="w-4 h-4 text-[#cbd5e1]" />
+              <span>{isKn ? 'ನುಡಿ ಮಿತ್ರ (ಎಐ)' : 'AI Mitra'}</span>
             </button>
           </div>
         </div>
       </section>
 
-      {/* 2. Interactive "ಕರ್ನಾಟಕದ ೫ ಪ್ರಾಂತ್ಯಗಳ ನುಡಿ ಸಿರಿ" Regional Voice Grid */}
+      {/* 2. FEATURED SPOTLIGHT: Dialect Arcade Grand Banner */}
+      <section 
+        onClick={() => onNavigate('arcade')}
+        className="cursor-pointer relative overflow-hidden rounded-3xl p-6 sm:p-8 bg-gradient-to-r from-[#171f33] via-[#1b253d] to-[#171f33] border-2 border-[#D4AF37]/50 shadow-2xl hover:border-[#D4AF37] transition-all group"
+      >
+        <div className="absolute top-0 right-0 w-80 h-80 bg-amber-500/10 rounded-full blur-2xl pointer-events-none" />
+        <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 relative z-10">
+          <div className="space-y-3 max-w-2xl">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 text-xs font-bold">
+              <Sparkles className="w-3.5 h-3.5" />
+              <span>{isKn ? 'ಹೊಸ ಗೇಮಿಫಿಕೇಶನ್ ವಿಭಾಗ • ನುಡಿ ಕ್ರೀಡಾಂಗಣ' : 'New Gamified Experience • Dialect Arcade'}</span>
+            </div>
+            <h3 className="text-2xl sm:text-3xl font-black text-white font-serif-kn group-hover:text-[#D4AF37] transition-colors">
+              {isKn ? '೪ ರೋಮಾಂಚಕ ಆಟಗಳು: ಒಗಟು, ತಿಂಡಿ ಮ್ಯಾಚಿಂಗ್, RPG & ಪಾಸ್‌ಪೋರ್ಟ್!' : '4 Interactive Modes: Riddles, Foodie Faceoff, Roleplay RPG & Passport!'}
+            </h3>
+            <p className="text-xs sm:text-sm text-gray-300 leading-relaxed">
+              {isKn 
+                ? '೧೮ ಅಧಿಕೃತ ಹಳ್ಳಿಯ ಒಗಟುಗಳನ್ನು ಬಿಡಿಸಿ, ಕರ್ನಾಟಕದ ೧೬ ಜಿಲ್ಲೆಗಳ ಪ್ರಸಿದ್ಧ ತಿಂಡಿಗಳನ್ನು ಮ್ಯಾಚ್ ಮಾಡಿ, ಪ್ರಾದೇಶಿಕ ಶೈಲಿಯಲ್ಲಿ ಆಟೋ ಡ್ರೈವರ್ ಅಥವಾ ಹೋಟೆಲ್ ಭಟ್ರೊಂದಿಗೆ ಚರ್ಚಿಸಿ ಹಾಗೂ ನಿಮ್ಮದೇ "ಕನ್ನಡ ರಾಯಭಾರಿ" ಡಿಜಿಟಲ್ ಪಾಸ್‌ಪೋರ್ಟ್ ಡೌನ್‌ಲೋಡ್ ಮಾಡಿ!'
+                : 'Solve 18 rural folk riddles with audio clues, match iconic dishes to 16 districts, roleplay in local dialects, and create your personalized Kannada Ambassador Digital Passport!'}
+            </p>
+            <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
+              <span className="px-2.5 py-1 rounded-lg bg-black/40 border border-white/10 text-amber-200">🧩 ೧೮ ಒಗಟುಗಳು</span>
+              <span className="px-2.5 py-1 rounded-lg bg-black/40 border border-white/10 text-amber-200">🍲 ೧೬ ಜಿಲ್ಲಾ ತಿಂಡಿಗಳು</span>
+              <span className="px-2.5 py-1 rounded-lg bg-black/40 border border-white/10 text-amber-200">🎭 ೩ ಪ್ರಾದೇಶಿಕ RPG ಸಂಭಾಷಣೆ</span>
+              <span className="px-2.5 py-1 rounded-lg bg-black/40 border border-white/10 text-amber-200">🪪 ರಾಯಭಾರಿ ಪಾಸ್‌ಪೋರ್ಟ್</span>
+            </div>
+          </div>
+
+          <div className="shrink-0 flex items-center md:flex-col justify-end gap-3">
+            <button
+              type="button"
+              className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#e6be44] text-[#0C0D0E] font-extrabold text-sm flex items-center gap-2 shadow-xl group-hover:scale-105 active:scale-95 transition-transform"
+            >
+              <span>{isKn ? 'ಈಗಲೇ ಆಡಿ ನೋಡಿ' : 'Play Arcade Now'}</span>
+              <ArrowRight className="w-4 h-4 text-[#0C0D0E]" />
+            </button>
+          </div>
+        </div>
+      </section>
+
+      {/* 3. Interactive "ಕರ್ನಾಟಕದ ೫ ಪ್ರಾಂತ್ಯಗಳ ನುಡಿ ಸಿರಿ" Regional Voice Grid */}
       <section className="space-y-4">
         <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 pb-1 border-b border-[#1e293b]">
           <div>
@@ -294,69 +394,84 @@ export default function HomePage({
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
-          {regionalHighlights.map((reg) => (
-            <div
-              key={reg.id}
-              className={`rounded-2xl classic-card p-4 sm:p-5 flex flex-col justify-between border ${reg.borderColor} bg-gradient-to-b ${reg.accentColor} hover:scale-[1.02] transition-all duration-200 shadow-lg group`}
-            >
-              <div>
-                <div className="flex items-center justify-between mb-2.5">
-                  <span className="text-2xl" role="img" aria-label={reg.name}>{reg.icon}</span>
-                  <button
-                    type="button"
-                    onClick={() => speakKannada(reg.audioText)}
-                    className="p-2 rounded-xl bg-[#0b0f17] hover:bg-[#D4AF37] hover:text-[#0b0f17] text-[#D4AF37] border border-[#1e293b] transition-all shadow-sm group-hover:border-[#D4AF37]/50"
-                    title={isKn ? `${reg.name} ಧ್ವನಿ ಆಲಿಸಿ` : `Listen to ${reg.name}`}
-                    aria-label={`Listen to ${reg.name}`}
-                  >
-                    <Volume2 className="w-4 h-4" />
-                  </button>
-                </div>
-
-                <h4 className="text-base font-bold text-[#f8fafc] font-serif-kn group-hover:text-[#D4AF37] transition-colors">
-                  {reg.name}
-                </h4>
-                <p className="text-[11px] text-[#94a3b8] mb-3">
-                  {reg.districts}
-                </p>
-
-                {/* Regional Greeting Quote */}
-                <div className="bg-[#0b0f17]/80 rounded-xl p-3 border border-[#1e293b] mb-3">
-                  <p className="text-xs sm:text-sm font-bold text-[#D4AF37] font-serif-kn leading-snug">
-                    {reg.greeting}
-                  </p>
-                  <span className="text-[10px] text-[#94a3b8] mt-1 block">
-                    ✨ {reg.tag}
-                  </span>
-                </div>
-
-                {/* Cultural Food Marker */}
-                <div className="text-[11px] text-[#cbd5e1] mb-2 flex items-center gap-1.5">
-                  <span>🍲</span>
-                  <span className="truncate">{reg.food}</span>
-                </div>
-              </div>
-
-              <button
-                type="button"
-                onClick={() => {
-                  if (onSelectRegion) onSelectRegion(reg.id);
-                  onNavigate('morph');
-                }}
-                className="w-full mt-2 py-2 rounded-lg bg-[#0b0f17] hover:bg-[#D4AF37] hover:text-[#0b0f17] text-[#D4AF37] border border-[#1e293b] text-xs font-semibold flex items-center justify-center gap-1 transition-all"
+          {regionalHighlights.map((reg) => {
+            const isPlaying = playingId === reg.id;
+            return (
+              <div
+                key={reg.id}
+                className={`rounded-2xl glass-regal p-4 sm:p-5 flex flex-col justify-between border ${reg.borderColor} bg-gradient-to-b ${reg.accentColor} hover:scale-[1.02] transition-all duration-200 shadow-lg group`}
               >
-                <span>{isKn ? 'ನುಡಿ ರೂಪಾಂತರಿಸಿ' : 'Morph to Dialect'}</span>
-                <ArrowRight className="w-3 h-3" />
-              </button>
-            </div>
-          ))}
+                <div>
+                  <div className="flex items-center justify-between mb-2.5">
+                    <span className="text-2xl" role="img" aria-label={reg.name}>{reg.icon}</span>
+                    <button
+                      type="button"
+                      onClick={() => handlePlaySound(reg.id, reg.audioText)}
+                      className={`p-2 rounded-xl transition-all shadow-sm ${
+                        isPlaying 
+                          ? 'bg-[#D4AF37] text-[#0b0f17] scale-110 shadow-lg' 
+                          : 'bg-[#0b0f17] hover:bg-[#D4AF37] hover:text-[#0b0f17] text-[#D4AF37] border border-[#1e293b]'
+                      }`}
+                      title={isKn ? `${reg.name} ಧ್ವನಿ ಆಲಿಸಿ` : `Listen to ${reg.name}`}
+                      aria-label={`Listen to ${reg.name}`}
+                    >
+                      {isPlaying ? (
+                        <div className="flex items-center gap-0.5 px-0.5">
+                          <span className="w-1 bg-[#0b0f17] rounded-full animate-soundwave-1" />
+                          <span className="w-1 bg-[#0b0f17] rounded-full animate-soundwave-2" />
+                          <span className="w-1 bg-[#0b0f17] rounded-full animate-soundwave-3" />
+                        </div>
+                      ) : (
+                        <Volume2 className="w-4 h-4" />
+                      )}
+                    </button>
+                  </div>
+
+                  <h4 className="text-base font-bold text-[#f8fafc] font-serif-kn group-hover:text-[#D4AF37] transition-colors">
+                    {reg.name}
+                  </h4>
+                  <p className="text-[11px] text-[#94a3b8] mb-3">
+                    {reg.districts}
+                  </p>
+
+                  {/* Regional Greeting Quote */}
+                  <div className="bg-[#0b0f17]/80 rounded-xl p-3 border border-[#1e293b] mb-3">
+                    <p className="text-xs sm:text-sm font-bold text-[#D4AF37] font-serif-kn leading-snug">
+                      {reg.greeting}
+                    </p>
+                    <span className="text-[10px] text-[#94a3b8] mt-1 block">
+                      ✨ {reg.tag}
+                    </span>
+                  </div>
+
+                  {/* Cultural Food Marker */}
+                  <div className="text-[11px] text-[#cbd5e1] mb-2 flex items-center gap-1.5">
+                    <span>🍲</span>
+                    <span className="truncate">{reg.food}</span>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => {
+                    if (onSelectRegion) onSelectRegion(reg.id);
+                    onNavigate('morph');
+                  }}
+                  className="w-full mt-2 py-2 rounded-lg bg-[#0b0f17] hover:bg-[#D4AF37] hover:text-[#0b0f17] text-[#D4AF37] border border-[#1e293b] text-xs font-semibold flex items-center justify-center gap-1 transition-all"
+                >
+                  <span>{isKn ? 'ನುಡಿ ರೂಪಾಂತರಿಸಿ' : 'Morph to Dialect'}</span>
+                  <ArrowRight className="w-3 h-3" />
+                </button>
+              </div>
+            );
+          })}
         </div>
       </section>
 
-      {/* 3. Word of the Day Banner */}
+      {/* 4. Word of the Day Banner */}
       <WordOfTheDay lang={lang} onSelectRegion={onSelectRegion} />
 
-      {/* 3. Understated Feature Portal Grid */}
+      {/* 5. Comprehensive Feature Portal Grid (All 8 Modules) */}
       <section aria-labelledby="modules-heading">
         <div className="flex items-center justify-between mb-5">
           <div>
@@ -378,17 +493,23 @@ export default function HomePage({
               <div
                 key={card.id}
                 onClick={() => onNavigate(card.id)}
-                className="group classic-card p-5 rounded-xl cursor-pointer flex flex-col justify-between hover:border-[#D4AF37]/40 hover:bg-[#181B1F] transition-all duration-200"
+                className={`group glass-regal p-5 rounded-2xl cursor-pointer flex flex-col justify-between hover:border-[#D4AF37]/60 hover:bg-[#181f33] transition-all duration-200 ${
+                  card.highlight ? 'border-amber-400/50 bg-gradient-to-b from-amber-500/10 to-transparent' : ''
+                }`}
                 role="button"
                 tabIndex={0}
                 onKeyDown={(e) => (e.key === 'Enter' || e.key === ' ') && onNavigate(card.id)}
               >
                 <div>
                   <div className="flex items-center justify-between gap-2 mb-4">
-                    <div className="w-10 h-10 rounded-lg bg-[#1D2025] border border-white/[0.06] flex items-center justify-center text-[#D4AF37] group-hover:border-[#D4AF37]/30 transition-colors">
+                    <div className="w-10 h-10 rounded-xl bg-[#1D2538] border border-white/[0.08] flex items-center justify-center text-[#D4AF37] group-hover:border-[#D4AF37]/40 transition-colors">
                       <Icon className="w-5 h-5 text-[#D4AF37]" />
                     </div>
-                    <span className="text-[10px] uppercase font-medium px-2.5 py-0.5 rounded-full bg-[#181B1F] border border-white/[0.08] text-[#9CA3AF]">
+                    <span className={`text-[10px] uppercase font-bold px-2.5 py-0.5 rounded-full border ${
+                      card.highlight 
+                        ? 'bg-amber-400/20 border-amber-400/50 text-amber-300'
+                        : 'bg-[#181B1F] border-white/[0.08] text-[#9CA3AF]'
+                    }`}>
                       {card.badge}
                     </span>
                   </div>
@@ -414,13 +535,13 @@ export default function HomePage({
         </div>
       </section>
 
-      {/* 4. Live Global Search directly on Home */}
+      {/* 6. Live Global Search directly on Home */}
       <section className="pt-2">
         <GlobalSearch lang={lang} />
       </section>
 
-      {/* 5. Metrics & Cultural Heritage Pride Bar */}
-      <section className="classic-card p-6 sm:p-8 rounded-3xl border border-[#D4AF37]/30 bg-gradient-to-r from-[#111726] via-[#151f33] to-[#111726] shadow-xl">
+      {/* 7. Metrics & Cultural Heritage Pride Bar */}
+      <section className="glass-regal p-6 sm:p-8 rounded-3xl border border-[#D4AF37]/40 bg-gradient-to-r from-[#111726] via-[#151f33] to-[#111726] shadow-xl">
         <div className="text-center max-w-xl mx-auto mb-6">
           <span className="text-[11px] font-bold text-[#D4AF37] uppercase tracking-widest block mb-1">
             {isKn ? 'ಕರ್ನಾಟಕದ ಸಾಂಸ್ಕೃತಿಕ ಗರಿಮೆ' : 'Karnataka Cultural Heritage Hall of Fame'}

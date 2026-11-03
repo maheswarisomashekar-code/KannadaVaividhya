@@ -379,14 +379,14 @@ def create_deck():
     # =========================================================================
     slide7 = prs.slides.add_slide(blank_layout)
     set_slide_background(slide7)
-    add_header(slide7, "Section 6", "Live Features & Demonstration Highlights", "ಪ್ರಾತ್ಯಕ್ಷಿಕೆಯ ಮುಖ್ಯ ಅಂಶಗಳು")
+    add_header(slide7, "Section 6", "Live Core Modules & Technical Highlights", "ಪ್ರಾತ್ಯಕ್ಷಿಕೆಯ ಮುಖ್ಯ ಅಂಶಗಳು")
 
     features = [
         ("Karnataka Interactive Map", "Clickable SVG state map with 5 color-coded dialect zones, district listings, audio greetings, and proverbs.", "🗺️"),
         ("Real-Time AI Dialect Mitra", "Translates ANY arbitrary sentence or word into 5 regional dialects with instant audio & etiquette tips.", "🧠"),
         ("5-Way Dialect Morph", "Curated side-by-side comparative matrices across key domains with authentic audio pacing & transliteration.", "✨"),
         ("Acoustic Frequency Lab", "Live microphone waveform visualizer on HTML5 canvas with automated pronunciation match scoring.", "🎙️"),
-        ("Dynamic Detective Quiz", "Endless randomized trivia rounds with shuffled options, sound effects, and 3 cultural badge tiers.", "🎮"),
+        ("Dynamic Detective Quiz", "Endless randomized trivia rounds with shuffled options, sound effects, and 3 cultural badge tiers.", "🎯"),
         ("Janapada Kosha Vault", "Searchable archive of regional proverbs & slang with real-time upvoting and community submission modal.", "📚")
     ]
 
@@ -411,6 +411,55 @@ def create_deck():
         p_d.font.size = Pt(11)
         p_d.font.color.rgb = GRAY
         p_d.space_before = Pt(8)
+
+    # =========================================================================
+    # SLIDE 7B: DIALECT ARCADE & CULTURAL GAMIFICATION SUITE
+    # =========================================================================
+    slide7b = prs.slides.add_slide(blank_layout)
+    set_slide_background(slide7b)
+    add_header(slide7b, "Section 6B", "Dialect Arcade & Gamified Cultural Engagement", "ನುಡಿ ಕ್ರೀಡಾಂಗಣ & ಸಂವಾದಾತ್ಮಕ ಆಟಗಳು")
+
+    arcade_games = [
+        ("🧩 Janapada Folk Riddles (ಒಗಟುಗಳು)", "18 authentic rural Kannada riddles across Karnataka with native audio narration, Fisher-Yates shuffling, progressive hints, and zero question repetition.", GOLD),
+        ("🍲 District Foodie Faceoff (ತಿಂಡಿ & ಜಿಲ್ಲೆ)", "16 iconic regional culinary delicacies across 16 districts. Pure culinary descriptions without city giveaways, testing deep geographical knowledge.", CYAN),
+        ("🎭 Dialect Roleplay RPG (ಸಂಭಾಷಣೆ ಕತೆಗಳು)", "3 branching conversational roleplays (Bengaluru Auto Negotiation, Dharwad Tea Stall, Udupi Breakfast) with realistic audio responses.", CRIMSON),
+        ("🪪 Kannada Rayabhari Digital Passport", "Personalized official cultural ambassador ID card generator with customizable avatar, district mottos, badge tiers, and 1-click PNG card export.", GOLD)
+    ]
+
+    for idx, (g_title, g_desc, col) in enumerate(arcade_games):
+        x = Inches(0.8 + (idx % 2) * 5.9)
+        y = Inches(1.8 + (idx // 2) * 2.3)
+        g_card = slide7b.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, x, y, Inches(5.6), Inches(2.1))
+        g_card.fill.solid()
+        g_card.fill.fore_color.rgb = CARD_DARK
+        g_card.line.color.rgb = col
+
+        tf_g = g_card.text_frame
+        tf_g.word_wrap = True
+        p_gt = tf_g.paragraphs[0]
+        p_gt.text = g_title
+        p_gt.font.size = Pt(15)
+        p_gt.font.bold = True
+        p_gt.font.color.rgb = col
+
+        p_gd = tf_g.add_paragraph()
+        p_gd.text = g_desc
+        p_gd.font.size = Pt(11.5)
+        p_gd.font.color.rgb = GRAY
+        p_gd.space_before = Pt(6)
+
+    # Bottom Highlight Banner on Slide 7B
+    b_banner = slide7b.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(6.3), Inches(11.5), Inches(0.8))
+    b_banner.fill.solid()
+    b_banner.fill.fore_color.rgb = RGBColor(18, 26, 44)
+    b_banner.line.color.rgb = GOLD
+    tf_bb = b_banner.text_frame
+    tf_bb.word_wrap = True
+    p_bb = tf_bb.paragraphs[0]
+    p_bb.text = "👑 Grand Opening Experience: 1-Click 5-Region Live Soundboard, Kuvempu State Motto Audio Capsule, & Royal Glassmorphism UI."
+    p_bb.font.size = Pt(11.5)
+    p_bb.font.bold = True
+    p_bb.font.color.rgb = GOLD
 
     # =========================================================================
     # SLIDE 8: IMPACT, CONCLUSION & FUTURE SCOPE
@@ -480,6 +529,27 @@ def create_deck():
         r_d.text = b_desc
         r_d.font.color.rgb = GRAY
         r_d.font.size = Pt(13)
+
+    # Bottom Submission & Links Banner on Slide 8
+    links_banner = slide8.shapes.add_shape(MSO_SHAPE.ROUNDED_RECTANGLE, Inches(0.8), Inches(6.1), Inches(11.6), Inches(0.85))
+    links_banner.fill.solid()
+    links_banner.fill.fore_color.rgb = RGBColor(16, 24, 40)
+    links_banner.line.color.rgb = GOLD
+    tf_lb = links_banner.text_frame
+    tf_lb.word_wrap = True
+    p_lb1 = tf_lb.paragraphs[0]
+    p_lb1.text = "🌐 Live Deployment: https://kannada-vaividhya.vercel.app/   |   📂 GitHub: https://github.com/maheswarisomashekar-code/KannadaVaividhya"
+    p_lb1.font.size = Pt(12)
+    p_lb1.font.bold = True
+    p_lb1.font.color.rgb = WHITE
+    p_lb1.alignment = PP_ALIGN.CENTER
+
+    p_lb2 = tf_lb.add_paragraph()
+    p_lb2.text = "Kannada Digital Innovation Hackathon 2026 • Problem Statement 04: Namma Kannada"
+    p_lb2.font.size = Pt(10)
+    p_lb2.font.color.rgb = GOLD
+    p_lb2.alignment = PP_ALIGN.CENTER
+    p_lb2.space_before = Pt(2)
 
     # Output file path
     output_path = os.path.join(os.getcwd(), "KannadaVaividhya_Presentation.pptx")
