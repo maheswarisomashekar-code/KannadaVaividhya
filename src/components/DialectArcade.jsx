@@ -26,14 +26,24 @@ const triggerConfetti = () => {
   } catch {}
 };
 
-// 1. Folk Riddles (ಒಗಟುಗಳು / Ogatugalu)
-const FOLK_RIDDLES = [
+// Helper: Shuffle array in place
+function shuffle(array) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+// 1. Folk Riddles (ಒಗಟುಗಳು / Ogatugalu) - 12+ Expanded authentic riddles
+const FOLK_RIDDLES_DATA = [
   {
     id: 1,
     riddleKn: 'ಮೇಲೆ ಹಸಿರು, ಒಳಗೆ ಕೆಂಪು, ತಿಂದರೆ ಸಿಹಿ, ಉಗುಳಿದರೆ ಬೀಜ — ಇದು ಏನು?',
     riddleEn: 'Green outside, red inside, sweet to eat, seeds to spit — what is it?',
-    optionsKn: ['ದಾಳಿಂಬೆ (Pomegranate)', 'ಸೇಬು (Apple)', 'ಕಲ್ಲಂಗಡಿ (Watermelon)', 'ಮಾವಿನ ಹಣ್ಣು (Mango)'],
-    correctIndex: 2,
+    correctAnswer: 'ಕಲ್ಲಂಗಡಿ (Watermelon)',
+    wrongOptions: ['ದಾಳಿಂಬೆ (Pomegranate)', 'ಸೇಬು (Apple)', 'ಮಾವಿನ ಹಣ್ಣು (Mango)'],
     hint: 'ಬೇಸಿಗೆ ಕಾಲದಲ್ಲಿ ಸಿಗುವ ತಂಪಾದ ಹಣ್ಣು!',
     region: 'ಕರಾವಳಿ & ಉತ್ತರ ಕರ್ನಾಟಕ'
   },
@@ -41,8 +51,8 @@ const FOLK_RIDDLES = [
     id: 2,
     riddleKn: 'ಮನೆಗೆ ಒಂದೇ ಬಾಗಿಲು, ಒಳಗಡೆ ಸಾವಿರ ಮುತ್ತುಗಳು — ಇದು ಏನು?',
     riddleEn: 'One door to the house, but thousands of pearls inside — what is it?',
-    optionsKn: ['ಕಾಯಿ (Coconut)', 'ದಾಳಿಂಬೆ (Pomegranate)', 'ಕಲ್ಲಂಗಡಿ (Watermelon)', 'ಹಲಸಿನ ಹಣ್ಣು (Jackfruit)'],
-    correctIndex: 1,
+    correctAnswer: 'ದಾಳಿಂಬೆ (Pomegranate)',
+    wrongOptions: ['ಕಾಯಿ (Coconut)', 'ಕಲ್ಲಂಗಡಿ (Watermelon)', 'ಹಲಸಿನ ಹಣ್ಣು (Jackfruit)'],
     hint: 'ಕೆಂಪು ಬಣ್ಣದ ಕಾಳುಗಳಿರುವ ಪೌಷ್ಟಿಕ ಹಣ್ಣು!',
     region: 'ಹಳೆ ಮೈಸೂರು'
   },
@@ -50,8 +60,8 @@ const FOLK_RIDDLES = [
     id: 3,
     riddleKn: 'ಕಾಲು ಇಲ್ಲದೆ ಓಡುತ್ತದೆ, ಕಣ್ಣು ಇಲ್ಲದೆ ಅಳುತ್ತದೆ — ಇದು ಏನು?',
     riddleEn: 'Runs without legs, cries without eyes — what is it?',
-    optionsKn: ['ನದಿ (River)', 'ಗಾಳಿ (Wind)', 'ರೈಲು (Train)', 'ಮೋಡ (Cloud / Rain)'],
-    correctIndex: 3,
+    correctAnswer: 'ಮೋಡ (Cloud / Rain)',
+    wrongOptions: ['ನದಿ (River)', 'ಗಾಳಿ (Wind)', 'ರೈಲು (Train)'],
     hint: 'ಆಕಾಶದಲ್ಲಿ ಕಪ್ಪಾಗಿ ಬಂದು ಮಳೆ ಸುರಿಸುತ್ತದೆ!',
     region: 'ಮಲೆನಾಡು'
   },
@@ -59,8 +69,8 @@ const FOLK_RIDDLES = [
     id: 4,
     riddleKn: 'ಕಪ್ಪು ಕೋಟೆಗೆ ಕೆಂಪು ಬಾಗಿಲು, ಒಳಗೆ ೩೨ ಕಾವಲುಗಾರರು — ಇದು ಏನು?',
     riddleEn: 'A red door with 32 guards inside — what is it?',
-    optionsKn: ['ಕೋಟೆ ಬಾಗಿಲು', 'ಬಾಯಿ ಮತ್ತು ಹಲ್ಲುಗಳು (Mouth & Teeth)', 'ದಾಳಿಂಬೆ ಹಣ್ಣು', 'ತೆಂಗಿನಕಾಯಿ'],
-    correctIndex: 1,
+    correctAnswer: 'ಬಾಯಿ ಮತ್ತು ಹಲ್ಲುಗಳು (Mouth & Teeth)',
+    wrongOptions: ['ಕೋಟೆ ಬಾಗಿಲು', 'ದಾಳಿಂಬೆ ಹಣ್ಣು', 'ತೆಂಗಿನಕಾಯಿ'],
     hint: 'ಪ್ರತಿದಿನ ನಾವು ಮಾತನಾಡಲು ಮತ್ತು ತಿನ್ನಲು ಬಳಸುತ್ತೇವೆ!',
     region: 'ಕಲ್ಯಾಣ ಕರ್ನಾಟಕ'
   },
@@ -68,8 +78,8 @@ const FOLK_RIDDLES = [
     id: 5,
     riddleKn: 'ಬೆಳ್ಳಿ ಬಟ್ಟಲಲ್ಲಿ ಚಿನ್ನದ ನಾಣ್ಯ — ಇದು ಏನು?',
     riddleEn: 'A golden coin in a silver plate — what is it?',
-    optionsKn: ['ದೀಪ (Lamp)', 'ಅನ್ನ & ಸಾಂಬಾರ್', 'ಆಕಾಶದಲ್ಲಿ ಚಂದ್ರ & ಸೂರ್ಯ (Sun / Moon in Sky)', 'ಬೆಟ್ಟ'],
-    correctIndex: 2,
+    correctAnswer: 'ಆಕಾಶದಲ್ಲಿ ಚಂದ್ರ & ಸೂರ್ಯ (Sun / Moon in Sky)',
+    wrongOptions: ['ದೀಪ (Lamp)', 'ಅನ್ನ & ಸಾಂಬಾರ್', 'ಬೆಟ್ಟ'],
     hint: 'ಹಗಲು ಮತ್ತು ರಾತ್ರಿ ಆಕಾಶದಲ್ಲಿ ಕಾಣಿಸುವ ನೈಸರ್ಗಿಕ ಬೆಳಕು!',
     region: 'ಸಮಸ್ತ ಕರ್ನಾಟಕ'
   },
@@ -77,23 +87,85 @@ const FOLK_RIDDLES = [
     id: 6,
     riddleKn: 'ಉದ್ದನೆಯ ಮನುಷ್ಯನಿಗೆ ಬಾಲದ ಮೇಲೆ ಬೆಂಕಿ — ಇದು ಏನು?',
     riddleEn: 'A tall man with fire on his head/tail — what is it?',
-    optionsKn: ['ದೀಪದ ಕಂಬ', 'ಸಿಲಿಂಡರ್', 'ಮರ', 'ಊದುಬತ್ತಿ / ಬೆಂಕಿಕಡ್ಡಿ (Incense / Matchstick)'],
-    correctIndex: 3,
+    correctAnswer: 'ಊದುಬತ್ತಿ / ಬೆಂಕಿಕಡ್ಡಿ (Incense / Matchstick)',
+    wrongOptions: ['ದೀಪದ ಕಂಬ', 'ಸಿಲಿಂಡರ್', 'ಮರ'],
     hint: 'ಪೂಜೆಗೆ ಬಳಸುವ ಸುವಾಸನೆಯ ಕಡ್ಡಿ!',
     region: 'ಹಳೆ ಮೈಸೂರು'
+  },
+  {
+    id: 7,
+    riddleKn: 'ಹಸಿರು ಅಂಗಿ ತೊಟ್ಟಿದ್ದಾನೆ, ಕಲ್ಲಿನ ಹೃದಯ ಹೊತ್ತಿದ್ದಾನೆ — ಇದು ಏನು?',
+    riddleEn: 'Wears a green shirt, carries a heart of stone — what is it?',
+    correctAnswer: 'ಮಾವಿನ ಹಣ್ಣು (Mango)',
+    wrongOptions: ['ಬಾಳೆಹಣ್ಣು', 'ತೆಂಗಿನಕಾಯಿ', 'ಸೇಬು'],
+    hint: 'ಹಣ್ಣುಗಳ ರಾಜ ಎಂದು ಕರೆಯಲ್ಪಡುವ ಬೇಸಿಗೆ ಹಣ್ಣು!',
+    region: 'ರಾಮನಗರ & ಕೋಲಾರ'
+  },
+  {
+    id: 8,
+    riddleKn: 'ಹಗಲು ಹೊತ್ತು ಮಲಗುತ್ತದೆ, ರಾತ್ರಿ ಹೊತ್ತು ಕಣ್ಣು ಬಿಡುತ್ತದೆ — ಇದು ಏನು?',
+    riddleEn: 'Sleeps during the day, opens eyes in the dark — what is it?',
+    correctAnswer: 'ಗೂಬೆ (Owl)',
+    wrongOptions: ['ಬಾವಲಿ (Bat)', 'ದೀಪ (Lamp)', 'ಬೆಕ್ಕು (Cat)'],
+    hint: 'ರಾತ್ರಿ ಹೊತ್ತು ಬೇಟೆಯಾಡುವ ಪಕ್ಷಿ!',
+    region: 'ಮಲೆನಾಡು'
+  },
+  {
+    id: 9,
+    riddleKn: 'ನಡೆದರೆ ಜೊತೆಗೆ ಬರುತ್ತದೆ, ನಿಂತರೆ ನಿಲ್ಲುತ್ತದೆ, ಕತ್ತಲಲ್ಲಿ ಕಣ್ಮರೆಯಾಗುತ್ತದೆ — ಇದು ಏನು?',
+    riddleEn: 'Walks when you walk, stops when you stop, vanishes in the dark — what is it?',
+    correctAnswer: 'ನೆರಳು (Shadow)',
+    wrongOptions: ['ಗಾಳಿ (Wind)', 'ಪಾದರಕ್ಷೆ', 'ನಾಯಿ'],
+    hint: 'ಬೆಳಕಿನಲ್ಲಿ ಸದಾ ನಿಮ್ಮೊಂದಿಗೇ ಇರುವ ಸಂಗಾತಿ!',
+    region: 'ಸಮಸ್ತ ಕರ್ನಾಟಕ'
+  },
+  {
+    id: 10,
+    riddleKn: 'ನೀರು ಕುಡಿದರೆ ಸಾಯುತ್ತದೆ, ಗಾಳಿ ತಿಂದರೆ ಬದುಕುತ್ತದೆ — ಇದು ಏನು?',
+    riddleEn: 'Dies when it drinks water, thrives when it eats air — what is it?',
+    correctAnswer: 'ಬೆಂಕಿ (Fire)',
+    wrongOptions: ['ದೀಪ (Lamp)', 'ಮರ (Tree)', 'ಮಣ್ಣು (Soil)'],
+    hint: 'ಅಡುಗೆ ಮಾಡಲು ಮತ್ತು ಶಾಖಕ್ಕೆ ಬೇಕಾದ ಜ್ವಾಲೆ!',
+    region: 'ಉತ್ತರ ಕರ್ನಾಟಕ'
+  },
+  {
+    id: 11,
+    riddleKn: 'ಕೈ ಇಲ್ಲ, ಕಾಲು ಇಲ್ಲ, ಆದರೂ ಎಲ್ಲರ ತಲೆ ಮೇಲೆ ಕೂರುತ್ತದೆ — ಇದು ಏನು?',
+    riddleEn: 'No hands, no legs, yet sits on everyone’s head — what is it?',
+    correctAnswer: 'ಟೋಪಿ / ಮೈಸೂರು ಪೇಟ (Cap / Turban)',
+    wrongOptions: ['ಹೂವು (Flower)', 'ಬಟ್ಟೆ', 'ಕನ್ನಡಿ'],
+    hint: 'ತಲೆಗೆ ಗೌರವ ಮತ್ತು ರಕ್ಷಣೆ ನೀಡುವ ವಸ್ತ್ರ!',
+    region: 'ಹಳೆ ಮೈಸೂರು'
+  },
+  {
+    id: 12,
+    riddleKn: 'ಒಂದು ಚಿಕ್ಕ ಗುಡಿಸಲು, ಒಳಗಡೆ ಜೋಡಿ ಕಡಲೆಕಾಳುಗಳು — ಇದು ಏನು?',
+    riddleEn: 'A small hut with twins sleeping inside — what is it?',
+    correctAnswer: 'ಕಡಲೆಕಾಯಿ (Groundnut)',
+    wrongOptions: ['ಮೊಟ್ಟೆ', 'ತೆಂಗಿನಕಾಯಿ', 'ದಾಳಿಂಬೆ'],
+    hint: 'ಕಡಲೆಕಾಯಿ ಪರಿಷೆಯಲ್ಲಿ ಸಿಗುವ ಹುರಿದ ಕಾಯಿ!',
+    region: 'ಬೆಂಗಳೂರು & ಚಿತ್ರದುರ್ಗ'
   }
 ];
 
-// 2. Karnataka Food & Native District Matching (Pure culinary terms without district names in titles)
-const FOOD_MATCHES = [
-  { food: 'ಗಿರ್ಮಿಟ್ & ಮಿರ್ಚಿ ಭಜಿ', foodEn: 'Girmit & Mirchi Baji', district: 'ಧಾರವಾಡ', region: 'ಉತ್ತರ ಕರ್ನಾಟಕ', icon: '🌶️', hint: 'ಮಂಡಕ್ಕಿ, ಒಗ್ಗರಣೆ ಹಾಗೂ ಖಾರದ ಮೆಣಸಿನಕಾಯಿಯಿಂದ ತಯಾರಾಗುವ ಸಂಜೆಯ ತಿನಿಸು!' },
+// 2. Karnataka Food & Native District Matching - 16 Diverse Dishes across Karnataka
+const FOOD_MATCHES_DATA = [
+  { food: 'ಗಿರ್ಮಿಟ್ & ಖಾರದ ಮಿರ್ಚಿ', foodEn: 'Girmit & Spicy Mirchi', district: 'ಧಾರವಾಡ', region: 'ಉತ್ತರ ಕರ್ನಾಟಕ', icon: '🌶️', hint: 'ಮಂಡಕ್ಕಿ, ಈರುಳ್ಳಿ ಒಗ್ಗರಣೆ ಹಾಗೂ ಖಾರದ ಮೆಣಸಿನಕಾಯಿಯಿಂದ ತಯಾರಾಗುವ ಸಂಜೆಯ ತಿನಿಸು!' },
   { food: 'ಅಸಲಿ ತುಪ್ಪದ ಅರಮನೆ ಪಾಕ್', foodEn: 'Royal Ghee Sweet', district: 'ಮೈಸೂರು', region: 'ಹಳೆ ಮೈಸೂರು', icon: '🧈', hint: 'ಅರಮನೆಯ ಅಡುಗೆ ಮನೆ ಕಾಕಾಸುರ ಮಾದಪ್ಪನವರ ಅಸಲಿ ತುಪ್ಪ, ಕಡಲೆಹಿಟ್ಟಿನ ಶಾಹಿ ಸಿಹಿ!' },
   { food: 'ಖೋವಾ ಕುಂದಾ ಮಿಠಾಯಿ', foodEn: 'Khoa Kunda', district: 'ಬೆಳಗಾವಿ', region: 'ಉತ್ತರ ಕರ್ನಾಟಕ', icon: '🍯', hint: 'ಶುದ್ಧ ಕೆನೆ ಹಾಲು ಹಾಗೂ ಸಕ್ಕರೆಯನ್ನು ಕೆಂಪಾಗುವವರೆಗೆ ಕುದಿಸಿ ತಯಾರಿಸುವ ದಟ್ಟ ಸಿಹಿ!' },
   { food: 'ಗರಿಗರಿ ಓಪನ್ ಬೆಣ್ಣೆ ದೋಸೆ', foodEn: 'Crispy Butter Dosa', district: 'ದಾವಣಗೆರೆ', region: 'ಮಧ್ಯ ಕರ್ನಾಟಕ', icon: '🥞', hint: 'ಮಂಡಕ್ಕಿ ರವೆ ಹಾಗೂ ಹಳ್ಳಿಯ ತಾಜಾ ಬೆಣ್ಣೆಯೊಂದಿಗೆ ಹೆಂಚಿನಲ್ಲಿ ಬೇಯಿಸಿದ ಘಮಘಮ ದೋಸೆ!' },
   { food: 'ಗೋಲಿ ಬಜೆ & ಮೃದು ಬನ್ಸ್', foodEn: 'Goli Baje & Soft Buns', district: 'ದಕ್ಷಿಣ ಕನ್ನಡ', region: 'ಕರಾವಳಿ', icon: '🍌', hint: 'ಕರಾವಳಿಯ ಮೈದಾ ಹಾಗೂ ಏಲಕ್ಕಿ ಬಾಳೆಹಣ್ಣಿನ ರುಚಿಕರ ಸಂಜೆಯ ಉಪಹಾರ!' },
   { food: 'ಗರಿಗರಿ ಈರುಳ್ಳಿ ಚಪ್ಪಟೆ ವಡೆ', foodEn: 'Crispy Onion Flat Vade', district: 'ಮಂಡ್ಯ', region: 'ಹಳೆ ಮೈಸೂರು', icon: '🍘', hint: 'ರೈಲ್ವೆ ಪ್ರಯಾಣಿಕರ ಅಚ್ಚುಮೆಚ್ಚಿನ, ಚಿರೋಟಿ ರವೆ ಹಾಗೂ ಈರುಳ್ಳಿಯ ಗರಿಗರಿ ತಿನಿಸು!' },
   { food: 'ಸುಸಲಾ & ಮಾಲ್ಪೂರಿ', foodEn: 'Susala & Malpuri', district: 'ಕಲಬುರಗಿ', region: 'ಕಲ್ಯಾಣ ಕರ್ನಾಟಕ', icon: '🥣', hint: 'ಕಲ್ಯಾಣ ಕರ್ನಾಟಕದ ಖಡಕ್ ಮಂಡಕ್ಕಿಯ ಒಗ್ಗರಣೆ ಉಪಹಾರ!' },
-  { food: 'ಸಜ್ಜಿಗೆ-ಬಜಿ & ನೀರ್ ದೋಸೆ', foodEn: 'Sajjige-Baji & Neer Dosa', district: 'ಉಡುಪಿ', region: 'ಕರಾವಳಿ', icon: '🥥', hint: 'ಕರಾವಳಿಯ ತಿಳಿ ಅಕ್ಕಿ ದೋಸೆ ಹಾಗೂ ಉಪ್ಮಾ-ಶಿರಾ ಜೋಡಿ ಖಾದ್ಯ!' }
+  { food: 'ಸಜ್ಜಿಗೆ-ಬಜಿ & ನೀರ್ ದೋಸೆ', foodEn: 'Sajjige-Baji & Neer Dosa', district: 'ಉಡುಪಿ', region: 'ಕರಾವಳಿ', icon: '🥥', hint: 'ಕರಾವಳಿಯ ತಿಳಿ ಅಕ್ಕಿ ದೋಸೆ ಹಾಗೂ ಉಪ್ಮಾ-ಶಿರಾ ಜೋಡಿ ಖಾದ್ಯ!' },
+  { food: 'ಪಂಡಿ ಕರಿ & ಕಡಂಬು', foodEn: 'Pandi Curry & Kadambuttu', district: 'ಕೊಡಗು', region: 'ಮಲೆನಾಡು', icon: '🍲', hint: 'ಕಚ್ಚಂಪುಳಿ ಹುಳಿ ಹಾಗೂ ಕಾಳುಮೆಣಸಿನೊಂದಿಗೆ ತಯಾರಾಗುವ ಕಾಫಿನಾಡಿನ ಪಾರಂಪರಿಕ ರಸದೌತಣ!' },
+  { food: 'ಬಿಸಿ ಅಗಲವಾದ ತಟ್ಟೆ ಇಡ್ಲಿ', foodEn: 'Steamy Thatte Idli', district: 'ತುಮಕೂರು', region: 'ಹಳೆ ಮೈಸೂರು', icon: '⚪', hint: 'ಕ್ಯಾತಸಂದ್ರ ಹಾಗೂ ಹೆದ್ದಾರಿಯ ಬೆಣ್ಣೆ ತೇಲುವ ಮೃದು ತಟ್ಟೆ ಇಡ್ಲಿ!' },
+  { food: 'ಖಡಕ್ ಜೋಳದ ರೊಟ್ಟಿ & ಎಣ್ಣೆಗಾಯಿ', foodEn: 'Khadak Jolada Rotti', district: 'ವಿಜಯಪುರ', region: 'ಉತ್ತರ ಕರ್ನಾಟಕ', icon: '🫓', hint: 'ಗುಮ್ಮಟ ನಗರದ ಜೋಳದ ರೊಟ್ಟಿ, ಬಿಸಿ ಎಣ್ಣೆಗಾಯಿ ಬದನೆಕಾಯಿ ಹಾಗೂ ಶೇಂಗಾ ಚಟ್ನಿ!' },
+  { food: 'ಕೇಸರಿಬಾತ್ & ಖಾರಾಬಾತ್ (ಚೌ-ಚೌ ಬಾತ್)', foodEn: 'Chow-Chow Bath', district: 'ಬೆಂಗಳೂರು', region: 'ಬೆಂಗಳೂರು', icon: '☕', hint: 'ದರ್ಶಿನಿ ಹೋಟೆಲ್‌ಗಳ ಬೆಳಗಿನ ಸಿಹಿ ಮತ್ತು ಖಾರದ ಐಕಾನಿಕ್ ಜೋಡಿ ತಿಂಡಿ!' },
+  { food: 'ಮಲೆನಾಡು ಹಲಸಿನ ಹಣ್ಣಿನ ಕಡುಬು', foodEn: 'Jackfruit Steamed Kadubu', district: 'ಶಿವಮೊಗ್ಗ', region: 'ಮಲೆನಾಡು', icon: '🌿', hint: 'ತೇಗದ ಹಾಗೂ ಬಾಳೆ ಎಲೆಯಲ್ಲಿ ಆವಿಯಲ್ಲಿ ಬೇಯಿಸಿದ ಸುವಾಸನೆಯ ಸಿಹಿ ಕಡುಬು!' },
+  { food: 'ಖಾರದ ಮಿರ್ಚಿ & ಮಂಡಕ್ಕಿ ಒಗ್ಗರಣೆ', foodEn: 'Ballari Mirchi Mandakki', district: 'ಬಳ್ಳಾರಿ', region: 'ಕಲ್ಯಾಣ ಕರ್ನಾಟಕ', icon: '🔥', hint: 'ಬಿಸಿಲ ನಗರಿಯ ಬಿಸಿಬಿಸಿ ಎಣ್ಣೆ ಬಜ್ಜಿ ಹಾಗೂ ಗರಿಗರಿ ಮಂಡಕ್ಕಿ ಮಿಕ್ಸ್!' },
+  { food: 'ಎಳ್ಳುಂಡೆ & ರಾಗಿ ಮುದ್ದೆ ನಾಟಿಕೋಳಿ', foodEn: 'Ragi Mudde & Saaru', district: 'ಹಾಸನ', region: 'ಹಳೆ ಮೈಸೂರು', icon: '🌾', hint: 'ಹೊಯ್ಸಳ ನಾಡಿನ ರಾಗಿ ಕಣಜದ ಗಂಡುಮೆಟ್ಟಿನ ಆಹಾರ!' },
+  { food: 'ಸಜ್ಜೆ ರೊಟ್ಟಿ & ಗುರೆಳ್ಳು ಚಟ್ನಿ', foodEn: 'Sajje Rotti & Chutney', district: 'ಬಾಗಲಕೋಟೆ', region: 'ಉತ್ತರ ಕರ್ನಾಟಕ', icon: '🥗', hint: 'ಬಾದಾಮಿ-ಐಹೊಳೆ ನೆಲದ ಪೌಷ್ಟಿಕ ಸಿರಿಧಾನ್ಯದ ರೊಟ್ಟಿ ಊಟ!' }
 ];
 
 // 3. Dialect Roleplay Scenarios
@@ -197,13 +269,26 @@ export default function DialectArcade({ lang = 'kn', onSelectRegion, onNavigate 
   const isKn = lang === 'kn';
   const [activeTab, setActiveTab] = useState('riddles'); // 'riddles' | 'foodmatch' | 'roleplay' | 'passport'
 
-  // Riddle state
+  const ALL_DISTRICTS = [
+    'ಧಾರವಾಡ', 'ಮೈಸೂರು', 'ಬೆಳಗಾವಿ', 'ದಾವಣಗೆರೆ', 'ದಕ್ಷಿಣ ಕನ್ನಡ', 'ಮಂಡ್ಯ',
+    'ಕಲಬುರಗಿ', 'ಉಡುಪಿ', 'ಕೊಡಗು', 'ತುಮಕೂರು', 'ವಿಜಯಪುರ', 'ಬೆಂಗಳೂರು',
+    'ಶಿವಮೊಗ್ಗ', 'ಬಳ್ಳಾರಿ', 'ಹಾಸನ', 'ಬಾಗಲಕೋಟೆ'
+  ];
+
+  // Dynamic Shuffled Riddle state - Never same sequence!
+  const [riddlesList, setRiddlesList] = useState(() => {
+    return shuffle(FOLK_RIDDLES_DATA).map((item) => ({
+      ...item,
+      options: shuffle([item.correctAnswer, ...item.wrongOptions])
+    }));
+  });
   const [riddleIndex, setRiddleIndex] = useState(0);
   const [selectedRiddleOption, setSelectedRiddleOption] = useState(null);
   const [riddleScore, setRiddleScore] = useState(0);
   const [showRiddleHint, setShowRiddleHint] = useState(false);
 
-  // Food match state
+  // Dynamic Shuffled Food match state - 16 diverse dishes randomized!
+  const [foodList, setFoodList] = useState(() => shuffle(FOOD_MATCHES_DATA));
   const [foodCurrentIndex, setFoodCurrentIndex] = useState(0);
   const [foodScore, setFoodScore] = useState(0);
   const [foodSelectedDistrict, setFoodSelectedDistrict] = useState(null);
@@ -222,12 +307,24 @@ export default function DialectArcade({ lang = 'kn', onSelectRegion, onNavigate 
   const [passportAvatar, setPassportAvatar] = useState('👑');
   const [passportDownloaded, setPassportDownloaded] = useState(false);
 
+  // Current Active Items
+  const currRiddle = riddlesList[riddleIndex] || riddlesList[0];
+  const currFood = foodList[foodCurrentIndex] || foodList[0];
+  const currRoleplay = ROLEPLAY_SCENARIOS[roleplayIndex];
+
+  // Dynamically compute 8 random district options for each dish (always includes correct district in random position)
+  const dynamicDistrictOptions = React.useMemo(() => {
+    if (!currFood) return ALL_DISTRICTS.slice(0, 8);
+    const otherDistricts = ALL_DISTRICTS.filter((d) => d !== currFood.district);
+    const shuffledOthers = shuffle(otherDistricts).slice(0, 7);
+    return shuffle([currFood.district, ...shuffledOthers]);
+  }, [currFood]);
+
   // Riddle Handler
-  const handleRiddleAnswer = (optIndex) => {
+  const handleRiddleAnswer = (selectedOpt) => {
     if (selectedRiddleOption !== null) return;
-    setSelectedRiddleOption(optIndex);
-    const curr = FOLK_RIDDLES[riddleIndex];
-    if (optIndex === curr.correctIndex) {
+    setSelectedRiddleOption(selectedOpt);
+    if (selectedOpt === currRiddle.correctAnswer) {
       setRiddleScore((prev) => prev + 10);
       soundEffects.playSuccess();
       triggerConfetti();
@@ -239,21 +336,31 @@ export default function DialectArcade({ lang = 'kn', onSelectRegion, onNavigate 
   const nextRiddle = () => {
     setSelectedRiddleOption(null);
     setShowRiddleHint(false);
-    setRiddleIndex((prev) => (prev + 1) % FOLK_RIDDLES.length);
+    if (riddleIndex + 1 >= riddlesList.length) {
+      // Re-shuffle dynamically when round is finished!
+      setRiddlesList(
+        shuffle(FOLK_RIDDLES_DATA).map((item) => ({
+          ...item,
+          options: shuffle([item.correctAnswer, ...item.wrongOptions])
+        }))
+      );
+      setRiddleIndex(0);
+    } else {
+      setRiddleIndex((prev) => prev + 1);
+    }
   };
 
   // Food Match Handler
   const handleFoodDistrictPick = (districtName) => {
     if (foodSelectedDistrict !== null) return;
     setFoodSelectedDistrict(districtName);
-    const curr = FOOD_MATCHES[foodCurrentIndex];
-    if (districtName === curr.district) {
+    if (districtName === currFood.district) {
       setFoodScore((prev) => prev + 15);
-      setFoodFeedback({ correct: true, text: `ಅದ್ಭುತ! ${curr.food} — ${curr.district}ಯ ಪ್ರಸಿದ್ಧ ಖಾದ್ಯ!` });
+      setFoodFeedback({ correct: true, text: `ಅದ್ಭುತ! ${currFood.food} — ${currFood.district}ಯ ಪಾರಂಪರಿಕ ಖಾದ್ಯ!` });
       soundEffects.playSuccess();
       triggerConfetti();
     } else {
-      setFoodFeedback({ correct: false, text: `ಅಯ್ಯೋ! ${curr.food} ಇರುವುದು ${curr.district}ಯಲ್ಲಿ!` });
+      setFoodFeedback({ correct: false, text: `ಅಯ್ಯೋ! ${currFood.food} ಇರುವುದು ${currFood.district}ಯಲ್ಲಿ!` });
       soundEffects.playIncorrect();
     }
   };
@@ -261,7 +368,13 @@ export default function DialectArcade({ lang = 'kn', onSelectRegion, onNavigate 
   const nextFoodMatch = () => {
     setFoodSelectedDistrict(null);
     setFoodFeedback(null);
-    setFoodCurrentIndex((prev) => (prev + 1) % FOOD_MATCHES.length);
+    if (foodCurrentIndex + 1 >= foodList.length) {
+      // Re-shuffle dynamically when round is finished!
+      setFoodList(shuffle(FOOD_MATCHES_DATA));
+      setFoodCurrentIndex(0);
+    } else {
+      setFoodCurrentIndex((prev) => prev + 1);
+    }
   };
 
   // Roleplay Handler
@@ -287,22 +400,6 @@ export default function DialectArcade({ lang = 'kn', onSelectRegion, onNavigate 
     triggerConfetti();
     setTimeout(() => setPassportDownloaded(false), 3000);
   };
-
-  const currRiddle = FOLK_RIDDLES[riddleIndex];
-  const currFood = FOOD_MATCHES[foodCurrentIndex];
-  const currRoleplay = ROLEPLAY_SCENARIOS[roleplayIndex];
-
-  // Shuffled district options for food match (Clean names without giveaway hints)
-  const districtOptions = [
-    'ಧಾರವಾಡ',
-    'ಮೈಸೂರು',
-    'ಬೆಳಗಾವಿ',
-    'ದಾವಣಗೆರೆ',
-    'ದಕ್ಷಿಣ ಕನ್ನಡ',
-    'ಮಂಡ್ಯ',
-    'ಕಲಬುರಗಿ',
-    'ಉಡುಪಿ'
-  ];
 
   return (
     <div className="space-y-8 animate-fade-in max-w-5xl mx-auto">
@@ -405,7 +502,7 @@ export default function DialectArcade({ lang = 'kn', onSelectRegion, onNavigate 
                   {isKn ? 'ಹಳ್ಳಿಯ ಜಾನಪದ ಒಗಟುಗಳು' : 'Traditional Karnataka Folk Riddles'}
                 </h3>
                 <span className="text-xs text-[#94a3b8]">
-                  ಒಗಟು #{currRiddle.id} / {FOLK_RIDDLES.length} • {currRiddle.region}
+                  ಒಗಟು #{riddleIndex + 1} / {riddlesList.length} • {currRiddle.region}
                 </span>
               </div>
             </div>
@@ -452,9 +549,9 @@ export default function DialectArcade({ lang = 'kn', onSelectRegion, onNavigate 
 
           {/* Options Grid */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
-            {currRiddle.optionsKn.map((option, idx) => {
-              const isSelected = selectedRiddleOption === idx;
-              const isCorrect = idx === currRiddle.correctIndex;
+            {(currRiddle.options || []).map((option, idx) => {
+              const isSelected = selectedRiddleOption === option;
+              const isCorrect = option === currRiddle.correctAnswer;
               let btnStyle = 'bg-[#131c30] hover:bg-[#1a2642] border-[#1e293b] text-[#cbd5e1]';
 
               if (selectedRiddleOption !== null) {
@@ -470,7 +567,7 @@ export default function DialectArcade({ lang = 'kn', onSelectRegion, onNavigate 
                   key={idx}
                   type="button"
                   disabled={selectedRiddleOption !== null}
-                  onClick={() => handleRiddleAnswer(idx)}
+                  onClick={() => handleRiddleAnswer(option)}
                   className={`p-4 rounded-xl border text-sm sm:text-base font-bold text-left transition-all flex items-center justify-between ${btnStyle}`}
                 >
                   <span className="font-serif-kn">{option}</span>
@@ -489,7 +586,7 @@ export default function DialectArcade({ lang = 'kn', onSelectRegion, onNavigate 
           {selectedRiddleOption !== null && (
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-4 border-t border-[#1e293b] animate-fadeIn">
               <div>
-                {selectedRiddleOption === currRiddle.correctIndex ? (
+                {selectedRiddleOption === currRiddle.correctAnswer ? (
                   <span className="text-emerald-400 font-bold text-sm flex items-center gap-1.5">
                     <CheckCircle2 className="w-4 h-4" />
                     <span>ಅದ್ಭುತ! ಸರಿಯಾದ ಉತ್ತರ! (+10 pts)</span>
@@ -497,7 +594,7 @@ export default function DialectArcade({ lang = 'kn', onSelectRegion, onNavigate 
                 ) : (
                   <span className="text-red-400 font-bold text-sm flex items-center gap-1.5">
                     <XCircle className="w-4 h-4" />
-                    <span>ತಪ್ಪು ಉತ್ತರ! ಸರಿಯಾದ ಉತ್ತರ: {currRiddle.optionsKn[currRiddle.correctIndex]}</span>
+                    <span>ತಪ್ಪು ಉತ್ತರ! ಸರಿಯಾದ ಉತ್ತರ: {currRiddle.correctAnswer}</span>
                   </span>
                 )}
               </div>
@@ -565,7 +662,7 @@ export default function DialectArcade({ lang = 'kn', onSelectRegion, onNavigate 
               ಸರಿಯಾದ ಜಿಲ್ಲೆಯನ್ನು ಆಯ್ಕೆ ಮಾಡಿ:
             </span>
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
-              {districtOptions.map((district, idx) => {
+              {dynamicDistrictOptions.map((district, idx) => {
                 const isSelected = foodSelectedDistrict === district;
                 const isCorrect = district === currFood.district;
                 let btnStyle = 'bg-[#131c30] hover:bg-[#1a2642] border-[#1e293b] text-[#cbd5e1]';
