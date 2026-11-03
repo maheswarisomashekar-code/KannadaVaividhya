@@ -1,4 +1,5 @@
 // Universal Dialect Engine & Real-Time Linguistic Transformer
+import { translateEnglishToKannada } from './englishToKannada.js';
 
 // Comprehensive Root Lexicon (English -> Kannada -> Regional Nuance)
 export const VOCABULARY_LEXICON = [
@@ -153,7 +154,55 @@ export function generatePhoneticTransliteration(kannadaText) {
 
 // Morphological Transformation Engine: Transforms any arbitrary sentence into 5 Regional Dialects cleanly without extra tail sentences
 export function transformToRegionalDialects(inputSentence, baseKannada = null) {
-  let sentence = (baseKannada || inputSentence).trim();
+  let sentence = (baseKannada || inputSentence || '').trim();
+
+  // If the sentence contains English, resolve it to Kannada FIRST to avoid English in dialects
+  if (/[a-zA-Z]/.test(sentence)) {
+    const englishMatch = translateEnglishToKannada(sentence);
+    if (englishMatch) {
+      if (englishMatch.variants) {
+        return {
+          mysuru: {
+            regionName: 'Old Mysuru (ಮೈಸೂರು-ಮಂಡ್ಯ)',
+            text: englishMatch.variants.mysuru.text,
+            phonetic: englishMatch.variants.mysuru.phonetic,
+            tone: englishMatch.variants.mysuru.trait || 'Courteous courtly tone with polite honorific.',
+            etiquetteTip: 'Always address with respectful plural forms like "Taavu" or "Neevu" in Mysuru and Mandya.'
+          },
+          north_karnataka: {
+            regionName: 'North Karnataka (ಧಾರವಾಡ-ಬೆಳಗಾವಿ)',
+            text: englishMatch.variants.north_karnataka.text,
+            phonetic: englishMatch.variants.north_karnataka.phonetic,
+            tone: englishMatch.variants.north_karnataka.trait || 'Energetic rhythm using "Eenree" and respectful "-nodree".',
+            etiquetteTip: 'Direct, hearty cadence signifying genuine warmth and closeness.'
+          },
+          karavali: {
+            regionName: 'Coastal Karavali (ಕುಂದಾಪ್ರ-ಮಂಗಳೂರು)',
+            text: englishMatch.variants.karavali.text,
+            phonetic: englishMatch.variants.karavali.phonetic,
+            tone: englishMatch.variants.karavali.trait || 'Melodic coastal sing-song cadence with iconic "Maaraya".',
+            etiquetteTip: 'Coastal friendly address creating an immediate affectionate rapport.'
+          },
+          kalyana_karnataka: {
+            regionName: 'Kalyana Karnataka (ಕಲಬುರಗಿ-ಬೀದರ್)',
+            text: englishMatch.variants.kalyana_karnataka.text,
+            phonetic: englishMatch.variants.kalyana_karnataka.phonetic,
+            tone: englishMatch.variants.kalyana_karnataka.trait || 'Deccani-Sharana blend featuring "Dosta" (companion).',
+            etiquetteTip: 'Deeply honors Basaveshwara equality principles—everyone is greeted as an equal companion.'
+          },
+          bengaluru: {
+            regionName: 'Bengaluru Urban Slang (ನಮ್ಮ ಬೆಂಗಳೂರು)',
+            text: englishMatch.variants.bengaluru.text,
+            phonetic: englishMatch.variants.bengaluru.phonetic,
+            tone: englishMatch.variants.bengaluru.trait || 'High-speed cosmopolitan youth and street lingo.',
+            etiquetteTip: 'Keep conversations quick, punchy, and casual.'
+          }
+        };
+      }
+      sentence = englishMatch.kannada;
+    }
+  }
+
   const isQuestion = sentence.endsWith('?') || /ಎಲ್ಲಿ|ಹೇಗೆ|ಏನು|ಯಾವಾಗ|ಎಷ್ಟು|ಆಯ್ತಾ|ಹೇಗಿದ್ದೀರಾ|ಮಾಡಬಹುದು|ಕಂಡುಹಿಡಿಯಬಹುದು/i.test(sentence);
   
   // Clean off trailing punctuation for natural inflection

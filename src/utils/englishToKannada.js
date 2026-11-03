@@ -2,6 +2,204 @@
 // Converts English sentences, colloquial expressions, and words into authentic Kannada
 
 export const ENGLISH_PHRASE_DICTIONARY = [
+  // Interactive Showcase Scenarios & Curated Prompts
+  {
+    patterns: [
+      'how much does a plate of jolada rotti cost',
+      'how much is a plate of jolada rotti',
+      'jolada rotti cost',
+      'jolada rotti price',
+      'plate of jolada rotti cost',
+      'how much for jolada rotti'
+    ],
+    kannada: 'ಒಂದು ಪ್ಲೇಟ್ ಜೋಳದ ರೊಟ್ಟಿಗೆ ಎಷ್ಟು ಬೆಲೆ?',
+    phonetic: 'Ondu plate jolada rottige eshtu bele?',
+    variants: {
+      mysuru: {
+        text: 'ಸ್ವಾಮಿ, ಒಂದು ಪ್ಲೇಟ್ ಜೋಳದ ರೊಟ್ಟಿಗೆ ಎಷ್ಟು ಬೆಲೆ ಆಗುತ್ತೆ ಹೇಳಿ?',
+        phonetic: 'Swaami, ondu plate jolada rottige eshtu bele aagutthe heli?',
+        trait: 'Polite Mysore inquiry with "Swaami" and courteous cadence.'
+      },
+      north_karnataka: {
+        text: 'ಏ ಪಾ, ಒಂದು ಪ್ಲೇಟ್ ಬಿಸಿ ಜೋಳದ ರೊಟ್ಟಿಗೆ ಎಷ್ಟಾತ ನೋಡ್ರಿಪಾ? ಕರೆಕ್ಟ್ ಹೇಳ್ರಿ!',
+        phonetic: 'Ee paa, ondu plate bisi jolada rottige eshtaatha nodreepaa? Correct helree!',
+        trait: 'Direct North Karnataka warmth with iconic "Ee paa" and "eshtaatha".'
+      },
+      karavali: {
+        text: 'ಮಾರಾಯ, ಒಂದು ಪ್ಲೇಟ್ ಜೋಳದ ರೊಟ್ಟಿಗೆ ಎಂತ ರೇಟು ಮಾರಾಯ? ಒಂತೆ ಹೇಳಿ ಬಪ್ಪ!',
+        phonetic: 'Maaraya, ondu plate jolada rottige entha rate-u maaraya? Onte heli bappa!',
+        trait: 'Coastal Kundapura melody with "entha rate-u" and "bappa".'
+      },
+      kalyana_karnataka: {
+        text: 'ದೋಸ್ತ, ಒಂದು ಪ್ಲೇಟ್ ಖಡಕ್ ಜೋಳದ ರೊಟ್ಟಿಗೆ ಬರಾಬರ್ ರೇಟ್ ಎಷ್ಟು ಹೇಳಪ್ಪ?',
+        phonetic: 'Dosta, ondu plate khadak jolada rottige baraabar rate eshtu helappa?',
+        trait: 'Deccani-Sharana phrasing with "khadak rotti" and "baraabar rate".'
+      },
+      bengaluru: {
+        text: 'ಬಾಸ್, ಒಂದು ಪ್ಲೇಟ್ ಜೋಳದ ರೊಟ್ಟಿಗೆ ಎಷ್ಟು ಗುರು? ಜಿಪೇ (GPay) ಮಾಡ್ತೀನಿ!',
+        phonetic: 'Boss, ondu plate jolada rottige eshtu guru? GPay maadtheeni!',
+        trait: 'Bangalore urban diner lingo with "Guru" and instant UPI.'
+      }
+    }
+  },
+
+  {
+    patterns: [
+      'i am getting late for college, please drive fast!',
+      'i am getting late for college please drive fast',
+      'late for college, please drive fast',
+      'late for college',
+      'getting late for college',
+      'please drive fast'
+    ],
+    kannada: 'ಕಾಲೇಜಿಗೆ ತಡವಾಗುತ್ತಿದೆ, ದಯವಿಟ್ಟು ವೇಗವಾಗಿ ಚಲಾಯಿಸಿ!',
+    phonetic: 'College-ge thadavaagutthidhe, dayavittu vegavaagi chalaayisi!',
+    variants: {
+      mysuru: {
+        text: 'ಸ್ವಾಮಿ, ಕಾಲೇಜಿಗೆ ಬಹಳ ತಡವಾಗ್ತಿದೆ, ದಯವಿಟ್ಟು ಸ್ವಲ್ಪ ಬೇಗ ಗಾಡಿ ಓಡಿಸ್ತೀರಾ?',
+        phonetic: 'Swaami, college-ge bahala thadavaagthidhe, dayavittu swalpa bega gaadi oodistheera?',
+        trait: 'Polite, respectful urgency with "Swaami" and "Dayavittu".'
+      },
+      north_karnataka: {
+        text: 'ಏ ಪಾ, ಕಾಲೇಜಿಗೆ ಬಹಳ ತಡಾತ ನೋಡ್ರಿ! ಜರಾ ಲಗೂನ್ ಗಾಡಿ ಓಡಿಸ್ರಿಪಾ!',
+        phonetic: 'Ee paa, college-ge bahala thadaatha nodree! Jaraa lagoon gaadi oodisripaa!',
+        trait: 'Authentic North Karnataka urgency using "thadaatha" and "lagoon" (fast).'
+      },
+      karavali: {
+        text: 'ಮಾರಾಯ, ಕಾಲೇಜಿಗೆ ಲೇಟಾತು ಬಪ್ಪ! ಒಂತೆ ಬೇಗ ಗಾಡಿ ಚಲಾಯಿಸಿ ಮಾರಾಯ!',
+        phonetic: 'Maaraya, college-ge leetaathu bappa! Onte bega gaadi chalaayisi maaraya!',
+        trait: 'Coastal sing-song cadence with "leetaathu" and "bappa".'
+      },
+      kalyana_karnataka: {
+        text: 'ದೋಸ್ತ, ಕಾಲೇಜ್ ಮುಟ್ಟೋಕೆ ಟೈಮ್ ಆತು! ಜಲ್ದಿ ಗಾಡಿ ಬಿಡು ನೋಡಪ್ಪ!',
+        phonetic: 'Dosta, college muttooke time aathu! Jaldi gaadi bidu nodappa!',
+        trait: 'Deccani urgency with "muttooke" and "jaldi".'
+      },
+      bengaluru: {
+        text: 'ಗುರು, ಕಾಲೇಜ್‌ಗೆ ಸಖತ್ ಲೇಟ್ ಆಯ್ತು ಮಗಾ! ಸ್ವಲ್ಪ ಬೇಗ ಎಳೆಯೋ ಗುರು!',
+        phonetic: 'Guru, college-ge sakhath late aaythu maga! Swalpa bega eleyo guru!',
+        trait: 'Bangalore youth rush with "Guru" and "Maga".'
+      }
+    }
+  },
+
+  {
+    patterns: [
+      'can you please reduce the auto fare a little bit?',
+      'can you please reduce the auto fare a little bit',
+      'reduce the auto fare a little bit',
+      'reduce auto fare',
+      'can you reduce auto fare'
+    ],
+    kannada: 'ದಯವಿಟ್ಟು ಆಟೋ ದರವನ್ನು ಸ್ವಲ್ಪ ಕಡಿಮೆ ಮಾಡಲು ಸಾಧ್ಯವೇ?',
+    phonetic: 'Dayavittu auto daravannu swalpa kadime maadalu saadhyave?',
+    variants: {
+      mysuru: {
+        text: 'ಸ್ವಲ್ಪ ನೋಡಿ ಕಡಿಮೆ ಮಾಡಿಕೊಡಿ ಸ್ವಾಮಿ, ನಾವು ನಿತ್ಯದ ಪ್ರಯಾಣಿಕರೇ ಅಲ್ವೇ?',
+        phonetic: 'Swalpa nodi kadime maadi-kodi swaami, naavu nithyada prayaanikare alwe?',
+        trait: 'Courteous, dignified negotiation with "Swaami".'
+      },
+      north_karnataka: {
+        text: 'ಏನ್ರೀ ಪಾ, ಜರಾ ಕರೆಕ್ಟ್ ರೇಟ್ ಮಾಡ್ರಿ! ನಮಗ್ಯಾಕೆ ಇಷ್ಟು ಜಾಸ್ತಿ ಹೇಳಕತ್ತೀರಿ?',
+        phonetic: 'Eenree paa, jaraa correct rate maadree! Namgyaake ishtu jaasthi helakattheeri?',
+        trait: 'Direct Dharwad street bargaining with "jaraa correct rate".'
+      },
+      karavali: {
+        text: 'ಮಾರಾಯ, ಒಂತೆ ಕಮ್ಮಿ ಮಾಡ್ಲೆ! ಇಷ್ಟ್ ದುಡ್ಡು ಕೊಟ್ರೆ ನಂಗೆ ಹೆಂಗೆ ಬಪ್ಪ?',
+        phonetic: 'Maaraya, onte kammi maadle! Isht duddu kothre nange henge bappa?',
+        trait: 'Friendly coastal persuasion with "onte kammi maadle".'
+      },
+      kalyana_karnataka: {
+        text: 'ದೋಸ್ತ, ಬರಾಬರ್ ಮೀಟರ್ ಹಾಕು ನೋಡಪ್ಪ! ನಾವೂ ನಿನ್ನವರೇ ಅಲ್ವೇನು!',
+        phonetic: 'Dosta, baraabar meter haaku nodappa! Naavoo ninnavare alweenu!',
+        trait: 'Deccani brotherhood appeal with "baraabar meter".'
+      },
+      bengaluru: {
+        text: 'ಬಾಸ್, ಸ್ವಲ್ಪ ಅಡ್ಜಸ್ಟ್ ಮಾಡಿ! ಒನ್-ಅಂಡ್-ಹಾಫ್ ಬೇಡ, ಕರೆಕ್ಟ್ ಮೀಟರ್ ಹಾಕಿ ಗುರು!',
+        phonetic: 'Boss, swalpa adjust maadi! One-and-half beda, correct meter haaki guru!',
+        trait: 'Classic Bangalore auto dispute: "One-and-half beda, meter haaki".'
+      }
+    }
+  },
+
+  {
+    patterns: [
+      'where can i find the best mysore pak here?',
+      'where can i find the best mysore pak here',
+      'best mysore pak',
+      'where to buy mysore pak',
+      'where is mysore pak available'
+    ],
+    kannada: 'ಇಲ್ಲಿ ಅತ್ಯುತ್ತಮ ಮೈಸೂರು ಪಾಕ್ ಎಲ್ಲಿ ಸಿಗುತ್ತದೆ?',
+    phonetic: 'Illi athyutthama Mysore Pak elli sigutthe?',
+    variants: {
+      mysuru: {
+        text: 'ಸ್ವಾಮಿ, ನಮ್ಮ ಊರಿನ ಅಸಲಿ ತುಪ್ಪದ ಮೈಸೂರು ಪಾಕ್ ಎಲ್ಲಿ ಸಿಗುತ್ತೆ ಅಂತ ಸ್ವಲ್ಪ ಹೇಳ್ತೀರಾ?',
+        phonetic: 'Swaami, namma oorina asali thuppada Mysore Pak elli sigutthe antha swalpa heltheera?',
+        trait: 'Proud royal Mysore sweet heritage inquiry.'
+      },
+      north_karnataka: {
+        text: 'ಏ ಪಾ, ಇಲ್ಲೇ ಬಾಜೂ ಮಸ್ತ್ ಮೈಸೂರು ಪಾಕ್ ಅಂಗಡಿ ಎಲ್ಲೈತಿ ನೋಡ್ರಿಪಾ?',
+        phonetic: 'Ee paa, ille baajoo mast Mysore Pak angadi ellaithi nodreepaa?',
+        trait: 'North Karnataka inquiry with "baajoo" (nearby) and "ellaithi".'
+      },
+      karavali: {
+        text: 'ಮಾರಾಯ, ಇಲ್ಲಿ ಭಾರೀ ರುಚಿಯಾದ ಮೈಸೂರು ಪಾಕ್ ಸಿಗೋ ಅಂಗಡಿ ಎಲ್ಲಿ ಉಂಟು ಬಪ್ಪ?',
+        phonetic: 'Maaraya, illi bhaaree ruchiyaada Mysore Pak sigo angadi elli untu bappa?',
+        trait: 'Coastal curiosity with "elli untu bappa".'
+      },
+      kalyana_karnataka: {
+        text: 'ದೋಸ್ತ, ಏಕ್ ದಂ ಬೆಸ್ಟ್ ಮೈಸೂರು ಪಾಕ್ ಎಲ್ಲಿ ಸಿಕ್ತದ ಬರಾಬರ್ ಹೇಳು ನೋಡಪ್ಪ!',
+        phonetic: 'Dosta, ek dam best Mysore Pak elli sikthada baraabar helu nodappa!',
+        trait: 'Deccani enthusiasm with "ek dam best".'
+      },
+      bengaluru: {
+        text: 'ಗುರು, ಇಲ್ಲಿ ಸಖತ್ ಟೇಸ್ಟಿ ಮೈಸೂರು ಪಾಕ್ ಎಲ್ಲಿ ಸಿಗುತ್ತೆ ಮಗಾ? ಶ್ರೀ ಕೃಷ್ಣ ಸ್ವೀಟ್ಸಾ?',
+        phonetic: 'Guru, illi sakhath tasty Mysore Pak elli sigutthe maga? Sri Krishna Sweetsa?',
+        trait: 'Bangalore food-hunt slang referencing legendary sweet shops.'
+      }
+    }
+  },
+
+  {
+    patterns: [
+      'friend, please wait for me at the bus stop.',
+      'friend, please wait for me at the bus stop',
+      'friend please wait for me at the bus stop',
+      'wait for me at the bus stop',
+      'wait at the bus stop'
+    ],
+    kannada: 'ಗೆಳೆಯಾ, ದಯವಿಟ್ಟು ಬಸ್ ನಿಲ್ದಾಣದಲ್ಲಿ ನನಗಾಗಿ ಕಾಯಿ.',
+    phonetic: 'Geleyaa, dayavittu bus nildaana dalli nanagaagi kaayi.',
+    variants: {
+      mysuru: {
+        text: 'ಸ್ನೇಹಿತರೇ, ಬಸ್ ನಿಲ್ದಾಣದಲ್ಲಿ ನನಗಾಗಿ ಸ್ವಲ್ಪ ಕಾಯ್ತೀರಾ ಸ್ವಾಮಿ? ಈಗಲೇ ಬಂದೆ.',
+        phonetic: 'Snehithare, bus nildaana dalli nanagaagi swalpa kaaytheera swaami? Eegale bande.',
+        trait: 'Polite, respectful invitation with "Snehithare".'
+      },
+      north_karnataka: {
+        text: 'ದೋಸ್ತಾ, ಬಸ್ ಸ್ಟ್ಯಾಂಡಾಗ ನನಗ ಕಾಯ್ಕೊಂತ ಕುಂದ್ರಪಾ! ಜರಾ ಲಗೂನ್ ಬರ್ತೇನಿ!',
+        phonetic: 'Dostha, bus stand-aaga nanaga kaaykontha kundrapaa! Jaraa lagoon bartheeni!',
+        trait: 'Authentic North Karnataka "kaaykontha kundrapaa" and "lagoon".'
+      },
+      karavali: {
+        text: 'ಮಾರಾಯ, ಬಸ್ ಸ್ಟಾಪ್‌ನಲ್ಲೇ ಒಂತೆ ಕಾದಿರು ಬಪ್ಪ! ಒಂಜೇ ಕ್ಷಣದಲ್ಲಿ ಬರ್ತೆನೆ!',
+        phonetic: 'Maaraya, bus stop-nalle onte kaadiru bappa! Onje kshanadalli barthene!',
+        trait: 'Coastal patience with "onje kshanadalli".'
+      },
+      kalyana_karnataka: {
+        text: 'ದೋಸ್ತ, ಬಸ್ ಸ್ಟಾಪ್ ಹತ್ರ ಬರಾಬರ್ ನಿಂತ್ಕೋ ನೋಡಪ್ಪ! ನಾ ಬಂದೇ ಬಿಟ್ಟೆ!',
+        phonetic: 'Dosta, bus stop hathra baraabar ninthko nodappa! Naa bande bitte!',
+        trait: 'Direct Deccani camaraderie with "baraabar ninthko".'
+      },
+      bengaluru: {
+        text: 'ಮಗಾ, ಬಸ್ ಸ್ಟಾಪ್ ಹತ್ರಾನೇ ವೇಟ್ ಮಾಡು ಗುರು! ಇನ್ನೈದು ನಿಮಿಷದಲ್ಲಿ ಅಲ್ಲೇ ಇರ್ತೀನಿ!',
+        phonetic: 'Maga, bus stop hathraane wait maadu guru! Innaidu nimishadalli alle irtheeni!',
+        trait: 'Bangalore quick ETA: "innaidu nimishadalli alle irtheeni".'
+      }
+    }
+  },
+
   // Affection & Emotions
   {
     patterns: ['i want to hug you', 'want to hug you', 'hug you', 'give you a hug', 'hug me'],

@@ -29,8 +29,8 @@ export const REGIONAL_LEXICON_RULES = [
         context: 'In Kalyana Karnataka (Kalaburagi/Bidar), it is called "ಶೀರಾ" (Sheera) or "ರವಾ ಹಲ್ವಾ" (Rawa Halwa).'
       },
       bengaluru: {
-        term: 'ಚೌ-ಚೌ ಬಾತ್ / ಕೇಸರಿಬಾತ್',
-        phonetic: 'Chow-Chow Bath / Kesaribath',
+        term: 'ಚೌ-ಚೌ ಬಾತ್',
+        phonetic: 'Chow-Chow Bath',
         context: 'In Bangalore Darshinis, it is famously paired with spicy Khara Bath as the iconic "ಚೌ-ಚೌ ಬಾತ್" (Chow-Chow Bath)!'
       }
     }
@@ -40,11 +40,11 @@ export const REGIONAL_LEXICON_RULES = [
     patterns: ['girmit', 'mandakki', 'churmuri', 'baji', 'puffed rice', 'puri'],
     foodType: 'puffed_rice_snack',
     terms: {
-      mysuru: { term: 'ಚುರುಮುರಿ (Churmuri)', phonetic: 'Churmuri', context: 'Mysore-style spiced churmuri with grated carrot and raw mango.' },
-      north_karnataka: { term: 'ಗಿರ್ಮಿಟ್ (Girmit)', phonetic: 'Girmit', context: 'The legendary spicy, wet-masala Hubballi-Dharwad street food snack!' },
-      karavali: { term: 'ಬಜಿ / ಚುರುಮುರಿ (Baji)', phonetic: 'Baji', context: 'Coastal seasoned puffed rice eaten with morning or evening tea.' },
-      kalyana_karnataka: { term: 'ಸುಸಲಾ / ಮಂಡಕ್ಕಿ (Susala)', phonetic: 'Susala / Mandakki', context: 'Famous tempered puffed-rice delicacy across Kalaburagi.' },
-      bengaluru: { term: 'ಮಸಾಲಾ ಪುರಿ / ಚುರುಮುರಿ (Masala Puri)', phonetic: 'Masala Puri', context: 'Iconic street carts across VV Puram food street.' }
+      mysuru: { term: 'ಚುರುಮುರಿ', phonetic: 'Churmuri', context: 'Mysore-style spiced churmuri with grated carrot and raw mango.' },
+      north_karnataka: { term: 'ಗಿರ್ಮಿಟ್', phonetic: 'Girmit', context: 'The legendary spicy, wet-masala Hubballi-Dharwad street food snack!' },
+      karavali: { term: 'ಬಜಿ', phonetic: 'Baji', context: 'Coastal seasoned puffed rice eaten with morning or evening tea.' },
+      kalyana_karnataka: { term: 'ಸುಸಲಾ', phonetic: 'Susala', context: 'Famous tempered puffed-rice delicacy across Kalaburagi.' },
+      bengaluru: { term: 'ಮಸಾಲಾ ಪುರಿ', phonetic: 'Masala Puri', context: 'Iconic street carts across VV Puram food street.' }
     }
   },
 
@@ -52,11 +52,11 @@ export const REGIONAL_LEXICON_RULES = [
     patterns: ['oota', 'koodu', 'meals', 'rice', 'lunch', 'dinner', 'anna', 'khana'],
     foodType: 'meal_rice',
     terms: {
-      mysuru: { term: 'ಊಟ (Oota)', phonetic: 'Oota', context: 'Traditional festive meal with Sambar, Rasam, and Payasa.' },
-      north_karnataka: { term: 'ಊಟ / ರೊಟ್ಟಿ ಊಟ (Oota)', phonetic: 'Rotti Oota', context: 'Wholesome jowar rotti feast with shenga chutney.' },
-      karavali: { term: 'ಬಿಸಿ ಕೂಡು / ಊಟ (Bisi Koodu)', phonetic: 'Bisi Koodu', context: 'Authentic coastal boiled brown rice (Koodu).' },
-      kalyana_karnataka: { term: 'ಖಾನಾ / ರೊಟ್ಟಿ (Khana)', phonetic: 'Khana', context: 'Everyday traditional plateau meals.' },
-      bengaluru: { term: 'ಮೀಲ್ಸ್ / ಊಟ (Meals)', phonetic: 'Meals', context: 'Fast-service South Indian thali.' }
+      mysuru: { term: 'ಊಟ', phonetic: 'Oota', context: 'Traditional festive meal with Sambar, Rasam, and Payasa.' },
+      north_karnataka: { term: 'ರೊಟ್ಟಿ ಊಟ', phonetic: 'Rotti Oota', context: 'Wholesome jowar rotti feast with shenga chutney.' },
+      karavali: { term: 'ಬಿಸಿ ಕೂಡು', phonetic: 'Bisi Koodu', context: 'Authentic coastal boiled brown rice (Koodu).' },
+      kalyana_karnataka: { term: 'ಖಾನಾ', phonetic: 'Khana', context: 'Everyday traditional plateau meals.' },
+      bengaluru: { term: 'ಮೀಲ್ಸ್', phonetic: 'Meals', context: 'Fast-service South Indian thali.' }
     }
   },
 
@@ -64,11 +64,11 @@ export const REGIONAL_LEXICON_RULES = [
     patterns: ['rotti', 'roti', 'mudde', 'ragi mudde', 'jolada rotti', 'akki rotti'],
     foodType: 'staple_bread',
     terms: {
-      mysuru: { term: 'ರಾಗಿ ಮುದ್ದೆ (Ragi Mudde)', phonetic: 'Ragi Mudde', context: 'The undisputed royal staple of Old Mysuru and Mandya.' },
-      north_karnataka: { term: 'ಜೋಳದ ರೊಟ್ಟಿ (Jolada Rotti)', phonetic: 'Jolada Rotti', context: 'Crisp, paper-thin jowar rotti with stuffed brinjal ennegai.' },
-      karavali: { term: 'ಅಕ್ಕಿ ರೊಟ್ಟಿ / ಕೋರಿ ರೊಟ್ಟಿ (Kori Rotti)', phonetic: 'Kori Rotti', context: 'Crispy wafer-thin rice crepes soaked in spicy gravy.' },
-      kalyana_karnataka: { term: 'ಸಜ್ಜೆ ರೊಟ್ಟಿ / ಜೋಳದ ರೊಟ್ಟಿ (Sajje Rotti)', phonetic: 'Sajje Rotti', context: 'Traditional pearl millet and jowar rottis.' },
-      bengaluru: { term: 'ರಾಗಿ ಮುದ್ದೆ / ಅಕ್ಕಿ ರೊಟ್ಟಿ (Akki Rotti)', phonetic: 'Akki Rotti', context: 'Classic breakfast rotti with dill leaves and coconut chutney.' }
+      mysuru: { term: 'ರಾಗಿ ಮುದ್ದೆ', phonetic: 'Ragi Mudde', context: 'The undisputed royal staple of Old Mysuru and Mandya.' },
+      north_karnataka: { term: 'ಜೋಳದ ರೊಟ್ಟಿ', phonetic: 'Jolada Rotti', context: 'Crisp, paper-thin jowar rotti with stuffed brinjal ennegai.' },
+      karavali: { term: 'ಅಕ್ಕಿ ರೊಟ್ಟಿ', phonetic: 'Akki Rotti', context: 'Crispy wafer-thin rice crepes soaked in spicy gravy.' },
+      kalyana_karnataka: { term: 'ಜೋಳದ ರೊಟ್ಟಿ', phonetic: 'Jolada Rotti', context: 'Traditional pearl millet and jowar rottis.' },
+      bengaluru: { term: 'ರಾಗಿ ಮುದ್ದೆ', phonetic: 'Ragi Mudde', context: 'Classic breakfast rotti with dill leaves and coconut chutney.' }
     }
   },
 
@@ -76,11 +76,11 @@ export const REGIONAL_LEXICON_RULES = [
     patterns: ['coffee', 'kaapi', 'tea', 'chaha', 'cha', 'kashaya', 'kashaaya'],
     foodType: 'beverage',
     terms: {
-      mysuru: { term: 'ಫಿಲ್ಟರ್ ಕಾಫಿ (Filter Kaapi)', phonetic: 'Filter Kaapi', context: 'Aromatic chicory blend in traditional brass davarah-tumbler.' },
-      north_karnataka: { term: 'ಸ್ಪೆಷಲ್ ಚಹಾ (Special Chahaa)', phonetic: 'Chahaa', context: 'Strong, sweet, boiled ginger tea served in cutting glasses.' },
-      karavali: { term: 'ಕಷಾಯ / ಕಾಫಿ (Kashaaya)', phonetic: 'Kashaaya', context: 'Aromatic herbal milk brew steeped with coriander and spices.' },
-      kalyana_karnataka: { term: 'ಕಡಕ್ ಚಹಾ (Kadak Chaha)', phonetic: 'Kadak Chaha', context: 'Rich, thick Deccani spiced tea.' },
-      bengaluru: { term: 'ಹಾಫ್ ಬೈ ಟೂ ಫಿಲ್ಟರ್ ಕಾಫಿ (Half-by-Two Kaapi)', phonetic: 'Half-by-Two Coffee', context: 'The classic Bangalore darshini custom of sharing coffee.' }
+      mysuru: { term: 'ಫಿಲ್ಟರ್ ಕಾಫಿ', phonetic: 'Filter Kaapi', context: 'Aromatic chicory blend in traditional brass davarah-tumbler.' },
+      north_karnataka: { term: 'ಸ್ಪೆಷಲ್ ಚಹಾ', phonetic: 'Special Chahaa', context: 'Strong, sweet, boiled ginger tea served in cutting glasses.' },
+      karavali: { term: 'ಕಷಾಯ', phonetic: 'Kashaaya', context: 'Aromatic herbal milk brew steeped with coriander and spices.' },
+      kalyana_karnataka: { term: 'ಕಡಕ್ ಚಹಾ', phonetic: 'Kadak Chaha', context: 'Rich, thick Deccani spiced tea.' },
+      bengaluru: { term: 'ಹಾಫ್ ಬೈ ಟೂ ಕಾಫಿ', phonetic: 'Half-by-Two Coffee', context: 'The classic Bangalore darshini custom of sharing coffee.' }
     }
   },
 
@@ -88,11 +88,11 @@ export const REGIONAL_LEXICON_RULES = [
     patterns: ['dosa', 'dose', 'masala dosa', 'masale dose', 'neer dosa'],
     foodType: 'dosa',
     terms: {
-      mysuru: { term: 'ಮೈಲಾರಿ ಮಸಾಲೆ ದೋಸೆ (Mylari Masale Dose)', phonetic: 'Mylari Masale Dose', context: 'Soft, melt-in-mouth butter dosa with signature white butter.' },
-      north_karnataka: { term: 'ದೋಸೆ (Dose)', phonetic: 'Dose', context: 'Crisp roaster with spicy red garlic paste.' },
-      karavali: { term: 'ನೀರ್ ದೋಸೆ (Neer Dosa)', phonetic: 'Neer Dosa', context: 'Silky, paper-soft rice crepe served with coconut chutney or gassi.' },
-      kalyana_karnataka: { term: 'ಮಸಾಲೆ ದೋಸೆ (Masale Dose)', phonetic: 'Masale Dose', context: 'Spicy plateau breakfast favorite.' },
-      bengaluru: { term: 'ಬೆಣ್ಣೆ ಮಸಾಲೆ ದೋಸೆ (Benne Masale Dose)', phonetic: 'Benne Masale Dose', context: 'Thick, golden crispy CTR and Vidyarthi Bhavan style.' }
+      mysuru: { term: 'ಮೈಲಾರಿ ಮಸಾಲೆ ದೋಸೆ', phonetic: 'Mylari Masale Dose', context: 'Soft, melt-in-mouth butter dosa with signature white butter.' },
+      north_karnataka: { term: 'ದೋಸೆ', phonetic: 'Dose', context: 'Crisp roaster with spicy red garlic paste.' },
+      karavali: { term: 'ನೀರ್ ದೋಸೆ', phonetic: 'Neer Dosa', context: 'Silky, paper-soft rice crepe served with coconut chutney or gassi.' },
+      kalyana_karnataka: { term: 'ಮಸಾಲೆ ದೋಸೆ', phonetic: 'Masale Dose', context: 'Spicy plateau breakfast favorite.' },
+      bengaluru: { term: 'ಬೆಣ್ಣೆ ಮಸಾಲೆ ದೋಸೆ', phonetic: 'Benne Masale Dose', context: 'Thick, golden crispy CTR and Vidyarthi Bhavan style.' }
     }
   }
 ];
@@ -270,29 +270,29 @@ export const ACTION_PATTERNS = [
   {
     patterns: ['thinbeku', 'thinabeku', 'thinnodu', 'thinnona', 'thinodu', 'eat', 'hungry', 'eating', 'have food'],
     morphs: {
-      mysuru: (food) => ({
+      mysuru: (food, ph) => ({
         text: `${food} ಸವಿಯೋಣ ಕಣ್ರೀ, ಬಿಸಿ ಬಿಸಿಯಾಗಿದೆ!`,
-        phonetic: `${food} saviyoona kanree, bisi bisiyaagidhe!`,
+        phonetic: `${ph || food} saviyoona kanree, bisi bisiyaagidhe!`,
         trait: 'Uses polite "saviyoona" (savor) and respectful "kanree"'
       }),
-      north_karnataka: (food) => ({
+      north_karnataka: (food, ph) => ({
         text: `ಬಿಸಿ ಬಿಸಿ ${food} ತಿನ್ಬೇಕಾಗೇದ ನೋಡ್ರಿ! ಬರ್ರಿ ಊಟ ಮಾಡೂಣುಪಾ!`,
-        phonetic: `Bisi bisi ${food} thinbekageda nodree! Barri oota maadoonupaa!`,
+        phonetic: `Bisi bisi ${ph || food} thinbekageda nodree! Barri oota maadoonupaa!`,
         trait: 'Uses regional verb "thinbekageda" (must eat) and warm tag "-paa"'
       }),
-      karavali: (food) => ({
+      karavali: (food, ph) => ({
         text: `ಮಾರಾಯ, ${food} ತಿನ್ಲೆ ಬಪ್ಪ! ಘಮ ಘಮ ಅಂತಿದೆ!`,
-        phonetic: `Maaraya, ${food} thinle bappa! Ghama ghama anthidhe!`,
+        phonetic: `Maaraya, ${ph || food} thinle bappa! Ghama ghama anthidhe!`,
         trait: 'Uses coastal "thinle bappa" and addressing as "Maaraya"'
       }),
-      kalyana_karnataka: (food) => ({
+      kalyana_karnataka: (food, ph) => ({
         text: `${food} ತಿನ್ನೋನು ನಡೀ ದೋಸ್ತ! ಬರಾಬರ್ ಟೈಮ್‌ಗೆ ಬಂದಿದಿ!`,
-        phonetic: `${food} thinnonu nadi dosta! Baraabar time-ge bandidi!`,
+        phonetic: `${ph || food} thinnonu nadi dosta! Baraabar time-ge bandidi!`,
         trait: 'Uses "nadi" (let us go) and "dosta" (companion)'
       }),
-      bengaluru: (food) => ({
+      bengaluru: (food, ph) => ({
         text: `ಬಾಸ್, ${food} ಹೊಡಿಯೋಣ ಮಗಾ! ಚಿಂದಿ ಟೇಸ್ಟ್ ಗುರು!`,
-        phonetic: `Boss, ${food} hodiyoona maga! Chindi taste guru!`,
+        phonetic: `Boss, ${ph || food} hodiyoona maga! Chindi taste guru!`,
         trait: 'Urban street slang "hodiyoona" (whack/eat) and "chindi"'
       })
     }
@@ -300,29 +300,29 @@ export const ACTION_PATTERNS = [
   {
     patterns: ['kodbeku', 'kodi', 'buy', 'order', 'give', 'eshtu', 'rate', 'price', 'cost'],
     morphs: {
-      mysuru: (subject) => ({
+      mysuru: (subject, ph) => ({
         text: `ದಯವಿಟ್ಟು ಒಂದು ${subject} ಕೊಡಿ ಸ್ವಾಮಿ, ಎಷ್ಟು ಆಯ್ತು?`,
-        phonetic: `Dayavittu ondu ${subject} kodi swaami, eshtu aaythu?`,
+        phonetic: `Dayavittu ondu ${ph || subject} kodi swaami, eshtu aaythu?`,
         trait: 'Polite request with "Dayavittu" and "Swaami"'
       }),
-      north_karnataka: (subject) => ({
+      north_karnataka: (subject, ph) => ({
         text: `ಏ ಪಾ, ಒಂದು ${subject} ಕೊಡ್ರಿಪಾ! ಎಷ್ಟಾತ ನೋಡ್ರಿ ಕರೆಕ್ಟ್ ಹೇಳ್ರಿ!`,
-        phonetic: `Ee paa, ondu ${subject} kodripaa! Eshtaatha nodree correct helree!`,
+        phonetic: `Ee paa, ondu ${ph || subject} kodripaa! Eshtaatha nodree correct helree!`,
         trait: 'Direct bargaining with "Ee paa" and "kodripaa"'
       }),
-      karavali: (subject) => ({
+      karavali: (subject, ph) => ({
         text: `ಮಾರಾಯ, ಒಂದು ${subject} ಕೊಡ್ಲೆ! ಎಂತ ಬೆಲೆ ಮಾರಾಯ?`,
-        phonetic: `Maaraya, ondu ${subject} kodle! Entha bele maaraya?`,
+        phonetic: `Maaraya, ondu ${ph || subject} kodle! Entha bele maaraya?`,
         trait: 'Friendly coastal informal trade'
       }),
-      kalyana_karnataka: (subject) => ({
+      kalyana_karnataka: (subject, ph) => ({
         text: `ದೋಸ್ತ, ಒಂದು ${subject} ಹಾಕು ನೋಡಪ್ಪ! ಬರಾಬರ್ ರೇಟ್ ಹೇಳು!`,
-        phonetic: `Dosta, ondu ${subject} haaku nodappa! Baraabar rate helu!`,
+        phonetic: `Dosta, ondu ${ph || subject} haaku nodappa! Baraabar rate helu!`,
         trait: 'Straightforward "baraabar rate"'
       }),
-      bengaluru: (subject) => ({
+      bengaluru: (subject, ph) => ({
         text: `ಬಾಸ್, ಒಂದು ${subject} ಕೊಡಿ! ಎಷ್ಟು ಆಯ್ತು, ಜಿಪೇ (GPay) ಮಾಡ್ಲಾ?`,
-        phonetic: `Boss, ondu ${subject} kodi! Eshtu aaythu, GPay maadlaa?`,
+        phonetic: `Boss, ondu ${ph || subject} kodi! Eshtu aaythu, GPay maadlaa?`,
         trait: 'Instant UPI/GPay urban rhythm'
       })
     }
@@ -397,18 +397,19 @@ export function parseAndMorphDialect(rawInput) {
     const regions = ['mysuru', 'north_karnataka', 'karavali', 'kalyana_karnataka', 'bengaluru'];
 
     regions.forEach((regKey) => {
-      const foodName = detectedFoodRule.terms[regKey].term;
-      const morphed = detectedActionRule.morphs[regKey](foodName);
+      const foodInfo = detectedFoodRule.terms[regKey];
+      const morphed = detectedActionRule.morphs[regKey](foodInfo.term, foodInfo.phonetic);
       results[regKey] = {
         text: morphed.text,
         phonetic: morphed.phonetic,
-        trait: `${morphed.trait} (${detectedFoodRule.terms[regKey].context})`
+        trait: `${morphed.trait} (${foodInfo.context})`
       };
     });
 
     return {
       type: 'semantic_food_action',
       keyword: matchedKeyword,
+      standardKannada: `${detectedFoodRule.terms.mysuru.term} ತಿನ್ನಬೇಕು`,
       variants: results
     };
   }

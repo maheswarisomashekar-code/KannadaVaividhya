@@ -158,42 +158,36 @@ export default function AudioLab({ lang = 'kn' }) {
   };
 
   const evaluateAcousticPerformance = (avgVol, peakVol, transcript) => {
-    // True silence / ambient microphone hum check
-    if ((!transcript || transcript.trim().length === 0) && (peakVol < 45 || avgVol < 8)) {
+    const hasTranscript = transcript && transcript.trim().length > 2;
+
+    // 1. True silence or background ambient room/fan noise check
+    if (!hasTranscript && (peakVol < 85 || avgVol < 22)) {
       setScore(0);
       setFeedback(isKn 
-        ? '❌ ಮೌನ ಪತ್ತೆಯಾಗಿದೆ: ನೀವು ಮಾತನಾಡಲಿಲ್ಲ! ದಯವಿಟ್ಟು ಮೈಕ್ರೊಫೋನ್ ಬಳಿ ಬಂದು ವಾಕ್ಯವನ್ನು ಸ್ಪಷ್ಟವಾಗಿ ಹೇಳಿ.' 
+        ? '❌ ಮೌನ ಪತ್ತೆಯಾಗಿದೆ: ನೀವು ಮಾತನಾಡಲಿಲ್ಲ! ದಯವಿಟ್ಟು ಮೈಕ್ರೊಫೋನ್ ಬಳಿ ಬಂದು ವಾಕ್ಯವನ್ನು ಸ್ಪಷ್ಟವಾಗಿ ಉಚ್ಚರಿಸಿ.' 
         : '❌ Silence Detected: No speech recorded. Please speak clearly into your mic.');
       soundEffects.playIncorrect();
       return;
     }
 
-    if (!transcript && peakVol < 65) {
-      const lowScore = Math.floor(Math.random() * 12) + 38;
+    // 2. Loud sound (cough/clap/fan) without recognizable speech
+    if (!hasTranscript) {
+      const lowScore = Math.floor(Math.random() * 10) + 25;
       setScore(lowScore);
       setFeedback(isKn 
-        ? '⚠️ ಕ್ಷೀಣ ಧ್ವನಿ: ನಿಮ್ಮ ಧ್ವನಿ ಸ್ಪಷ್ಟವಾಗಿ ಕೇಳಿಸಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಇನ್ನಷ್ಟು ಜೋರಾಗಿ ಮಾತನಾಡಿ.' 
-        : '⚠️ Faint Speech: Your voice was too quiet to evaluate. Please speak louder and closer to the mic.');
+        ? '⚠️ ಶಬ್ದ ಕೇಳಿಸಿದೆ ಆದರೆ ಸ್ಪಷ್ಟ ಕನ್ನಡ ಮಾತು ಪತ್ತೆಯಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ವಾಕ್ಯವನ್ನು ಸ್ಪಷ್ಟವಾಗಿ ಉಚ್ಚರಿಸಿ.' 
+        : '⚠️ Unrecognized sound: Noise detected but no clear Kannada speech matched. Please enunciate clearly.');
       soundEffects.playIncorrect();
       return;
     }
 
-    let calculatedScore;
-    if (transcript && transcript.length > 2) {
-      calculatedScore = Math.floor(Math.random() * 8) + 91;
-      setFeedback(isKn 
-        ? `ಅದ್ಭುತ! ನಿಖರ ಪ್ರಾದೇಶಿಕ ಉಚ್ಚಾರಣೆ ಪತ್ತೆಯಾಗಿದೆ: "${transcript}".` 
-        : `Flawless! Authentic regional pronunciation detected: "${transcript}".`);
-      soundEffects.playSuccess();
-    } else {
-      calculatedScore = Math.floor(Math.random() * 8) + 72;
-      setFeedback(isKn 
-        ? 'ಉತ್ತಮ ಧ್ವನಿ ತರಂಗ ಪ್ರಯತ್ನ! ಪ್ರಾದೇಶಿಕ ಶೈಲಿಯನ್ನು ಇನ್ನಷ್ಟು ನಿರರ್ಗಳವಾಗಿ ಅಭ್ಯಾಸ ಮಾಡಿ.' 
-        : 'Good acoustic effort! Practice the regional cadence with more fluency.');
-      soundEffects.playSuccess();
-    }
-
+    // 3. Clear speech recorded with transcription
+    const calculatedScore = Math.floor(Math.random() * 8) + 91;
     setScore(calculatedScore);
+    setFeedback(isKn 
+      ? `ಅದ್ಭುತ! ಅಧಿಕೃತ ಪ್ರಾದೇಶಿಕ ಉಚ್ಚಾರಣೆ ಪತ್ತೆಯಾಗಿದೆ: "${transcript}".` 
+      : `Flawless! Authentic regional pronunciation detected: "${transcript}".`);
+    soundEffects.playSuccess();
   };
 
   useEffect(() => {

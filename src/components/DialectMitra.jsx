@@ -5,6 +5,7 @@ import {
   transformToRegionalDialects
 } from '../utils/universalTranslator';
 import { parseAndMorphDialect } from '../utils/regionalLexiconEngine';
+import { translateEnglishToKannada } from '../utils/englishToKannada';
 import { REGIONS } from '../data/regions';
 import { speakKannada, soundEffects } from '../utils/audioHelper';
 import {
@@ -110,32 +111,63 @@ export default function DialectMitra({ lang = 'kn' }) {
 
     try {
       const lower = text.toLowerCase();
-      const lexiconMatch = VOCABULARY_LEXICON.find(
-        (item) => item.en.toLowerCase() === lower || item.kn.includes(text)
-      );
-
       let standardKn = text;
-      const isEnglish = /^[A-Za-z0-9\s.,!?'"()-]+$/.test(text);
+      const isEnglish = /[a-zA-Z]/.test(text);
+
+      let englishMatch = null;
       if (isEnglish) {
-        if (lexiconMatch) {
-          standardKn = lexiconMatch.kn;
+        englishMatch = translateEnglishToKannada(text);
+        if (englishMatch?.kannada) {
+          standardKn = englishMatch.kannada;
         } else {
-          standardKn = await fetchOnlineKannadaTranslation(text);
+          const lexiconMatch = VOCABULARY_LEXICON.find(
+            (item) => item.en.toLowerCase() === lower || item.kn.includes(text)
+          );
+          if (lexiconMatch) {
+            standardKn = lexiconMatch.kn;
+          } else {
+            const onlineKn = await fetchOnlineKannadaTranslation(text);
+            if (onlineKn && !/^[A-Za-z\s.,!?'"]+$/.test(onlineKn)) {
+              standardKn = onlineKn;
+            }
+          }
         }
       }
 
-      // Attempt intelligent parsing on original text or Kannada translated text
+      // 1. If English match already provided rich regional dialect variants, use them immediately
+      let regionalBreakdown = {};
+      if (englishMatch?.variants) {
+        Object.keys(REGIONS).forEach((regKey) => {
+          const m = englishMatch.variants[regKey];
+          if (m) {
+            regionalBreakdown[regKey] = {
+              text: m.text,
+              phonetic: m.phonetic,
+              tone: m.trait || m.tone,
+              etiquetteTip: m.culturalNuance || m.trait || ''
+            };
+          }
+        });
+
+        setActiveResult({
+          original: text,
+          standardKannada: englishMatch.kannada || standardKn,
+          variants: regionalBreakdown
+        });
+        soundEffects.playSuccess();
+        return;
+      }
+
+      // 2. Attempt intelligent semantic parsing on original text or Kannada translated text
       let morphedResult = parseAndMorphDialect(text);
       if (!morphedResult || morphedResult.type === 'general_morph') {
         const knMorph = parseAndMorphDialect(standardKn);
-        if (knMorph && knMorph.type !== 'general_morph') {
+        if (knMorph) {
           morphedResult = knMorph;
         }
       }
 
-      let regionalBreakdown = {};
-
-      if (morphedResult && morphedResult.variants && morphedResult.type !== 'general_morph') {
+      if (morphedResult && morphedResult.variants) {
         Object.keys(REGIONS).forEach((regKey) => {
           const m = morphedResult.variants[regKey];
           if (m) {
@@ -147,6 +179,9 @@ export default function DialectMitra({ lang = 'kn' }) {
             };
           }
         });
+        if (morphedResult.standardKannada) {
+          standardKn = morphedResult.standardKannada;
+        }
       } else {
         regionalBreakdown = transformToRegionalDialects(standardKn);
       }
