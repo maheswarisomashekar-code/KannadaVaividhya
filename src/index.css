@@ -70,10 +70,30 @@ h1.font-kannada, h2.font-kannada, h3.font-kannada {
 
 /* Understated Muted Gold Text */
 .gold-classic-text {
-  background: linear-gradient(135deg, #f5e6b8 0%, #d4af37 60%, #b8972e 100%);
+  background: linear-gradient(135deg, #fef3c7 0%, #f59e0b 45%, #d4af37 80%, #b45309 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   display: inline-block;
+  text-shadow: 0 0 25px rgba(212, 175, 55, 0.2);
+}
+
+/* Karnataka Flag Ribbon Accent */
+.karnataka-ribbon {
+  background: linear-gradient(90deg, #DC2626 0%, #DC2626 50%, #FBBF24 50%, #FBBF24 100%);
+}
+
+/* Pulsing Golden Glow for Featured Badges & Highlights */
+@keyframes goldPulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(212, 175, 55, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 32px rgba(212, 175, 55, 0.6);
+  }
+}
+
+.gold-glow-pulse {
+  animation: goldPulse 3s infinite ease-in-out;
 }
 
 /* Refined Classic Button */

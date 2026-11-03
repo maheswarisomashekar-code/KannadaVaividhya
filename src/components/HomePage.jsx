@@ -26,6 +26,69 @@ export default function HomePage({
   const t = UI_STRINGS[lang] || UI_STRINGS.kn;
   const isKn = lang === 'kn';
 
+  const regionalHighlights = [
+    {
+      id: 'mysuru',
+      name: isKn ? 'ಹಳೆ ಮೈಸೂರು' : 'Old Mysuru',
+      districts: isKn ? 'ಮೈಸೂರು • ಮಂಡ್ಯ • ಹಾಸನ' : 'Mysuru • Mandya • Hassan',
+      greeting: '“ಸ್ವಾಮಿ, ಕ್ಷೇಮವೇ? ಊಟ ಆಯ್ತಾ?”',
+      audioText: 'ಸ್ವಾಮಿ, ನಮಸ್ಕಾರ, ಮನೆಯಲ್ಲಿ ಎಲ್ಲರೂ ಕ್ಷೇಮವೇ? ಊಟ ಆಯ್ತಾ?',
+      tag: isKn ? 'ಗಾಂಭೀರ್ಯ & ಮರ್ಯಾದೆ' : 'Courtly Courteous',
+      food: isKn ? 'ರಾಗಿ ಮುದ್ದೆ • ಮೈಸೂರು ಪಾಕ್' : 'Ragi Mudde • Mysore Pak',
+      icon: '🏰',
+      accentColor: 'from-amber-500/20 to-orange-500/10',
+      borderColor: 'border-amber-500/40'
+    },
+    {
+      id: 'north_karnataka',
+      name: isKn ? 'ಉತ್ತರ ಕರ್ನಾಟಕ' : 'North Karnataka',
+      districts: isKn ? 'ಧಾರವಾಡ • ಬೆಳಗಾವಿ • ವಿಜಯಪುರ' : 'Dharwad • Belagavi • Vijayapura',
+      greeting: '“ಏನ್ರೀ ಸಮಾಚಾರ? ಆರಾಮ ಅದೀರೇನು?”',
+      audioText: 'ಏನ್ರೀ ಸಮಾಚಾರ? ಆರಾಮ ಅದೀರೇನು? ಬರ್ರಿ ಊಟ ಮಾಡೂಣುಪಾ!',
+      tag: isKn ? 'ಆತ್ಮೀಯತೆ & ಠಸ್ಸಾ' : 'Hearty & Energetic',
+      food: isKn ? 'ಜೋಳದ ರೊಟ್ಟಿ • ಗಿರ್ಮಿಟ್' : 'Jolada Rotti • Girmit',
+      icon: '🌾',
+      accentColor: 'from-yellow-500/20 to-amber-500/10',
+      borderColor: 'border-yellow-500/40'
+    },
+    {
+      id: 'karavali',
+      name: isKn ? 'ಕರಾವಳಿ ಕರ್ನಾಟಕ' : 'Coastal Karavali',
+      districts: isKn ? 'ದಕ್ಷಿಣ ಕನ್ನಡ • ಉಡುಪಿ • ಉತ್ತರ ಕನ್ನಡ' : 'DK • Udupi • Uttara Kannada',
+      greeting: '“ಎಂತ ಮಾರಾಯ ಸಮಾಚಾರ? ಕುಶಲವೇ?”',
+      audioText: 'ಎಂತ ಮಾರಾಯ ಸಮಾಚಾರ? ಮನೆಯಲ್ಲೆಲ್ಲ ಕುಶಲವೇ ಬಪ್ಪ?',
+      tag: isKn ? 'ಸಂಗೀತಮಯ ಲಯ' : 'Melodic Coastal',
+      food: isKn ? 'ನೀರ್ ದೋಸೆ • ಸಜ್ಜಿಗೆ-ಬಜಿ' : 'Neer Dosa • Sajjige-Baji',
+      icon: '🌊',
+      accentColor: 'from-emerald-500/20 to-teal-500/10',
+      borderColor: 'border-emerald-500/40'
+    },
+    {
+      id: 'kalyana_karnataka',
+      name: isKn ? 'ಕಲ್ಯಾಣ ಕರ್ನಾಟಕ' : 'Kalyana Karnataka',
+      districts: isKn ? 'ಕಲಬುರಗಿ • ಬೀದರ್ • ರಾಯಚೂರು' : 'Kalaburagi • Bidar • Raichur',
+      greeting: '“ಆರಾಮ ಅದೀರೇನು ದೋಸ್ತ? ಬರಾಬರ್ ಇದೀಯಾ?”',
+      audioText: 'ಆರಾಮ ಅದೀರೇನು ದೋಸ್ತ? ಮನೆಯಾಗ ಎಲ್ಲಾ ಬರಾಬರ್ ಅದಾರ?',
+      tag: isKn ? 'ಶರಣ ಸಂಸ್ಕೃತಿ & ಸಮಾನತೆ' : 'Sharana Brotherhood',
+      food: isKn ? 'ಸುಸಲಾ • ಖಡಕ್ ರೊಟ್ಟಿ' : 'Susala • Khadak Rotti',
+      icon: '☀️',
+      accentColor: 'from-red-500/20 to-rose-500/10',
+      borderColor: 'border-red-500/40'
+    },
+    {
+      id: 'bengaluru',
+      name: isKn ? 'ನಮ್ಮ ಬೆಂಗಳೂರು' : 'Bengaluru Urban',
+      districts: isKn ? 'ಬೆಂಗಳೂರು ನಗರ • ಗ್ರಾಮಾಂತರ' : 'Bengaluru Urban • Rural',
+      greeting: '“ಏನ್ ಮಗಾ? ಸೀನ್ ಎಲ್ಲ ಸಾರ್ಟೆಡ್ ಅಲ್ವಾ ಗುರು?”',
+      audioText: 'ಏನ್ ಮಗಾ ಹೆಂಗಿದ್ದೀಯಾ? ಸೀನ್ ಎಲ್ಲ ಸಾರ್ಟೆಡ್ ಅಲ್ವಾ ಗುರು?',
+      tag: isKn ? 'ಕಾಸ್ಮೋಪಾಲಿಟನ್ ಯೂತ್' : 'Fast Cosmopolitan',
+      food: isKn ? 'ಬೆಣ್ಣೆ ಮಸಾಲೆ ದೋಸೆ • ಫಿಲ್ಟರ್ ಕಾಫಿ' : 'Benne Masale Dose • Kaapi',
+      icon: '🏙️',
+      accentColor: 'from-blue-500/20 to-indigo-500/10',
+      borderColor: 'border-blue-500/40'
+    }
+  ];
+
   const portalCards = [
     {
       id: 'map',
@@ -96,92 +159,192 @@ export default function HomePage({
   return (
     <div className="space-y-10 animate-fade-in">
       
-      {/* 1. Classic Understated Hero Banner */}
-      <section className="relative overflow-hidden rounded-2xl classic-card p-8 sm:p-12 lg:p-14">
-        {/* Very subtle warm ambient gradient in corner */}
-        <div className="absolute top-0 right-0 w-96 h-96 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-[#D4AF37]/8 via-transparent to-transparent pointer-events-none" />
+      {/* 1. Classic Royal Karnataka Hero Banner */}
+      <section className="relative overflow-hidden rounded-3xl classic-card p-6 sm:p-10 lg:p-12 border-t-4 border-t-[#D4AF37] shadow-2xl">
+        {/* Karnataka Flag Dual-Tone Ambient Glow (Turmeric Yellow + Crimson Red) */}
+        <div className="absolute top-0 right-0 w-[500px] h-[500px] bg-[radial-gradient(circle_at_top_right,_var(--tw-gradient-stops))] from-amber-500/15 via-red-600/10 to-transparent pointer-events-none -z-0" />
         
         <div className="relative z-10 max-w-4xl">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-[#1A1D21] border border-[#D4AF37]/30 text-[#D4AF37] text-xs font-medium mb-5">
-            <Crown className="w-3.5 h-3.5 text-[#D4AF37]" />
-            <span className="tracking-wide uppercase">{t.challengeTag} • {t.heroTag}</span>
+          {/* Karnataka Flag & Hackathon Badge */}
+          <div className="flex flex-wrap items-center gap-2 mb-4">
+            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#1A1D21] border border-[#D4AF37]/40 text-[#D4AF37] text-xs font-semibold shadow-inner">
+              <span className="flex h-2 w-2 rounded-full bg-red-500 inline-block animate-pulse" />
+              <Crown className="w-3.5 h-3.5 text-[#D4AF37]" />
+              <span className="tracking-wide">
+                {isKn ? 'ಕನ್ನಡ ಡಿಜಿಟಲ್ ನಾವೀನ್ಯತೆ ೨೦೨೬ • ಸಂಭ್ರಮ' : 'Kannada Digital Innovation 2026 • Grand Stage'}
+              </span>
+            </div>
+            <span className="text-[11px] font-bold px-3 py-1 rounded-full bg-gradient-to-r from-red-600/30 to-yellow-500/30 border border-yellow-500/30 text-yellow-300">
+              🚩 ಹೆಸರಾಯಿತು ಕರ್ನಾಟಕ • ಉಸಿರಾಗಲಿ ಕನ್ನಡ
+            </span>
           </div>
 
-          <h2 className="text-3xl sm:text-5xl font-bold text-[#F1F3F5] tracking-tight font-serif-kn mb-5 leading-[1.3]">
+          <h1 className="text-3xl sm:text-5xl lg:text-6xl font-black text-[#F1F3F5] tracking-tight font-serif-kn mb-4 leading-[1.25]">
             {isKn ? (
               <>
-                ಕರ್ನಾಟಕದ ಗಂಡುಮೆಟ್ಟಿನ ನುಡಿಗಟ್ಟುಗಳ <br />
+                ಕರ್ನಾಟಕದ ೫ ಪ್ರಾಂತ್ಯಗಳ <br />
                 <span className="gold-classic-text">
-                  ಜೀವಂತ ಸಂಸ್ಕೃತಿ ಲೋಕ
+                  ಗಂಡುಮೆಟ್ಟಿನ ನುಡಿ ಸಿರಿ
                 </span>
               </>
             ) : (
               <>
-                Explore the Living Tapestry of <br />
+                The Living Soul of <br />
                 <span className="gold-classic-text">
                   Karnataka’s Regional Dialects
                 </span>
               </>
             )}
-          </h2>
+          </h1>
 
-          <p className="text-sm sm:text-base text-[#9CA3AF] leading-relaxed mb-8 max-w-2xl font-normal">
-            {t.heroDescription}
+          <p className="text-sm sm:text-base text-[#cbd5e1] leading-relaxed mb-6 max-w-2xl font-medium">
+            {isKn 
+              ? 'ಹಳೆ ಮೈಸೂರಿನ ಮರ್ಯಾದೆ, ಉತ್ತರ ಕರ್ನಾಟಕದ ಗತ್ತು, ಕರಾವಳಿಯ ನಾದ, ಕಲ್ಯಾಣದ ಶರಣ ಸಮಾನತೆ ಮತ್ತು ಬೆಂಗಳೂರಿನ ಯುವ ಸಂಭಾಷಣೆಯ ಜೀವಂತ ಪ್ರಾದೇಶಿಕ ಭಾಷಾ ತಾಣ!'
+              : 'Celebrate the royal courtliness of Old Mysuru, hearty rhythm of North Karnataka, coastal music of Karavali, brotherhood of Kalyana, and vibrant slang of Bengaluru!'}
           </p>
 
-          {/* Interactive Classic Audio Motto Pill */}
-          <div className="inline-flex items-center gap-4 bg-[#101214] border border-white/[0.08] rounded-xl p-3 sm:p-4 mb-8">
+          {/* Interactive Kuvempu State Motto Audio Capsule */}
+          <div className="inline-flex items-center gap-4 bg-[#0a0e17]/90 border border-[#D4AF37]/35 rounded-2xl p-3 sm:p-4 mb-7 shadow-xl hover:border-[#D4AF37]/60 transition-all">
             <button
               type="button"
-              onClick={() => speakKannada('ಸಿರಿಗನ್ನಡಂ ಗೆಲ್ಗೆ, ಸಿರಿಗನ್ನಡಂ ಬಾಳ್ಗೆ! ಕರ್ನಾಟಕದ ಸಮಸ್ತ ಪ್ರಾದೇಶಿಕ ನುಡಿಗಳಿಗೆ ನಮನ.')}
-              className="w-11 h-11 rounded-lg btn-classic-gold flex items-center justify-center shrink-0 shadow-sm"
+              onClick={() => speakKannada('ಎಲ್ಲಾದರೂ ಇರು, ಎಂತಾದರೂ ಇರು, ಎಂದೆಂದಿಗೂ ನೀ ಕನ್ನಡವಾಗಿರು! ಸಿರಿಗನ್ನಡಂ ಗೆಲ್ಗೆ, ಸಿರಿಗನ್ನಡಂ ಬಾಳ್ಗೆ!')}
+              className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#D4AF37] to-[#e6be44] text-[#0C0D0E] flex items-center justify-center shrink-0 shadow-lg hover:scale-105 active:scale-95 transition-transform"
+              title={isKn ? "ಕುವೆಂಪು ನುಡಿ ಆಲಿಸಿ" : "Listen to Kuvempu's state motto"}
               aria-label="Listen to audio motto"
             >
               <Volume2 className="w-5 h-5 text-[#0C0D0E]" />
             </button>
-            <div className="text-left pr-3">
-              <p className="text-[#D4AF37] font-semibold text-base font-serif-kn">
-                {t.heroMotto}
+            <div className="text-left pr-2">
+              <p className="text-[#D4AF37] font-bold text-sm sm:text-base font-serif-kn tracking-wide">
+                “ಎಲ್ಲಾದರೂ ಇರು, ಎಂತಾದರೂ ಇರು, ಎಂದೆಂದಿಗೂ ನೀ ಕನ್ನಡವಾಗಿರು!”
               </p>
-              <p className="text-[#9CA3AF] text-xs">
-                {t.heroMottoTip}
+              <p className="text-[#94a3b8] text-xs mt-0.5 flex items-center gap-1.5">
+                <span>— ರಾಷ್ಟ್ರಕವಿ ಕುವೆಂಪು</span>
+                <span className="text-[#D4AF37]/60">•</span>
+                <span className="text-[#D4AF37] font-medium">{isKn ? 'ಧ್ವನಿ ಕೇಳಲು ಬಟನ್ ಒತ್ತಿ' : 'Click icon to listen'}</span>
               </p>
             </div>
           </div>
 
-          {/* Quick Actions */}
+          {/* Quick Action Navigation Buttons */}
           <div className="flex flex-wrap items-center gap-3">
             <button
               type="button"
               onClick={() => onNavigate('map')}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg btn-classic-gold text-sm font-semibold transition-all active:scale-95"
+              className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-xl bg-gradient-to-r from-[#D4AF37] to-[#e6be44] text-[#0C0D0E] text-xs sm:text-sm font-bold shadow-lg hover:brightness-110 active:scale-95 transition-all"
             >
               <Compass className="w-4 h-4 text-[#0C0D0E]" />
-              <span>{t.btnExploreMap}</span>
+              <span>{isKn ? '೩೧ ಜಿಲ್ಲೆಗಳ ನಕ್ಷೆ' : 'Explore 31 Districts'}</span>
             </button>
 
             <button
               type="button"
               onClick={() => onNavigate('morph')}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg btn-classic-secondary text-sm font-medium transition-all active:scale-95"
+              className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-xl bg-[#131c30] hover:bg-[#1a2642] border border-[#D4AF37]/50 text-[#D4AF37] text-xs sm:text-sm font-bold shadow-md active:scale-95 transition-all"
             >
               <Sparkles className="w-4 h-4 text-[#D4AF37]" />
-              <span>{t.btnTryMorph}</span>
+              <span>{isKn ? 'ನುಡಿ ರೂಪಾಂತರ ಮ್ಯಾಟ್ರಿಕ್ಸ್' : 'Dialect Morph Matrix'}</span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => onNavigate('mitra')}
+              className="inline-flex items-center gap-2 px-5 sm:px-6 py-3 rounded-xl bg-[#131c30] hover:bg-[#1a2642] border border-white/15 text-[#cbd5e1] text-xs sm:text-sm font-semibold shadow-md active:scale-95 transition-all"
+            >
+              <Globe2 className="w-4 h-4 text-[#cbd5e1]" />
+              <span>{isKn ? 'ನುಡಿ ಮಿತ್ರ (ಎಐ)' : 'AI Dialect Mitra'}</span>
             </button>
 
             <button
               type="button"
               onClick={() => onNavigate('quiz')}
-              className="inline-flex items-center gap-2 px-6 py-3 rounded-lg btn-classic-secondary text-sm font-medium transition-all active:scale-95"
+              className="inline-flex items-center gap-2 px-4 sm:px-5 py-3 rounded-xl bg-[#131c30] hover:bg-[#1a2642] border border-white/15 text-[#cbd5e1] text-xs sm:text-sm font-semibold active:scale-95 transition-all"
             >
-              <HelpCircle className="w-4 h-4 text-[#9CA3AF]" />
-              <span>{t.btnPlayQuiz}</span>
+              <HelpCircle className="w-4 h-4 text-[#cbd5e1]" />
+              <span>{isKn ? 'ರಸಪ್ರಶ್ನೆ ಆಡಿ' : 'Detective Quiz'}</span>
             </button>
           </div>
         </div>
       </section>
 
-      {/* 2. Word of the Day Banner */}
+      {/* 2. Interactive "ಕರ್ನಾಟಕದ ೫ ಪ್ರಾಂತ್ಯಗಳ ನುಡಿ ಸಿರಿ" Regional Voice Grid */}
+      <section className="space-y-4">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-2 pb-1 border-b border-[#1e293b]">
+          <div>
+            <div className="flex items-center gap-2 text-xs font-bold text-[#D4AF37] uppercase tracking-wider mb-1">
+              <span>🚩</span>
+              <span>{isKn ? '೫ ಪ್ರಾಂತ್ಯಗಳ ಅಧಿಕೃತ ನುಡಿ ಮಾದರಿಗಳು' : '5 Regional Voice Showcases'}</span>
+            </div>
+            <h3 className="text-xl sm:text-2xl font-black text-[#F1F3F5] font-serif-kn">
+              {isKn ? 'ಕರ್ನಾಟಕದ ೫ ನುಡಿ ಸಿರಿ & ಹೆಮ್ಮೆ' : 'Voices of Karnataka — 5 Living Dialects'}
+            </h3>
+          </div>
+          <p className="text-xs text-[#94a3b8]">
+            {isKn ? 'ಧ್ವನಿ ಆಲಿಸಲು ಸ್ಪೀಕರ್ ಮೇಲೆ ಕ್ಲಿಕ್ ಮಾಡಿ' : 'Click speaker to hear authentic regional audio'}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3.5">
+          {regionalHighlights.map((reg) => (
+            <div
+              key={reg.id}
+              className={`rounded-2xl classic-card p-4 sm:p-5 flex flex-col justify-between border ${reg.borderColor} bg-gradient-to-b ${reg.accentColor} hover:scale-[1.02] transition-all duration-200 shadow-lg group`}
+            >
+              <div>
+                <div className="flex items-center justify-between mb-2.5">
+                  <span className="text-2xl" role="img" aria-label={reg.name}>{reg.icon}</span>
+                  <button
+                    type="button"
+                    onClick={() => speakKannada(reg.audioText)}
+                    className="p-2 rounded-xl bg-[#0b0f17] hover:bg-[#D4AF37] hover:text-[#0b0f17] text-[#D4AF37] border border-[#1e293b] transition-all shadow-sm group-hover:border-[#D4AF37]/50"
+                    title={isKn ? `${reg.name} ಧ್ವನಿ ಆಲಿಸಿ` : `Listen to ${reg.name}`}
+                    aria-label={`Listen to ${reg.name}`}
+                  >
+                    <Volume2 className="w-4 h-4" />
+                  </button>
+                </div>
+
+                <h4 className="text-base font-bold text-[#f8fafc] font-serif-kn group-hover:text-[#D4AF37] transition-colors">
+                  {reg.name}
+                </h4>
+                <p className="text-[11px] text-[#94a3b8] mb-3">
+                  {reg.districts}
+                </p>
+
+                {/* Regional Greeting Quote */}
+                <div className="bg-[#0b0f17]/80 rounded-xl p-3 border border-[#1e293b] mb-3">
+                  <p className="text-xs sm:text-sm font-bold text-[#D4AF37] font-serif-kn leading-snug">
+                    {reg.greeting}
+                  </p>
+                  <span className="text-[10px] text-[#94a3b8] mt-1 block">
+                    ✨ {reg.tag}
+                  </span>
+                </div>
+
+                {/* Cultural Food Marker */}
+                <div className="text-[11px] text-[#cbd5e1] mb-2 flex items-center gap-1.5">
+                  <span>🍲</span>
+                  <span className="truncate">{reg.food}</span>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => {
+                  if (onSelectRegion) onSelectRegion(reg.id);
+                  onNavigate('morph');
+                }}
+                className="w-full mt-2 py-2 rounded-lg bg-[#0b0f17] hover:bg-[#D4AF37] hover:text-[#0b0f17] text-[#D4AF37] border border-[#1e293b] text-xs font-semibold flex items-center justify-center gap-1 transition-all"
+              >
+                <span>{isKn ? 'ನುಡಿ ರೂಪಾಂತರಿಸಿ' : 'Morph to Dialect'}</span>
+                <ArrowRight className="w-3 h-3" />
+              </button>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 3. Word of the Day Banner */}
       <WordOfTheDay lang={lang} onSelectRegion={onSelectRegion} />
 
       {/* 3. Understated Feature Portal Grid */}
@@ -247,31 +410,67 @@ export default function HomePage({
         <GlobalSearch lang={lang} />
       </section>
 
-      {/* 5. Metrics & Impact Bar */}
-      <section className="grid grid-cols-2 sm:grid-cols-4 gap-4 classic-card p-6 rounded-xl text-center">
-        <div className="p-3">
-          <span className="block text-3xl sm:text-4xl font-bold text-[#D4AF37] font-royal">5</span>
-          <span className="text-xs text-[#9CA3AF] mt-1 block font-medium">
-            {isKn ? 'ಉಪಭಾಷಾ ವಲಯಗಳು' : 'Dialect Zones'}
+      {/* 5. Metrics & Cultural Heritage Pride Bar */}
+      <section className="classic-card p-6 sm:p-8 rounded-3xl border border-[#D4AF37]/30 bg-gradient-to-r from-[#111726] via-[#151f33] to-[#111726] shadow-xl">
+        <div className="text-center max-w-xl mx-auto mb-6">
+          <span className="text-[11px] font-bold text-[#D4AF37] uppercase tracking-widest block mb-1">
+            {isKn ? 'ಕರ್ನಾಟಕದ ಸಾಂಸ್ಕೃತಿಕ ಗರಿಮೆ' : 'Karnataka Cultural Heritage Hall of Fame'}
           </span>
+          <h4 className="text-lg sm:text-xl font-bold text-[#f8fafc] font-serif-kn">
+            {isKn ? 'ಭಾಷೆ, ಸಾಹಿತ್ಯ ಮತ್ತು ಡಿಜಿಟಲ್ ಸಂರಕ್ಷಣೆಯ ಮಹಾಸಂಗಮ' : 'Uniting Classical Heritage with Next-Gen AI'}
+          </h4>
         </div>
-        <div className="p-3">
-          <span className="block text-3xl sm:text-4xl font-bold text-[#D4AF37] font-royal">31</span>
-          <span className="text-xs text-[#9CA3AF] mt-1 block font-medium">
-            {isKn ? 'ಜಿಲ್ಲೆಗಳ ಪ್ರಾತಿನಿಧ್ಯ' : 'Districts Covered'}
-          </span>
-        </div>
-        <div className="p-3">
-          <span className="block text-3xl sm:text-4xl font-bold text-[#D4AF37] font-royal">100%</span>
-          <span className="text-xs text-[#9CA3AF] mt-1 block font-medium">
-            {isKn ? 'ನೈಜ ಆಡಿಯೋ ಧ್ವನಿ' : 'Native Spoken Audio'}
-          </span>
-        </div>
-        <div className="p-3">
-          <span className="block text-2xl sm:text-3xl font-bold text-[#D4AF37] font-serif-kn">ಜನಪದ</span>
-          <span className="text-xs text-[#9CA3AF] mt-1 block font-medium">
-            {isKn ? 'ಮುಕ್ತ ಗಾದೆ ಕೋಶ' : 'Crowdsourced Kosha'}
-          </span>
+
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-3.5 text-center">
+          <div className="p-3.5 bg-[#0b0f17]/80 rounded-2xl border border-white/[0.06] hover:border-[#D4AF37]/50 transition-all">
+            <span className="block text-2xl sm:text-3xl font-black text-[#D4AF37] font-serif-kn">೨,೦೦೦+</span>
+            <span className="text-xs text-[#cbd5e1] mt-1 block font-semibold">
+              {isKn ? 'ವರ್ಷಗಳ ಇತಿಹಾಸ' : 'Years Classical History'}
+            </span>
+            <span className="text-[10px] text-[#94a3b8] mt-0.5 block">
+              {isKn ? 'ಶಾಸ್ತ್ರೀಯ ಭಾಷೆ' : 'Classical Language'}
+            </span>
+          </div>
+
+          <div className="p-3.5 bg-[#0b0f17]/80 rounded-2xl border border-white/[0.06] hover:border-[#D4AF37]/50 transition-all">
+            <span className="block text-2xl sm:text-3xl font-black text-[#D4AF37] font-serif-kn">೮</span>
+            <span className="text-xs text-[#cbd5e1] mt-1 block font-semibold">
+              {isKn ? 'ಜ್ಞಾನಪೀಠ ಪ್ರಶಸ್ತಿ' : 'Jnanpith Laureates'}
+            </span>
+            <span className="text-[10px] text-[#94a3b8] mt-0.5 block">
+              {isKn ? 'ದಕ್ಷಿಣ ಭಾರತದಲ್ಲೇ ಗರಿಷ್ಠ' : 'Highest in South India'}
+            </span>
+          </div>
+
+          <div className="p-3.5 bg-[#0b0f17]/80 rounded-2xl border border-white/[0.06] hover:border-[#D4AF37]/50 transition-all">
+            <span className="block text-2xl sm:text-3xl font-black text-[#D4AF37] font-serif-kn">೫</span>
+            <span className="text-xs text-[#cbd5e1] mt-1 block font-semibold">
+              {isKn ? 'ನುಡಿ ವಲಯಗಳು' : 'Dialect Zones'}
+            </span>
+            <span className="text-[10px] text-[#94a3b8] mt-0.5 block">
+              {isKn ? 'ಮೈಸೂರು • ಉತ್ತರ • ಕರಾವಳಿ...' : 'Mysuru • North • Coast...'}
+            </span>
+          </div>
+
+          <div className="p-3.5 bg-[#0b0f17]/80 rounded-2xl border border-white/[0.06] hover:border-[#D4AF37]/50 transition-all">
+            <span className="block text-2xl sm:text-3xl font-black text-[#D4AF37] font-serif-kn">೩೧</span>
+            <span className="text-xs text-[#cbd5e1] mt-1 block font-semibold">
+              {isKn ? 'ಜಿಲ್ಲೆಗಳ ನಕ್ಷೆ' : 'Districts Mapped'}
+            </span>
+            <span className="text-[10px] text-[#94a3b8] mt-0.5 block">
+              {isKn ? 'ಸಂಪೂರ್ಣ ಕರ್ನಾಟಕ' : 'Entire State Covered'}
+            </span>
+          </div>
+
+          <div className="p-3.5 bg-[#0b0f17]/80 rounded-2xl border border-white/[0.06] hover:border-[#D4AF37]/50 transition-all col-span-2 sm:col-span-1">
+            <span className="block text-2xl sm:text-3xl font-black text-[#D4AF37] font-serif-kn">೧೦೦%</span>
+            <span className="text-xs text-[#cbd5e1] mt-1 block font-semibold">
+              {isKn ? 'ನೈಜ ಧ್ವನಿ ಎಐ' : 'Voice AI & Audio'}
+            </span>
+            <span className="text-[10px] text-[#94a3b8] mt-0.5 block">
+              {isKn ? 'ಸ್ಪೀಚ್ & ವೇವ್‌ಫಾರ್ಮ್' : 'Speech & Waveforms'}
+            </span>
+          </div>
         </div>
       </section>
 
