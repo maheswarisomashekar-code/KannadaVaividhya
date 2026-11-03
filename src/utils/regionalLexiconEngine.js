@@ -1,5 +1,6 @@
 // Intelligent Real-Time Semantic & Vocabulary Dialect Engine
 // Translates and morphs ANY word, phrase, food item, verb, or sentence across all 5 Karnataka regions
+import { translateEnglishToKannada } from './englishToKannada.js';
 
 // 1. Food & Culinary Substitutions (Sheera, Sajjige, Kesaribath, Girmit, etc.)
 export const REGIONAL_LEXICON_RULES = [
@@ -344,6 +345,25 @@ export function parseAndMorphDialect(rawInput) {
   if (!rawInput || !rawInput.trim()) return null;
   const inputLower = rawInput.toLowerCase().trim();
 
+  // 0. English Sentence Translation & Idiom/Emotion Resolution (PREVENTS ENGLISH WORDS IN KANNADA DIALECTS)
+  const isEnglish = /[a-zA-Z]/.test(rawInput);
+  let translatedKannada = null;
+
+  if (isEnglish) {
+    const englishMatch = translateEnglishToKannada(rawInput);
+    if (englishMatch) {
+      if (englishMatch.variants) {
+        return {
+          type: 'english_semantic_match',
+          keyword: rawInput,
+          standardKannada: englishMatch.kannada,
+          variants: englishMatch.variants
+        };
+      }
+      translatedKannada = englishMatch.kannada;
+    }
+  }
+
   // 1. Detect if any regional food/noun token is mentioned (HIGHEST PRIORITY)
   let detectedFoodRule = null;
   let matchedKeyword = '';
@@ -428,10 +448,10 @@ export function parseAndMorphDialect(rawInput) {
     }
   }
 
-  // 6. Natural Language Heuristic Fallback for ANY Arbitrary Input (Clean, zero dummy tail sentences)
-  const clean = rawInput.trim();
-  const cleanBase = clean.replace(/[.?!]+$/, '').trim();
-  const isQuestion = clean.endsWith('?') || /ಎಲ್ಲಿ|ಹೇಗೆ|ಏನು|ಯಾವಾಗ|ಎಷ್ಟು|ಆಯ್ತಾ|ಮಾಡಬಹುದು|ಕಂಡುಹಿಡಿಯಬಹುದು/i.test(clean);
+  // 6. Natural Language Heuristic Fallback for ANY Arbitrary Input (Strictly pure Kannada, ZERO English leftovers)
+  const baseSentence = (translatedKannada || rawInput).trim();
+  const cleanBase = baseSentence.replace(/[.?!]+$/, '').trim();
+  const isQuestion = rawInput.endsWith('?') || /ಎಲ್ಲಿ|ಹೇಗೆ|ಏನು|ಯಾವಾಗ|ಎಷ್ಟು|ಆಯ್ತಾ|ಮಾಡಬಹುದು|ಕಂಡುಹಿಡಿಯಬಹುದು/i.test(baseSentence);
 
   const mysuruText = isQuestion ? `${cleanBase} ಸ್ವಾಮಿ?` : `${cleanBase} ಬಿಡಿ ಸ್ವಾಮಿ.`;
   const northText = isQuestion ? `ಏನ್ರೀ, ${cleanBase} ನೋಡ್ರಿ?` : `ಏನ್ರೀ, ${cleanBase} ನೋಡ್ರಿಪಾ.`;
@@ -441,7 +461,8 @@ export function parseAndMorphDialect(rawInput) {
 
   return {
     type: 'general_morph',
-    keyword: clean,
+    keyword: rawInput,
+    standardKannada: translatedKannada || cleanBase,
     isRecognized: true,
     variants: {
       mysuru: {

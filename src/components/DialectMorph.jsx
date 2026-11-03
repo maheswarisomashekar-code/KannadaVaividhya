@@ -329,15 +329,36 @@ export default function DialectMorph({ lang = 'kn' }) {
 
             {parsedCustomResult ? (
               <div className="space-y-4">
-                <div className="p-3 bg-[#d4af37]/10 border border-[#d4af37]/30 rounded-xl text-xs text-[#d4af37] flex items-center justify-between">
+                <div className="p-3 bg-[#d4af37]/10 border border-[#d4af37]/30 rounded-xl text-xs text-[#d4af37] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                   <span>
                     💡 <strong>{isKn ? 'ನೈಜ-ಸಮಯದ ಲೆಕ್ಸಿಕನ್ ಇಂಜಿನ್: ' : 'Semantic Lexicon Engine: '}</strong> 
                     {isKn ? `"${customInput}" ವಾಕ್ಯವು 5 ಪ್ರಾಂತಗಳಿಗೆ ಹೊಂದಾಣಿಕೆಯಾಗಿದೆ!` : `Adapted "${customInput}" across 5 regional vocabularies!`}
                   </span>
-                  <span className="text-[10px] bg-[#d4af37]/20 px-2 py-0.5 rounded text-[#d4af37] uppercase font-bold">
+                  <span className="text-[10px] bg-[#d4af37]/20 px-2 py-0.5 rounded text-[#d4af37] uppercase font-bold self-start sm:self-auto">
                     {isKn ? '5 ಪ್ರಾಂತ್ಯಗಳು ಸಕ್ರಿಯ' : '5 Regions Active'}
                   </span>
                 </div>
+
+                {parsedCustomResult.standardKannada && (
+                  <div className="bg-[#0b0f17] border border-[#d4af37]/40 rounded-xl p-3.5 text-xs flex items-center justify-between gap-3">
+                    <div>
+                      <span className="text-[#d4af37] font-semibold block text-[11px] uppercase tracking-wider">
+                        {isKn ? 'ಪ್ರಮಾಣಿತ ಕನ್ನಡ ಅರ್ಥ:' : 'Standard Kannada Meaning:'}
+                      </span>
+                      <span className="text-[#f8fafc] font-bold text-sm font-serif mt-0.5 block">
+                        {parsedCustomResult.standardKannada}
+                      </span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => speakKannada(parsedCustomResult.standardKannada)}
+                      className="p-1.5 rounded-lg bg-[#111726] hover:bg-[#d4af37] hover:text-[#0b0f17] text-[#d4af37] border border-[#1e293b] shrink-0"
+                      title={isKn ? "ಆಲಿಸಿ" : "Listen"}
+                    >
+                      <Volume2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                )}
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
                   {Object.keys(REGIONS).map((regKey) => {
