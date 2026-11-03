@@ -145,6 +145,60 @@ const FOLK_RIDDLES_DATA = [
     wrongOptions: ['ಮೊಟ್ಟೆ', 'ತೆಂಗಿನಕಾಯಿ', 'ದಾಳಿಂಬೆ'],
     hint: 'ಕಡಲೆಕಾಯಿ ಪರಿಷೆಯಲ್ಲಿ ಸಿಗುವ ಹುರಿದ ಕಾಯಿ!',
     region: 'ಬೆಂಗಳೂರು & ಚಿತ್ರದುರ್ಗ'
+  },
+  {
+    id: 13,
+    riddleKn: 'ಮೂರು ಕಣ್ಣುಗಳುಂಟು ಆದರೆ ಶಿವನಲ್ಲ, ಒಳಗೆ ಸಿಹಿ ನೀರುಂಟು ಆದರೆ ನದಿಯಲ್ಲ — ಇದು ಏನು?',
+    riddleEn: 'Has three eyes but is not Shiva, filled with sweet water but is not a river — what is it?',
+    correctAnswer: 'ತೆಂಗಿನಕಾಯಿ (Coconut)',
+    wrongOptions: ['ಕಲ್ಲಂಗಡಿ', 'ಮಡಕೆ', 'ಬಾವಿ'],
+    hint: 'ಕರಾವಳಿಯ ಕಲ್ಪವೃಕ್ಷದ ಕಾಯಿ!',
+    region: 'ಕರಾವಳಿ'
+  },
+  {
+    id: 14,
+    riddleKn: 'ಹಸಿರಾಗಿ ಇರುತ್ತದೆ, ಬಾಯಲ್ಲಿ ಮೆಲ್ಲಿದರೆ ಕೆಂಪಾಗುತ್ತದೆ — ಇದು ಏನು?',
+    riddleEn: 'Green to begin with, turns bright red when chewed — what is it?',
+    correctAnswer: 'ವೀಳ್ಯದೆಲೆ & ಅಡಿಕೆ (Betel Leaf & Areca nut)',
+    wrongOptions: ['ಮೆಣಸಿನಕಾಯಿ', 'ಟೊಮೆಟೊ', 'ದಾಳಿಂಬೆ'],
+    hint: 'ಹಬ್ಬ ಹರಿದಿನಗಳಲ್ಲಿ ತಾಂಬೂಲವಾಗಿ ನೀಡುವ ಎಲೆ!',
+    region: 'ಮಲೆನಾಡು & ಹಳೆ ಮೈಸೂರು'
+  },
+  {
+    id: 15,
+    riddleKn: 'ಎಲ್ಲರಿಗೂ ಸುಂದರ ಬಟ್ಟೆ ಹೊಲಿಯುತ್ತದೆ, ಆದರೆ ತಾನು ಮಾತ್ರ ಸದಾ ಬೆತ್ತಲೆ — ಇದು ಏನು?',
+    riddleEn: 'Stitches beautiful clothes for everyone, yet stays naked itself — what is it?',
+    correctAnswer: 'ಸೂಜಿ (Needle)',
+    wrongOptions: ['ಕತ್ತರಿ (Scissors)', 'ದಾರ (Thread)', 'ಯಂತ್ರ'],
+    hint: 'ಬಟ್ಟೆ ಹೊಲಿಯಲು ಬಳಸುವ ಸಣ್ಣ ಲೋಹದ ಸಾಧನ!',
+    region: 'ಸಮಸ್ತ ಕರ್ನಾಟಕ'
+  },
+  {
+    id: 16,
+    riddleKn: 'ಕಾಲಿಲ್ಲದೆ ಮರ ಏರುತ್ತದೆ, ಬಾಲವಿಲ್ಲದೆ ಇಳಿಯುತ್ತದೆ — ಇದು ಏನು?',
+    riddleEn: 'Climbs the tree without legs, slides down without a tail — what is it?',
+    correctAnswer: 'ಬಳ್ಳಿ / ಹಾವಿನ ಬಳ್ಳಿ (Vine / Creeper)',
+    wrongOptions: ['ಕೋತಿ', 'ಹಕ್ಕಿ', 'ಅಳಿಲು'],
+    hint: 'ಮರವನ್ನು ಸುತ್ತಿಕೊಂಡು ಬೆಳೆಯುವ ಹಸಿರು ಸಸ್ಯ!',
+    region: 'ಉತ್ತರ ಕನ್ನಡ'
+  },
+  {
+    id: 17,
+    riddleKn: 'ಬಾಲ ಹಿಡಿದು ತಿರುಗಿಸಿದರೆ ತಂಪಾದ ನೀರು ಕೊಡುತ್ತದೆ — ಇದು ಏನು?',
+    riddleEn: 'Shake its tail up and down, and it gives cool water — what is it?',
+    correctAnswer: 'ಕೈಪಂಪು / ಕೊಳವೆಬಾವಿ (Handpump)',
+    wrongOptions: ['ಬಕೆಟ್', 'ಹೊಳೆ', 'ಹಗ್ಗ'],
+    hint: 'ಹಳ್ಳಿಗಳಲ್ಲಿ ಭೂಮಿಯ ನೀರು ಸೇದಲು ಬಳಸುವ ಯಂತ್ರ!',
+    region: 'ಕಲ್ಯಾಣ ಕರ್ನಾಟಕ'
+  },
+  {
+    id: 18,
+    riddleKn: 'ಅಜ್ಜಿ ಕುಳಿತಿದ್ದಾಳೆ, ಮೈಯೆಲ್ಲ ಸಾವಿರ ಕಣ್ಣುಗಳು — ಇದು ಏನು?',
+    riddleEn: 'Grandma sits quiet, with a thousand eyes across her body — what is it?',
+    correctAnswer: 'ಹಿಟ್ಟಿನ ಜರಡಿ (Flour Sieve)',
+    wrongOptions: ['ಬುಟ್ಟಿ', 'ಮಂಚ', 'ಬಲೆ'],
+    hint: 'ಅಡುಗೆ ಮನೆಯಲ್ಲಿ ಹಿಟ್ಟು ಸೋಸಲು ಬಳಸುವ ಪಾತ್ರೆ!',
+    region: 'ಉತ್ತರ ಕರ್ನಾಟಕ'
   }
 ];
 
@@ -507,14 +561,36 @@ export default function DialectArcade({ lang = 'kn', onSelectRegion, onNavigate 
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={() => speakKannada(currRiddle.riddleKn)}
-              className="px-3 py-1.5 rounded-xl bg-[#0b0f17] hover:bg-[#D4AF37] hover:text-[#0b0f17] text-[#D4AF37] border border-[#1e293b] text-xs font-semibold flex items-center gap-1.5 transition-all"
-            >
-              <Volume2 className="w-3.5 h-3.5" />
-              <span>{isKn ? 'ಒಗಟು ಆಲಿಸಿ' : 'Hear Riddle'}</span>
-            </button>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setRiddlesList(
+                    shuffle(FOLK_RIDDLES_DATA).map((item) => ({
+                      ...item,
+                      options: shuffle([item.correctAnswer, ...item.wrongOptions])
+                    }))
+                  );
+                  setRiddleIndex(0);
+                  setSelectedRiddleOption(null);
+                  setShowRiddleHint(false);
+                }}
+                className="px-3 py-1.5 rounded-xl bg-[#0b0f17] hover:bg-[#1a2642] text-[#cbd5e1] border border-[#1e293b] text-xs font-semibold flex items-center gap-1.5 transition-all"
+                title="ಹೊಸ ಒಗಟುಗಳನ್ನು ಷಫಲ್ ಮಾಡಿ"
+              >
+                <RefreshCw className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span>{isKn ? 'ಹೊಸ ಒಗಟುಗಳು (ಷಫಲ್)' : 'Shuffle Riddles'}</span>
+              </button>
+
+              <button
+                type="button"
+                onClick={() => speakKannada(currRiddle.riddleKn)}
+                className="px-3 py-1.5 rounded-xl bg-[#0b0f17] hover:bg-[#D4AF37] hover:text-[#0b0f17] text-[#D4AF37] border border-[#1e293b] text-xs font-semibold flex items-center gap-1.5 transition-all"
+              >
+                <Volume2 className="w-3.5 h-3.5" />
+                <span>{isKn ? 'ಒಗಟು ಆಲಿಸಿ' : 'Hear Riddle'}</span>
+              </button>
+            </div>
           </div>
 
           {/* Riddle Card */}
@@ -623,14 +699,31 @@ export default function DialectArcade({ lang = 'kn', onSelectRegion, onNavigate 
                   {isKn ? 'ಕರ್ನಾಟಕ ತಿಂಡಿ & ಜಿಲ್ಲೆ ಮ್ಯಾಚಿಂಗ್' : 'Karnataka Food & District Matchmaker'}
                 </h3>
                 <span className="text-xs text-[#94a3b8]">
-                  ತಿಂಡಿ #{foodCurrentIndex + 1} / {FOOD_MATCHES.length} • {currFood.region}
+                  ತಿಂಡಿ #{foodCurrentIndex + 1} / {foodList.length} • {currFood.region}
                 </span>
               </div>
             </div>
 
-            <span className="text-xs font-bold text-[#D4AF37] px-3 py-1 rounded-full bg-[#1A1D21] border border-[#D4AF37]/30">
-              ಫುಡ್ ಸ್ಕೋರ್: {foodScore} pts
-            </span>
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => {
+                  setFoodList(shuffle(FOOD_MATCHES_DATA));
+                  setFoodCurrentIndex(0);
+                  setFoodSelectedDistrict(null);
+                  setFoodFeedback(null);
+                }}
+                className="px-3 py-1.5 rounded-xl bg-[#0b0f17] hover:bg-[#1a2642] text-[#cbd5e1] border border-[#1e293b] text-xs font-semibold flex items-center gap-1.5 transition-all"
+                title="ಹೊಸ ತಿಂಡಿಗಳನ್ನು ಷಫಲ್ ಮಾಡಿ"
+              >
+                <RefreshCw className="w-3.5 h-3.5 text-[#D4AF37]" />
+                <span>{isKn ? 'ಹೊಸ ತಿಂಡಿಗಳು (ಷಫಲ್)' : 'Shuffle Dishes'}</span>
+              </button>
+
+              <span className="text-xs font-bold text-[#D4AF37] px-3 py-1.5 rounded-xl bg-[#1A1D21] border border-[#D4AF37]/30">
+                ಫುಡ್ ಸ್ಕೋರ್: {foodScore} pts
+              </span>
+            </div>
           </div>
 
           {/* Target Dish Spotlight */}
