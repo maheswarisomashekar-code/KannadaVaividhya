@@ -9,6 +9,7 @@ import AudioLab from './components/AudioLab';
 import DialectQuiz from './components/DialectQuiz';
 import FolkVault from './components/FolkVault';
 import RegionalShowcase from './components/RegionalShowcase';
+import DialectArcade from './components/DialectArcade';
 import GlobalSearch from './components/GlobalSearch';
 import AuthModal from './components/AuthModal';
 import Footer from './components/Footer';
@@ -133,6 +134,17 @@ export default function App() {
               currentRegion={currentRegion}
               setCurrentRegion={setCurrentRegion}
               lang={lang}
+            />
+          )}
+
+          {activePage === 'arcade' && (
+            <DialectArcade
+              lang={lang}
+              onSelectRegion={setCurrentRegion}
+              onNavigate={(pageId) => {
+                setActivePage(pageId);
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+              }}
             />
           )}
 

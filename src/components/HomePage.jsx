@@ -11,7 +11,8 @@ import {
   ArrowRight, 
   Globe2,
   Crown,
-  Compass
+  Compass,
+  Gamepad2
 } from 'lucide-react';
 import { speakKannada } from '../utils/audioHelper';
 import { UI_STRINGS } from '../data/translations';
@@ -129,6 +130,14 @@ export default function HomePage({
       desc: isKn ? 'ಆಡಿಯೋ ಸುಳಿವುಗಳನ್ನು ಆಲಿಸಿ, ಪ್ರಾಂತ್ಯವನ್ನು ಊಹಿಸಿ ಮತ್ತು ಅಧಿಕೃತ ನಾಡ ಬ್ಯಾಡ್ಜ್‌ಗಳನ್ನು ಗೆಲ್ಲಿರಿ.' : 'Test your ear with fresh randomized audio clues and earn certified linguistic detective badges.',
       icon: HelpCircle,
       badge: 'Gamified Trivia'
+    },
+    {
+      id: 'arcade',
+      title: isKn ? 'ನುಡಿ ಕ್ರೀಡಾಂಗಣ (Arcade)' : 'Dialect Arcade',
+      kannada: 'ಒಗಟು, ಫುಡ್ ಮ್ಯಾಚ್ & ರೋಲ್‌ಪ್ಲೇ',
+      desc: isKn ? 'ಹಳ್ಳಿಯ ಒಗಟು ಬಿಡಿಸಿ, ಸ್ಥಳೀಯ ತಿಂಡಿ ಮ್ಯಾಚ್ ಮಾಡಿ, ಪ್ರಾದೇಶಿಕ ಭಾಷೆಯಲ್ಲಿ ಆಟೋ ಡ್ರೈವರ್ ಅಥವಾ ಹೋಟೆಲ್ ಭಟ್ರೊಂದಿಗೆ ಚರ್ಚಿಸಿ!' : 'Play village folk riddles, match iconic dishes to districts, and roleplay in authentic regional dialects!',
+      icon: Gamepad2,
+      badge: 'Interactive Games'
     },
     {
       id: 'vault',

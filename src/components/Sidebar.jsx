@@ -12,7 +12,8 @@ import {
   LogIn, 
   LogOut,
   X, 
-  Award
+  Award,
+  Gamepad2
 } from 'lucide-react';
 import { REGIONS } from '../data/regions';
 import { UI_STRINGS } from '../data/translations';
@@ -40,6 +41,7 @@ export default function Sidebar({
     { id: 'mitra', label: t.navMitra, icon: Sparkles },
     { id: 'audiolab', label: t.navAudio, icon: Mic },
     { id: 'quiz', label: t.navQuiz, icon: HelpCircle },
+    { id: 'arcade', label: isKn ? 'ನುಡಿ ಕ್ರೀಡಾಂಗಣ' : 'Dialect Arcade', icon: Gamepad2 },
     { id: 'vault', label: t.navVault, icon: BookOpen },
     { id: 'culture', label: t.navCulture, icon: Users },
     { id: 'search', label: t.navSearch, icon: Search },

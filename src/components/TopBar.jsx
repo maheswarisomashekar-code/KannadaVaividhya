@@ -20,6 +20,7 @@ export default function TopBar({
     mitra: isKn ? 'ನುಡಿ ಮಿತ್ರ — AI Dialect Mitra' : 'AI Dialect Mitra & Lexicon',
     audiolab: isKn ? 'ಧ್ವನಿ ಪ್ರಯೋಗಾಲಯ — Voice Lab' : 'Voice Waveform Lab',
     quiz: isKn ? 'ಯಾವ ಕನ್ನಡ? — Detective Quiz' : 'Dialect Detective Quiz',
+    arcade: isKn ? 'ನುಡಿ ಕ್ರೀಡಾಂಗಣ — Dialect Arcade' : 'Dialect Arcade & Games',
     vault: isKn ? 'ಜನಪದ ಕೋಶ — Folk Vault' : 'Janapada Folk Vault',
     culture: isKn ? 'ಸಂಸ್ಕೃತಿ & ಸಾಹಿತ್ಯ — Heritage' : 'Living Cultural Heritage',
     search: isKn ? 'ಸಾರ್ವತ್ರಿಕ ಹುಡುಕಾಟ — Search' : 'Universal Dialect Search'
