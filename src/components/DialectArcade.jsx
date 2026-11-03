@@ -32,8 +32,8 @@ const FOLK_RIDDLES = [
     id: 1,
     riddleKn: 'ಮೇಲೆ ಹಸಿರು, ಒಳಗೆ ಕೆಂಪು, ತಿಂದರೆ ಸಿಹಿ, ಉಗುಳಿದರೆ ಬೀಜ — ಇದು ಏನು?',
     riddleEn: 'Green outside, red inside, sweet to eat, seeds to spit — what is it?',
-    optionsKn: ['ಕಲ್ಲಂಗಡಿ (Watermelon)', 'ದಾಳಿಂಬೆ (Pomegranate)', 'ಸೇಬು (Apple)', 'ಮಾವಿನ ಹಣ್ಣು (Mango)'],
-    correctIndex: 0,
+    optionsKn: ['ದಾಳಿಂಬೆ (Pomegranate)', 'ಸೇಬು (Apple)', 'ಕಲ್ಲಂಗಡಿ (Watermelon)', 'ಮಾವಿನ ಹಣ್ಣು (Mango)'],
+    correctIndex: 2,
     hint: 'ಬೇಸಿಗೆ ಕಾಲದಲ್ಲಿ ಸಿಗುವ ತಂಪಾದ ಹಣ್ಣು!',
     region: 'ಕರಾವಳಿ & ಉತ್ತರ ಕರ್ನಾಟಕ'
   },
@@ -41,8 +41,8 @@ const FOLK_RIDDLES = [
     id: 2,
     riddleKn: 'ಮನೆಗೆ ಒಂದೇ ಬಾಗಿಲು, ಒಳಗಡೆ ಸಾವಿರ ಮುತ್ತುಗಳು — ಇದು ಏನು?',
     riddleEn: 'One door to the house, but thousands of pearls inside — what is it?',
-    optionsKn: ['ದಾಳಿಂಬೆ (Pomegranate)', 'ಕಾಯಿ (Coconut)', 'ಕಲ್ಲಂಗಡಿ (Watermelon)', 'ಹಲಸಿನ ಹಣ್ಣು (Jackfruit)'],
-    correctIndex: 0,
+    optionsKn: ['ಕಾಯಿ (Coconut)', 'ದಾಳಿಂಬೆ (Pomegranate)', 'ಕಲ್ಲಂಗಡಿ (Watermelon)', 'ಹಲಸಿನ ಹಣ್ಣು (Jackfruit)'],
+    correctIndex: 1,
     hint: 'ಕೆಂಪು ಬಣ್ಣದ ಕಾಳುಗಳಿರುವ ಪೌಷ್ಟಿಕ ಹಣ್ಣು!',
     region: 'ಹಳೆ ಮೈಸೂರು'
   },
@@ -50,8 +50,8 @@ const FOLK_RIDDLES = [
     id: 3,
     riddleKn: 'ಕಾಲು ಇಲ್ಲದೆ ಓಡುತ್ತದೆ, ಕಣ್ಣು ಇಲ್ಲದೆ ಅಳುತ್ತದೆ — ಇದು ಏನು?',
     riddleEn: 'Runs without legs, cries without eyes — what is it?',
-    optionsKn: ['ಮೋಡ (Cloud / Rain)', 'ನದಿ (River)', 'ಗಾಳಿ (Wind)', 'ರೈಲು (Train)'],
-    correctIndex: 0,
+    optionsKn: ['ನದಿ (River)', 'ಗಾಳಿ (Wind)', 'ರೈಲು (Train)', 'ಮೋಡ (Cloud / Rain)'],
+    correctIndex: 3,
     hint: 'ಆಕಾಶದಲ್ಲಿ ಕಪ್ಪಾಗಿ ಬಂದು ಮಳೆ ಸುರಿಸುತ್ತದೆ!',
     region: 'ಮಲೆನಾಡು'
   },
@@ -59,8 +59,8 @@ const FOLK_RIDDLES = [
     id: 4,
     riddleKn: 'ಕಪ್ಪು ಕೋಟೆಗೆ ಕೆಂಪು ಬಾಗಿಲು, ಒಳಗೆ ೩೨ ಕಾವಲುಗಾರರು — ಇದು ಏನು?',
     riddleEn: 'A red door with 32 guards inside — what is it?',
-    optionsKn: ['ಬಾಯಿ ಮತ್ತು ಹಲ್ಲುಗಳು (Mouth & Teeth)', 'ದಾಳಿಂಬೆ ಹಣ್ಣು', 'ಕೋಟೆ ಬಾಗಿಲು', 'ತೆಂಗಿನಕಾಯಿ'],
-    correctIndex: 0,
+    optionsKn: ['ಕೋಟೆ ಬಾಗಿಲು', 'ಬಾಯಿ ಮತ್ತು ಹಲ್ಲುಗಳು (Mouth & Teeth)', 'ದಾಳಿಂಬೆ ಹಣ್ಣು', 'ತೆಂಗಿನಕಾಯಿ'],
+    correctIndex: 1,
     hint: 'ಪ್ರತಿದಿನ ನಾವು ಮಾತನಾಡಲು ಮತ್ತು ತಿನ್ನಲು ಬಳಸುತ್ತೇವೆ!',
     region: 'ಕಲ್ಯಾಣ ಕರ್ನಾಟಕ'
   },
@@ -68,8 +68,8 @@ const FOLK_RIDDLES = [
     id: 5,
     riddleKn: 'ಬೆಳ್ಳಿ ಬಟ್ಟಲಲ್ಲಿ ಚಿನ್ನದ ನಾಣ್ಯ — ಇದು ಏನು?',
     riddleEn: 'A golden coin in a silver plate — what is it?',
-    optionsKn: ['ಆಕಾಶದಲ್ಲಿ ಚಂದ್ರ & ಸೂರ್ಯ (Sun / Moon in Sky)', 'ದೀಪ (Lamp)', 'ಅನ್ನ & ಸಾಂಬಾರ್', 'ಬೆಟ್ಟ'],
-    correctIndex: 0,
+    optionsKn: ['ದೀಪ (Lamp)', 'ಅನ್ನ & ಸಾಂಬಾರ್', 'ಆಕಾಶದಲ್ಲಿ ಚಂದ್ರ & ಸೂರ್ಯ (Sun / Moon in Sky)', 'ಬೆಟ್ಟ'],
+    correctIndex: 2,
     hint: 'ಹಗಲು ಮತ್ತು ರಾತ್ರಿ ಆಕಾಶದಲ್ಲಿ ಕಾಣಿಸುವ ನೈಸರ್ಗಿಕ ಬೆಳಕು!',
     region: 'ಸಮಸ್ತ ಕರ್ನಾಟಕ'
   },
@@ -77,23 +77,23 @@ const FOLK_RIDDLES = [
     id: 6,
     riddleKn: 'ಉದ್ದನೆಯ ಮನುಷ್ಯನಿಗೆ ಬಾಲದ ಮೇಲೆ ಬೆಂಕಿ — ಇದು ಏನು?',
     riddleEn: 'A tall man with fire on his head/tail — what is it?',
-    optionsKn: ['ಊದುಬತ್ತಿ / ಬೆಂಕಿಕಡ್ಡಿ (Incense / Matchstick)', 'ದೀಪದ ಕಂಬ', 'ಸಿಲಿಂಡರ್', 'ಮರ'],
-    correctIndex: 0,
+    optionsKn: ['ದೀಪದ ಕಂಬ', 'ಸಿಲಿಂಡರ್', 'ಮರ', 'ಊದುಬತ್ತಿ / ಬೆಂಕಿಕಡ್ಡಿ (Incense / Matchstick)'],
+    correctIndex: 3,
     hint: 'ಪೂಜೆಗೆ ಬಳಸುವ ಸುವಾಸನೆಯ ಕಡ್ಡಿ!',
     region: 'ಹಳೆ ಮೈಸೂರು'
   }
 ];
 
-// 2. Karnataka Food & Native District Matching
+// 2. Karnataka Food & Native District Matching (Pure culinary terms without district names in titles)
 const FOOD_MATCHES = [
-  { food: 'ಧಾರವಾಡ ಪೇಡಾ', foodEn: 'Dharwad Pedha', district: 'ಧಾರವಾಡ (Dharwad)', region: 'ಉತ್ತರ ಕರ್ನಾಟಕ', icon: '🍬', hint: 'ಬಾಬಾಸಿಂಗ್ ಠಾಕೂರ್ ಅವರ ಕೈಚಳಕದ ಅಸಲಿ ಹಾಲು ಮಿಠಾಯಿ!' },
-  { food: 'ಮೈಸೂರು ಪಾಕ್', foodEn: 'Mysore Pak', district: 'ಮೈಸೂರು (Mysuru)', region: 'ಹಳೆ ಮೈಸೂರು', icon: '🧈', hint: 'ಅರಮನೆಯ ಅಡುಗೆ ಮನೆ ಕಾಕಾಸುರ ಮಾದಪ್ಪನವರ ಅಸಲಿ ತುಪ್ಪದ ಸ್ವೀಟ್!' },
-  { food: 'ಬೆಳಗಾವಿ ಕುಂದಾ', foodEn: 'Belagavi Kunda', district: 'ಬೆಳಗಾವಿ (Belagavi)', region: 'ಉತ್ತರ ಕರ್ನಾಟಕ', icon: '🍯', hint: 'ಖೋವಾ ಮತ್ತು ಜೇನಿನಂತ ಸಿರಪ್‌ನಿಂದ ತಯಾರಾಗುವ ಬೆಳಗಾವಿ ಖಾದ್ಯ!' },
-  { food: 'ದಾವಣಗೆರೆ ಬೆಣ್ಣೆ ದೋಸೆ', foodEn: 'Davanagere Benne Dosa', district: 'ದಾವಣಗೆರೆ (Davanagere)', region: 'ಮಧ್ಯ ಕರ್ನಾಟಕ', icon: '🥞', hint: 'ಹೆಂಚಿನ ಮೇಲೆ ಕಾದ ಹಳ್ಳಿಯ ಬೆಣ್ಣೆಯ ಗರಿಗರಿ ದೋಸೆ!' },
-  { food: 'ಮಂಗಳೂರು ಬನ್ಸ್ / ಗೋಲಿ ಬಜೆ', foodEn: 'Mangalore Buns / Goli Baje', district: 'ದಕ್ಷಿಣ ಕನ್ನಡ (Mangaluru)', region: 'ಕರಾವಳಿ', icon: '🍌', hint: 'ಬಾಳೆಹಣ್ಣು ಮತ್ತು ಮೈದಾದಿಂದ ತಯಾರಾಗುವ ಕರಾವಳಿ ಬೆಳಗಿನ ತಿಂಡಿ!' },
-  { food: 'ಮದ್ದೂರು ವಡೆ', foodEn: 'Maddur Vade', district: 'ಮಂಡ್ಯ (Maddur / Mandya)', region: 'ಹಳೆ ಮೈಸೂರು', icon: '🍘', hint: 'ರೈಲ್ವೆ ಪ್ರಯಾಣಿಕರ ಅಚ್ಚುಮೆಚ್ಚಿನ ಗರಿಗರಿ ಈರುಳ್ಳಿ ವಡೆ!' },
-  { food: 'ಕಲಬುರಗಿ ಸುಸಲಾ & ಮಾಲ್ಪೂರಿ', foodEn: 'Kalaburagi Susala', district: 'ಕಲಬುರಗಿ (Kalaburagi)', region: 'ಕಲ್ಯಾಣ ಕರ್ನಾಟಕ', icon: '🥣', hint: 'ಖಡಕ್ ಮಂಡಕ್ಕಿಯ ಮಸಾಲೆ ಒಗ್ಗರಣೆ ತಿಂಡಿ!' },
-  { food: 'ಉಡುಪಿ ನೀರ್ ದೋಸೆ & ಸಜ್ಜಿಗೆ', foodEn: 'Udupi Neer Dosa', district: 'ಉಡುಪಿ (Udupi)', region: 'ಕರಾವಳಿ', icon: '🥥', hint: 'ರೇಷ್ಮೆಯಂತ ಮೃದುವಾದ ಅಕ್ಕಿ ದೋಸೆ ಮತ್ತು ಸಜ್ಜಿಗೆ-ಬಜಿ!' }
+  { food: 'ಗಿರ್ಮಿಟ್ & ಮಿರ್ಚಿ ಭಜಿ', foodEn: 'Girmit & Mirchi Baji', district: 'ಧಾರವಾಡ', region: 'ಉತ್ತರ ಕರ್ನಾಟಕ', icon: '🌶️', hint: 'ಮಂಡಕ್ಕಿ, ಒಗ್ಗರಣೆ ಹಾಗೂ ಖಾರದ ಮೆಣಸಿನಕಾಯಿಯಿಂದ ತಯಾರಾಗುವ ಸಂಜೆಯ ತಿನಿಸು!' },
+  { food: 'ಅಸಲಿ ತುಪ್ಪದ ಅರಮನೆ ಪಾಕ್', foodEn: 'Royal Ghee Sweet', district: 'ಮೈಸೂರು', region: 'ಹಳೆ ಮೈಸೂರು', icon: '🧈', hint: 'ಅರಮನೆಯ ಅಡುಗೆ ಮನೆ ಕಾಕಾಸುರ ಮಾದಪ್ಪನವರ ಅಸಲಿ ತುಪ್ಪ, ಕಡಲೆಹಿಟ್ಟಿನ ಶಾಹಿ ಸಿಹಿ!' },
+  { food: 'ಖೋವಾ ಕುಂದಾ ಮಿಠಾಯಿ', foodEn: 'Khoa Kunda', district: 'ಬೆಳಗಾವಿ', region: 'ಉತ್ತರ ಕರ್ನಾಟಕ', icon: '🍯', hint: 'ಶುದ್ಧ ಕೆನೆ ಹಾಲು ಹಾಗೂ ಸಕ್ಕರೆಯನ್ನು ಕೆಂಪಾಗುವವರೆಗೆ ಕುದಿಸಿ ತಯಾರಿಸುವ ದಟ್ಟ ಸಿಹಿ!' },
+  { food: 'ಗರಿಗರಿ ಓಪನ್ ಬೆಣ್ಣೆ ದೋಸೆ', foodEn: 'Crispy Butter Dosa', district: 'ದಾವಣಗೆರೆ', region: 'ಮಧ್ಯ ಕರ್ನಾಟಕ', icon: '🥞', hint: 'ಮಂಡಕ್ಕಿ ರವೆ ಹಾಗೂ ಹಳ್ಳಿಯ ತಾಜಾ ಬೆಣ್ಣೆಯೊಂದಿಗೆ ಹೆಂಚಿನಲ್ಲಿ ಬೇಯಿಸಿದ ಘಮಘಮ ದೋಸೆ!' },
+  { food: 'ಗೋಲಿ ಬಜೆ & ಮೃದು ಬನ್ಸ್', foodEn: 'Goli Baje & Soft Buns', district: 'ದಕ್ಷಿಣ ಕನ್ನಡ', region: 'ಕರಾವಳಿ', icon: '🍌', hint: 'ಕರಾವಳಿಯ ಮೈದಾ ಹಾಗೂ ಏಲಕ್ಕಿ ಬಾಳೆಹಣ್ಣಿನ ರುಚಿಕರ ಸಂಜೆಯ ಉಪಹಾರ!' },
+  { food: 'ಗರಿಗರಿ ಈರುಳ್ಳಿ ಚಪ್ಪಟೆ ವಡೆ', foodEn: 'Crispy Onion Flat Vade', district: 'ಮಂಡ್ಯ', region: 'ಹಳೆ ಮೈಸೂರು', icon: '🍘', hint: 'ರೈಲ್ವೆ ಪ್ರಯಾಣಿಕರ ಅಚ್ಚುಮೆಚ್ಚಿನ, ಚಿರೋಟಿ ರವೆ ಹಾಗೂ ಈರುಳ್ಳಿಯ ಗರಿಗರಿ ತಿನಿಸು!' },
+  { food: 'ಸುಸಲಾ & ಮಾಲ್ಪೂರಿ', foodEn: 'Susala & Malpuri', district: 'ಕಲಬುರಗಿ', region: 'ಕಲ್ಯಾಣ ಕರ್ನಾಟಕ', icon: '🥣', hint: 'ಕಲ್ಯಾಣ ಕರ್ನಾಟಕದ ಖಡಕ್ ಮಂಡಕ್ಕಿಯ ಒಗ್ಗರಣೆ ಉಪಹಾರ!' },
+  { food: 'ಸಜ್ಜಿಗೆ-ಬಜಿ & ನೀರ್ ದೋಸೆ', foodEn: 'Sajjige-Baji & Neer Dosa', district: 'ಉಡುಪಿ', region: 'ಕರಾವಳಿ', icon: '🥥', hint: 'ಕರಾವಳಿಯ ತಿಳಿ ಅಕ್ಕಿ ದೋಸೆ ಹಾಗೂ ಉಪ್ಮಾ-ಶಿರಾ ಜೋಡಿ ಖಾದ್ಯ!' }
 ];
 
 // 3. Dialect Roleplay Scenarios
@@ -292,16 +292,16 @@ export default function DialectArcade({ lang = 'kn', onSelectRegion, onNavigate 
   const currFood = FOOD_MATCHES[foodCurrentIndex];
   const currRoleplay = ROLEPLAY_SCENARIOS[roleplayIndex];
 
-  // Shuffled district options for food match
+  // Shuffled district options for food match (Clean names without giveaway hints)
   const districtOptions = [
-    'ಧಾರವಾಡ (Dharwad)',
-    'ಮೈಸೂರು (Mysuru)',
-    'ಬೆಳಗಾವಿ (Belagavi)',
-    'ದಾವಣಗೆರೆ (Davanagere)',
-    'ದಕ್ಷಿಣ ಕನ್ನಡ (Mangaluru)',
-    'ಮಂಡ್ಯ (Maddur / Mandya)',
-    'ಕಲಬುರಗಿ (Kalaburagi)',
-    'ಉಡುಪಿ (Udupi)'
+    'ಧಾರವಾಡ',
+    'ಮೈಸೂರು',
+    'ಬೆಳಗಾವಿ',
+    'ದಾವಣಗೆರೆ',
+    'ದಕ್ಷಿಣ ಕನ್ನಡ',
+    'ಮಂಡ್ಯ',
+    'ಕಲಬುರಗಿ',
+    'ಉಡುಪಿ'
   ];
 
   return (
