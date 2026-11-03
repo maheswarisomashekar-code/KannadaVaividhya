@@ -2,6 +2,55 @@
 // Converts English sentences, colloquial expressions, and words into authentic Kannada
 
 export const ENGLISH_PHRASE_DICTIONARY = [
+  // Praise, Appreciation & Quality Expressions (Awesome / Excellent / Super)
+  {
+    patterns: [
+      'awesome / excellent',
+      'awesome/excellent',
+      'awesome',
+      'excellent',
+      'superb',
+      'super',
+      'amazing',
+      'wonderful',
+      'fantastic',
+      'great',
+      'brilliant',
+      'mind blowing',
+      'top notch',
+      'best'
+    ],
+    kannada: 'ಅದ್ಭುತ / ಶ್ರೇಷ್ಠ',
+    phonetic: 'Adbhutha / Shreshtha',
+    variants: {
+      mysuru: {
+        text: 'ಬಹಳ ಮೆಚ್ಚುಗೆಯಾಯ್ತು ಸ್ವಾಮಿ, ಅತ್ಯದ್ಭುತವಾಗಿದೆ!',
+        phonetic: 'Bahala mecchugeyaaythu swaami, athyadbhuthavaagidhe!',
+        trait: 'Aristocratic Mysuru praise with polite honorific "Swaami".'
+      },
+      north_karnataka: {
+        text: 'ಏನ್ರೀ, ಮಸ್ತ ಅದ ನೋಡ್ರಿ! ಏಕ್ ದಂ ಚಲೋ ಅದಪಾ!',
+        phonetic: 'Eenree, masta ada nodree! Ek dam chaloo adapaa!',
+        trait: 'High North Karnataka enthusiasm using "Masta" and "Chaloo".'
+      },
+      karavali: {
+        text: 'ಮಾರಾಯ, ಭಾರೀ ಚಂದದ ಕೆಲಸ ಬಪ್ಪ! ಸೂಪರ್ ಉಂಟು!',
+        phonetic: 'Maaraya, bhaaree chandada kelasa bappa! Super untu!',
+        trait: 'Coastal appreciation with "bhaaree chanda" and "bappa".'
+      },
+      kalyana_karnataka: {
+        text: 'ದೋಸ್ತ, ಬೆಂಕಿ ಕೆಲಸ ನೋಡಪ್ಪ! ಏಕ್ ದಂ ಬರಾಬರ್ ಐತಿ!',
+        phonetic: 'Dosta, benki kelasa nodappa! Ek dam baraabar aithi!',
+        trait: 'Deccani praise with iconic "Benki" (fire) and "Baraabar".'
+      },
+      bengaluru: {
+        text: 'ಚಿಂದಿ ಗುರು! ನೆಕ್ಸ್ಟ್ ಲೆವೆಲ್ ಸೀನ್ ಮಗಾ!',
+        phonetic: 'Chindi guru! Next level scene maga!',
+        trait: 'Peak Bengaluru urban youth street celebration: "Chindi" and "Next level".'
+      }
+    }
+  },
+
   // Interactive Showcase Scenarios & Curated Prompts
   {
     patterns: [
@@ -455,6 +504,15 @@ export const ENGLISH_WORD_MAP = {
   'dosa': 'ದೋಸೆ',
 
   // Adjectives & Modifiers
+  'awesome': 'ಅದ್ಭುತ',
+  'excellent': 'ಶ್ರೇಷ್ಠ',
+  'super': 'ಸೂಪರ್',
+  'superb': 'ಅದ್ಭುತ',
+  'great': 'ಉತ್ತಮ',
+  'amazing': 'ಅದ್ಭುತ',
+  'wonderful': 'ಅದ್ಭುತ',
+  'fantastic': 'ಅದ್ಭುತ',
+  'nice': 'ಚಂದ',
   'good': 'ಒಳ್ಳೆಯದು',
   'bad': 'ಕೆಟ್ಟದ್ದು',
   'happy': 'ಖುಷಿ',

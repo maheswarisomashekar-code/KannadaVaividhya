@@ -158,6 +158,59 @@ export function transformToRegionalDialects(inputSentence, baseKannada = null) {
 
   // If the sentence contains English, resolve it to Kannada FIRST to avoid English in dialects
   if (/[a-zA-Z]/.test(sentence)) {
+    const lower = sentence.toLowerCase().trim();
+
+    // 1. Direct VOCABULARY_LEXICON lookup (handles "awesome / excellent", "friend", "come", etc.)
+    const lex = VOCABULARY_LEXICON.find((item) => {
+      const itemEn = item.en.toLowerCase();
+      if (itemEn === lower) return true;
+      const slashParts = itemEn.split('/').map((p) => p.trim());
+      if (slashParts.includes(lower)) return true;
+      if (lower.split('/').map((p) => p.trim()).some((p) => slashParts.includes(p))) return true;
+      return false;
+    });
+
+    if (lex && lex.dialects) {
+      return {
+        mysuru: {
+          regionName: 'Old Mysuru (ಮೈಸೂರು-ಮಂಡ್ಯ)',
+          text: lex.dialects.mysuru.word.replace(/\s*\([^)]*\)/g, '').trim(),
+          phonetic: lex.dialects.mysuru.word.match(/\(([^)]+)\)/)?.[1] || lex.dialects.mysuru.word,
+          tone: lex.dialects.mysuru.note,
+          etiquetteTip: 'Always address with respectful plural forms like "Taavu" or "Neevu" in Mysuru and Mandya.'
+        },
+        north_karnataka: {
+          regionName: 'North Karnataka (ಧಾರವಾಡ-ಬೆಳಗಾವಿ)',
+          text: lex.dialects.north_karnataka.word.replace(/\s*\([^)]*\)/g, '').trim(),
+          phonetic: lex.dialects.north_karnataka.word.match(/\(([^)]+)\)/)?.[1] || lex.dialects.north_karnataka.word,
+          tone: lex.dialects.north_karnataka.note,
+          etiquetteTip: 'Direct, hearty cadence signifying genuine warmth and closeness.'
+        },
+        karavali: {
+          regionName: 'Coastal Karavali (ಕುಂದಾಪ್ರ-ಮಂಗಳೂರು)',
+          text: lex.dialects.karavali.word.replace(/\s*\([^)]*\)/g, '').trim(),
+          phonetic: lex.dialects.karavali.word.match(/\(([^)]+)\)/)?.[1] || lex.dialects.karavali.word,
+          tone: lex.dialects.karavali.note,
+          etiquetteTip: 'Coastal friendly address creating an immediate affectionate rapport.'
+        },
+        kalyana_karnataka: {
+          regionName: 'Kalyana Karnataka (ಕಲಬುರಗಿ-ಬೀದರ್)',
+          text: lex.dialects.kalyana_karnataka.word.replace(/\s*\([^)]*\)/g, '').trim(),
+          phonetic: lex.dialects.kalyana_karnataka.word.match(/\(([^)]+)\)/)?.[1] || lex.dialects.kalyana_karnataka.word,
+          tone: lex.dialects.kalyana_karnataka.note,
+          etiquetteTip: 'Deeply honors Basaveshwara equality principles—everyone is greeted as an equal companion.'
+        },
+        bengaluru: {
+          regionName: 'Bengaluru Urban Slang (ನಮ್ಮ ಬೆಂಗಳೂರು)',
+          text: lex.dialects.bengaluru.word.replace(/\s*\([^)]*\)/g, '').trim(),
+          phonetic: lex.dialects.bengaluru.word.match(/\(([^)]+)\)/)?.[1] || lex.dialects.bengaluru.word,
+          tone: lex.dialects.bengaluru.note,
+          etiquetteTip: 'Keep conversations quick, punchy, and casual.'
+        }
+      };
+    }
+
+    // 2. Bilingual Phrase & Syntax engine
     const englishMatch = translateEnglishToKannada(sentence);
     if (englishMatch) {
       if (englishMatch.variants) {
@@ -199,7 +252,9 @@ export function transformToRegionalDialects(inputSentence, baseKannada = null) {
           }
         };
       }
-      sentence = englishMatch.kannada;
+      if (englishMatch.kannada && !/[a-zA-Z]/.test(englishMatch.kannada)) {
+        sentence = englishMatch.kannada;
+      }
     }
   }
 

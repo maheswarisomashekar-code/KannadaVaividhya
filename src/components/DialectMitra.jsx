@@ -110,52 +110,80 @@ export default function DialectMitra({ lang = 'kn' }) {
     setIsLoading(true);
 
     try {
-      const lower = text.toLowerCase();
+      const lower = text.toLowerCase().trim();
       let standardKn = text;
       const isEnglish = /[a-zA-Z]/.test(text);
 
-      let englishMatch = null;
-      if (isEnglish) {
-        englishMatch = translateEnglishToKannada(text);
-        if (englishMatch?.kannada) {
-          standardKn = englishMatch.kannada;
-        } else {
-          const lexiconMatch = VOCABULARY_LEXICON.find(
-            (item) => item.en.toLowerCase() === lower || item.kn.includes(text)
-          );
-          if (lexiconMatch) {
-            standardKn = lexiconMatch.kn;
-          } else {
-            const onlineKn = await fetchOnlineKannadaTranslation(text);
-            if (onlineKn && !/^[A-Za-z\s.,!?'"]+$/.test(onlineKn)) {
-              standardKn = onlineKn;
-            }
-          }
-        }
-      }
+      // 0. Check VOCABULARY_LEXICON directly (handles "awesome / excellent", "friend", "food / meal", etc.)
+      const lexiconMatch = VOCABULARY_LEXICON.find((item) => {
+        const itemEn = item.en.toLowerCase();
+        if (itemEn === lower) return true;
+        const slashParts = itemEn.split('/').map((p) => p.trim());
+        if (slashParts.includes(lower)) return true;
+        if (lower.split('/').map((p) => p.trim()).some((p) => slashParts.includes(p))) return true;
+        return item.kn.includes(text);
+      });
 
-      // 1. If English match already provided rich regional dialect variants, use them immediately
-      let regionalBreakdown = {};
-      if (englishMatch?.variants) {
+      if (lexiconMatch && lexiconMatch.dialects) {
+        const regionalBreakdown = {};
         Object.keys(REGIONS).forEach((regKey) => {
-          const m = englishMatch.variants[regKey];
-          if (m) {
+          const d = lexiconMatch.dialects[regKey];
+          if (d) {
+            const textOnly = d.word.replace(/\s*\([^)]*\)/g, '').trim();
+            const phoneticOnly = d.word.match(/\(([^)]+)\)/)?.[1] || d.word;
             regionalBreakdown[regKey] = {
-              text: m.text,
-              phonetic: m.phonetic,
-              tone: m.trait || m.tone,
-              etiquetteTip: m.culturalNuance || m.trait || ''
+              text: textOnly,
+              phonetic: phoneticOnly,
+              tone: d.note,
+              etiquetteTip: d.note
             };
           }
         });
 
         setActiveResult({
           original: text,
-          standardKannada: englishMatch.kannada || standardKn,
+          standardKannada: lexiconMatch.kn,
           variants: regionalBreakdown
         });
         soundEffects.playSuccess();
         return;
+      }
+
+      // 1. Check English phrase and syntax engine
+      let englishMatch = null;
+      if (isEnglish) {
+        englishMatch = translateEnglishToKannada(text);
+        if (englishMatch?.variants) {
+          const regionalBreakdown = {};
+          Object.keys(REGIONS).forEach((regKey) => {
+            const m = englishMatch.variants[regKey];
+            if (m) {
+              regionalBreakdown[regKey] = {
+                text: m.text,
+                phonetic: m.phonetic,
+                tone: m.trait || m.tone,
+                etiquetteTip: m.culturalNuance || m.trait || ''
+              };
+            }
+          });
+
+          setActiveResult({
+            original: text,
+            standardKannada: englishMatch.kannada,
+            variants: regionalBreakdown
+          });
+          soundEffects.playSuccess();
+          return;
+        }
+
+        if (englishMatch?.kannada && !/[a-zA-Z]/.test(englishMatch.kannada)) {
+          standardKn = englishMatch.kannada;
+        } else {
+          const onlineKn = await fetchOnlineKannadaTranslation(text);
+          if (onlineKn && !/^[A-Za-z\s.,!?'"]+$/.test(onlineKn)) {
+            standardKn = onlineKn;
+          }
+        }
       }
 
       // 2. Attempt intelligent semantic parsing on original text or Kannada translated text
